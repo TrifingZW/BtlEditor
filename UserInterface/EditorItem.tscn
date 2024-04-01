@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://beisxt0foinfn"]
+
+[ext_resource type="Script" path="res://UserInterface/EditorItem.cs" id="1_s0mmk"]
+
+[node name="EditorItem" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s0mmk")
+
+[node name="MarginContainer1" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Head" type="BoxContainer" parent="MarginContainer1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Content" type="BoxContainer" parent="MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2

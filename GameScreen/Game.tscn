@@ -1,0 +1,327 @@
+[gd_scene load_steps=20 format=3 uid="uid://c78ax6yhf632"]
+
+[ext_resource type="Script" path="res://GameScreen/Scripts/GameUI.cs" id="1_m3q6x"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
+[ext_resource type="Texture2D" uid="uid://b3iwesxgjb4n4" path="res://Assets/Textures/pts/map_land.png" id="2_f42uu"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/CameraController.cs" id="2_n3m31"]
+[ext_resource type="TileSet" uid="uid://f3y4463ptra3" path="res://GameScreen/TileSet.tres" id="3_dpsvd"]
+[ext_resource type="Shader" path="res://GameScreen/Shader/LandShader.gdshader" id="4_fbyr2"]
+[ext_resource type="Texture2D" uid="uid://cpahj6uo782rp" path="res://Assets/Textures/pts/map_sea.png" id="5_dsksy"]
+[ext_resource type="Texture2D" uid="uid://bcdattkc7eire" path="res://Assets/Textures/UI/move.svg" id="8_st2wp"]
+[ext_resource type="Texture2D" uid="uid://c5uqnry1pxbk3" path="res://Assets/Textures/UI/select.svg" id="9_3ud52"]
+[ext_resource type="Texture2D" uid="uid://vyfm4hd0b5e2" path="res://Assets/Textures/UI/multi.svg" id="10_x3imk"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Single/ArmySingle.cs" id="11_g6t54"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Single/CitySingle.cs" id="12_u6p06"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Single/LandSingle.cs" id="13_qyb2k"]
+[ext_resource type="PackedScene" uid="uid://2un2y08h3sph" path="res://UserInterface/TreeBar.tscn" id="14_1irfd"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Multi/ArmyMulti.cs" id="15_be31v"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/EditWindow.cs" id="15_twsgt"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Multi/CityMulti.cs" id="16_reurq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ffr3h"]
+shader = ExtResource("4_fbyr2")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ddpdi"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Game" type="Node2D"]
+
+[node name="CanvasGroup" type="CanvasGroup" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_tib5m")
+metadata/TileWidth = 148
+metadata/TileHeigth = 129
+metadata/SideLength = 76
+
+[node name="SeaRender" type="Sprite2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+texture_repeat = 2
+texture = ExtResource("5_dsksy")
+centered = false
+region_enabled = true
+
+[node name="LandRender" type="Sprite2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_ffr3h")
+texture = SubResource("ViewportTexture_ddpdi")
+centered = false
+
+[node name="TileMap" type="TileMap" parent="CanvasGroup"]
+unique_name_in_owner = true
+tile_set = ExtResource("3_dpsvd")
+format = 2
+layer_0/name = "城市"
+layer_1/name = "陷阱"
+layer_1/tile_data = PackedInt32Array()
+layer_2/name = "军队"
+layer_2/tile_data = PackedInt32Array()
+layer_3/name = "等级"
+layer_3/tile_data = PackedInt32Array()
+layer_4/name = "兵种叠加"
+layer_4/tile_data = PackedInt32Array()
+layer_5/name = "国旗"
+layer_5/tile_data = PackedInt32Array()
+layer_6/name = "多选"
+layer_6/tile_data = PackedInt32Array()
+
+[node name="Additional" type="Node2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_n3m31")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+transparent_bg = true
+render_target_update_mode = 1
+
+[node name="Land" type="Sprite2D" parent="SubViewport"]
+unique_name_in_owner = true
+texture_repeat = 2
+texture = ExtResource("2_f42uu")
+centered = false
+region_enabled = true
+
+[node name="Topography" type="Node2D" parent="SubViewport"]
+unique_name_in_owner = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_m3q6x")
+
+[node name="MainPanel" type="PanelContainer" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainPanel"]
+layout_mode = 2
+
+[node name="Utils" type="TabBar" parent="CanvasLayer/MainPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_constants/h_separation = 0
+theme_override_font_sizes/font_size = 50
+tab_count = 3
+tab_alignment = 1
+clip_tabs = false
+tab_0/title = "移动"
+tab_0/icon = ExtResource("8_st2wp")
+tab_1/title = "选择"
+tab_1/icon = ExtResource("9_3ud52")
+tab_2/title = "多选"
+tab_2/icon = ExtResource("10_x3imk")
+
+[node name="DataContainer" type="PanelContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(800, 0)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DataContainer"]
+layout_mode = 2
+
+[node name="DataTabContainer" type="TabContainer" parent="CanvasLayer/DataContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="军队" type="ScrollContainer" parent="CanvasLayer/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+script = ExtResource("11_g6t54")
+
+[node name="城市" type="ScrollContainer" parent="CanvasLayer/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+script = ExtResource("12_u6p06")
+
+[node name="地块" type="ScrollContainer" parent="CanvasLayer/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+script = ExtResource("13_qyb2k")
+
+[node name="MultiContainer" type="PanelContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/MultiContainer"]
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MultiContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MultiModeTab" type="TabBar" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+tab_count = 3
+clip_tabs = false
+tab_0/title = "选中模式"
+tab_1/title = "清除模式"
+tab_2/title = "占位空体"
+
+[node name="Clear" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "清空选中"
+
+[node name="CreatePanel" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
+layout_mode = 2
+
+[node name="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel" index="0"]
+text = "批量创建"
+
+[node name="Layout" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer" index="0"]
+theme_override_constants/separation = 0
+
+[node name="CreateArmy" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout" index="0"]
+layout_mode = 2
+focus_mode = 0
+text = "创建军队"
+
+[node name="CreateCity" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout" index="1"]
+layout_mode = 2
+focus_mode = 0
+text = "创建城市"
+
+[node name="SetPanel" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel" index="0"]
+text = "批量设置"
+
+[node name="SetArmyBar" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="0" instance=ExtResource("14_1irfd")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetArmyBar" index="0"]
+text = "设置军队"
+
+[node name="Layout" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetArmyBar/Panel/MarginContainer" index="0"]
+theme_override_constants/separation = 0
+script = ExtResource("15_be31v")
+
+[node name="SetCityBar" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="1" instance=ExtResource("14_1irfd")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetCityBar" index="0"]
+text = "设置城市"
+
+[node name="Layout" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetCityBar/Panel/MarginContainer" index="0"]
+theme_override_constants/separation = 0
+script = ExtResource("16_reurq")
+
+[node name="SetProvince" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="2"]
+layout_mode = 2
+focus_mode = 0
+text = "设置省规划"
+
+[node name="SetBelong" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="3"]
+layout_mode = 2
+focus_mode = 0
+text = "设置归属"
+
+[node name="DeletePanel" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
+layout_mode = 2
+
+[node name="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel" index="0"]
+text = "批量删除"
+
+[node name="Layout" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer" index="0"]
+theme_override_constants/separation = 0
+
+[node name="DeleteArmy" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout" index="0"]
+layout_mode = 2
+focus_mode = 0
+text = "删除军队"
+
+[node name="DeleteCity" type="Button" parent="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout" index="1"]
+layout_mode = 2
+focus_mode = 0
+text = "删除城市"
+
+[node name="EditWindow" type="Window" parent="CanvasLayer"]
+unique_name_in_owner = true
+initial_position = 1
+size = Vector2i(400, 126)
+visible = false
+wrap_controls = true
+keep_title_visible = true
+script = ExtResource("15_twsgt")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/EditWindow"]
+offset_right = 212.0
+offset_bottom = 158.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/EditWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="SpinBox" type="SpinBox" parent="CanvasLayer/EditWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+update_on_text_changed = true
+
+[node name="Button" type="Button" parent="CanvasLayer/EditWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "确定"
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -59.0
+offset_right = 80.0
+grow_vertical = 0
+text = "保存"
+
+[connection signal="tab_selected" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="CanvasLayer" method="MultiModeTabSelect"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="CanvasLayer" method="MultiModeClear"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="CanvasLayer" method="MultiModeCreateArmy"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateCity" to="CanvasLayer" method="MultiModeCreateCity"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetProvince" to="CanvasLayer" method="MultiModeSetProvince"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetBelong" to="CanvasLayer" method="MultiModeSetBelong"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteArmy" to="CanvasLayer" method="MultiModeDeleteArmy"]
+[connection signal="pressed" from="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteCity" to="CanvasLayer" method="MultiModeDeleteCity"]
+[connection signal="pressed" from="CanvasLayer/Button" to="CanvasGroup" method="Save"]
+
+[editable path="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel"]
+[editable path="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel"]
+[editable path="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetArmyBar"]
+[editable path="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetCityBar"]
+[editable path="CanvasLayer/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel"]

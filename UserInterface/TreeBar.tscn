@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://2un2y08h3sph"]
+
+[ext_resource type="Script" path="res://UserInterface/TreeBar.cs" id="1_mo02i"]
+
+[node name="TreeBar" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 54.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+script = ExtResource("1_mo02i")
+metadata/Expanded = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme_override_font_sizes/font_size = 50
+alignment = 0
+expand_icon = true
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 30
+
+[node name="Layout" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2

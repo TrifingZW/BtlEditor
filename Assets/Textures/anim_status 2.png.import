@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brssl8m03nwqt"
-path="res://.godot/imported/image_legion_icon_hd.png-674fc9ac9ddbc2bcbdb925f440fc9403.ctex"
+uid="uid://d1rlrc5gnc6ia"
+path="res://.godot/imported/anim_status 2.png-2e1bc2f8568f52942aa6ce4dc9f5fd11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/image_legion_icon_hd.png"
-dest_files=["res://.godot/imported/image_legion_icon_hd.png-674fc9ac9ddbc2bcbdb925f440fc9403.ctex"]
+source_file="res://Assets/Textures/anim_status 2.png"
+dest_files=["res://.godot/imported/anim_status 2.png-2e1bc2f8568f52942aa6ce4dc9f5fd11.ctex"]
 
 [params]
 

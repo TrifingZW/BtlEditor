@@ -14,7 +14,6 @@ public class LandUnit(MapController mapController)
 {
     private LandUnit[] LandUnits => mapController.LandUnits;
     private TileMap TileMap => mapController.TileMap;
-    private TileSet TileSet => TileMap.TileSet;
     public short Index { get; init; }
     public short RegionIndex { get; init; }
     public int X { get; init; }
@@ -73,7 +72,7 @@ public class LandUnit(MapController mapController)
 
     public void UpdateBelong(byte belong)
     {
-        TileMap.EraseCell(MapController.FlagLayer, Coords);
+        // TileMap.EraseCell(MapController.FlagLayer, Coords);
         foreach (LandUnit landUnit in LandUnits)
             if (landUnit.Province == RegionIndex)
                 landUnit.LandColor = Colors.White;
@@ -84,7 +83,7 @@ public class LandUnit(MapController mapController)
                 if (wc4ResourceElement.Name == $"f_{country.国家:D2}.png")
                 {
                     Vector2I atlasCoords = new(wc4ResourceElement.X, wc4ResourceElement.Y);
-                    TileMap.SetCell(MapController.FlagLayer, Coords, MapController.TacticalmapTileSetAtlasId, atlasCoords);
+                    // TileMap.SetCell(MapController.FlagLayer, Coords, MapController.TacticalmapTileSetAtlasId, atlasCoords);
                     break;
                 }
 
@@ -127,6 +126,7 @@ public class LandUnit(MapController mapController)
     public void UpdateCity()
     {
         TileMap.EraseCell(MapController.BuildLayer, Coords);
+        City.坐标 = RegionIndex;
         foreach (Wc4ResourceElement wc4ResourceElement in BuildingsHd.Images.ImageList)
         {
             var level = City.等级;
@@ -164,10 +164,19 @@ public class LandUnit(MapController mapController)
     #region 军队
 
     private Army _army;
-    private readonly SpriteFrames _spriteFrames = ResourceLoader.Load<SpriteFrames>("res://Assets/Textures/army_frame.tres");
-    private AnimatedSprite2D _armySprite;
+    public ArmySprite ArmySprite { get; set; }
     public ArmyJson ArmyJson { get; private set; }
-    public GeneralJson GeneralJson { get; private set; }
+    private GeneralJson _generalJson;
+
+    public GeneralJson GeneralJson
+    {
+        get => _generalJson;
+        private set
+        {
+            _generalJson = value;
+            ArmySprite.GeneralJson = value;
+        }
+    }
 
     public Army Army
     {
@@ -178,12 +187,13 @@ public class LandUnit(MapController mapController)
             if (value != null)
             {
                 _army = value;
-                if (_armySprite == null)
+                if (ArmySprite == null)
                 {
-                    _armySprite = new() { SpriteFrames = _spriteFrames };
-                    TileMap.AddChild(_armySprite);
+                    ArmySprite = new();
+                    TileMap.AddChild(ArmySprite);
                 }
 
+                ArmySprite.Army = Army;
                 UpdateArmy();
             }
             else
@@ -191,29 +201,21 @@ public class LandUnit(MapController mapController)
                 _army = null;
                 ArmyJson = null;
                 GeneralJson = null;
-                _cityLabel?.QueueFree();
-                _cityLabel = null;
-                TileMap.EraseCell(MapController.ArmyLayer, Coords);
-                TileMap.EraseCell(MapController.LevelLayer, Coords);
-                TileMap.EraseCell(MapController.StackLayer, Coords);
+                ArmySprite?.QueueFree();
+                ArmySprite = null;
             }
         }
     }
 
     public void UpdateArmy()
     {
-        _armySprite.Frame = ArmyDictionary.GetValueOrDefault(Army.兵种, 0);
-        TileMap.SetCell(MapController.ArmyLayer, Coords, MapController.ArmyTileSetAtlasId, vector2I, Army.方向);
-        else TileMap.EraseCell(MapController.ArmyLayer, Coords);
-        TileMap.SetCell(MapController.LevelLayer, Coords, MapController.LevelTileSetAtlasId, new(Army.等级 - 2, 0));
-        TileMap.SetCell(MapController.StackLayer, Coords, MapController.StackTileSetAtlasId, new(Army.编制 - 1, 0));
+        Army.坐标 = RegionIndex;
 
         foreach (GeneralJson generalJson in GeneralSettings.GeneralJsons)
         {
             if (generalJson.Id == Army.将领 && generalJson.Name != null)
             {
                 GeneralJson = generalJson;
-                mapController.Additional.QueueRedraw();
                 break;
             }
 
@@ -226,6 +228,8 @@ public class LandUnit(MapController mapController)
                 ArmyJson = armyJson;
                 break;
             }
+
+        ArmySprite.Position = Position;
     }
 
     #endregion

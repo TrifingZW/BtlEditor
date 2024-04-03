@@ -50,19 +50,13 @@ centered = false
 unique_name_in_owner = true
 tile_set = ExtResource("3_dpsvd")
 format = 2
-layer_0/name = "城市"
-layer_1/name = "陷阱"
+layer_0/name = "多选"
+layer_1/name = "单选"
 layer_1/tile_data = PackedInt32Array()
-layer_2/name = "军队"
+layer_2/name = "城市"
 layer_2/tile_data = PackedInt32Array()
-layer_3/name = "等级"
+layer_3/name = "陷阱"
 layer_3/tile_data = PackedInt32Array()
-layer_4/name = "兵种叠加"
-layer_4/tile_data = PackedInt32Array()
-layer_5/name = "国旗"
-layer_5/tile_data = PackedInt32Array()
-layer_6/name = "多选"
-layer_6/tile_data = PackedInt32Array()
 
 [node name="Additional" type="Node2D" parent="CanvasGroup"]
 unique_name_in_owner = true

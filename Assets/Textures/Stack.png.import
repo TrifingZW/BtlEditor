@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://beac321jpyvxk"
-path="res://.godot/imported/Stack.png-ee7175e645a84b1fb4e914a21204e547.ctex"
+path="res://.godot/imported/stack.png-5563e78aabb9af292ab949d04a6b7a2d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Stack.png"
-dest_files=["res://.godot/imported/Stack.png-ee7175e645a84b1fb4e914a21204e547.ctex"]
+source_file="res://Assets/Textures/stack.png"
+dest_files=["res://.godot/imported/stack.png-5563e78aabb9af292ab949d04a6b7a2d.ctex"]
 
 [params]
 

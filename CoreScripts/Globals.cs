@@ -60,7 +60,7 @@ public partial class Globals : Node
 
         Work.Load(WorkFile);
         WorkPath = Work.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
-        BtlPath = Work.GetValue("Work", "BtlPath", $"{StagePath}/conquest1.btl").AsString();
+        BtlPath = Work.GetValue("Work", "BtlPath", $"{StagePath}/conquest5.btl").AsString();
 
         Save(Scale, Fps, Shader, WindowMode, VSync);
     }

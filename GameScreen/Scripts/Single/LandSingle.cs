@@ -52,7 +52,8 @@ public partial class LandSingle : BaseSingle
         updateProvinceButton.Text = "保存并更新";
         updateProvinceButton.Pressed += () =>
         {
-            LandUnit.UpdateProvince(province);
+            LandUnit.Province = province;
+            LandUnit.UpdateProvince();
             LandUnit.UpdateRender();
         };
         provinceBar.Layout.AddChild(updateProvinceButton);
@@ -79,7 +80,8 @@ public partial class LandSingle : BaseSingle
         updateBelongButton.Text = "保存并更新";
         updateBelongButton.Pressed += () =>
         {
-            LandUnit.UpdateBelong(belong);
+            LandUnit.Belong = belong;
+            LandUnit.UpdateBelong();
             LandUnit.UpdateRender();
         };
         belongBar.Layout.AddChild(updateBelongButton);

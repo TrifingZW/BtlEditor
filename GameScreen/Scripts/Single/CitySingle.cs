@@ -18,7 +18,7 @@ public partial class CitySingle : BaseSingle
                 {
                     坐标 = LandUnit.RegionIndex
                 };
-                LandUnit.UpdateProvince(LandUnit.RegionIndex);
+                LandUnit.UpdateProvince();
                 LandUnit.UpdateRender();
                 Update();
             };

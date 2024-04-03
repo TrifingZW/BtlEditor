@@ -35,6 +35,7 @@ metadata/SideLength = 76
 
 [node name="SeaRender" type="Sprite2D" parent="CanvasGroup"]
 unique_name_in_owner = true
+visibility_layer = 512
 texture_repeat = 2
 texture = ExtResource("5_dsksy")
 centered = false
@@ -42,6 +43,7 @@ region_enabled = true
 
 [node name="LandRender" type="Sprite2D" parent="CanvasGroup"]
 unique_name_in_owner = true
+visibility_layer = 2
 material = SubResource("ShaderMaterial_ffr3h")
 texture = SubResource("ViewportTexture_ddpdi")
 centered = false
@@ -58,7 +60,13 @@ layer_2/tile_data = PackedInt32Array()
 layer_3/name = "陷阱"
 layer_3/tile_data = PackedInt32Array()
 
-[node name="Additional" type="Node2D" parent="CanvasGroup"]
+[node name="ArmyRender" type="Node2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+
+[node name="FlagRender" type="Node2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+
+[node name="GeneralRender" type="Node2D" parent="CanvasGroup"]
 unique_name_in_owner = true
 
 [node name="Camera2D" type="Camera2D" parent="."]

@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using BtlEditor.CoreScripts;
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
 using Godot;
 using static BtlEditor.CoreScripts.Parser.ParserHelper;
 using static BtlEditor.CoreScripts.StaticRes;
-using static BtlEditor.CoreScripts.TileSetDictionary;
 
 namespace BtlEditor.GameScreen.Scripts;
 
-public class LandUnit(MapController mapController)
+public class LandUnit
 {
-    private LandUnit[] LandUnits => mapController.LandUnits;
-    private TileMap TileMap => mapController.TileMap;
+    private static MapController MapController => MapController.Instance;
+    private LandUnit[] LandUnits => MapController.LandUnits;
+    private TileMap TileMap => MapController.TileMap;
     public short Index { get; init; }
     public short RegionIndex { get; init; }
     public int X { get; init; }
@@ -39,7 +38,7 @@ public class LandUnit(MapController mapController)
         {
             if (value is { } color)
             {
-                mapController.SetUvColorV(Coords, color);
+                MapController.SetUvColorV(Coords, color);
                 _color = color;
             }
         }
@@ -51,16 +50,15 @@ public class LandUnit(MapController mapController)
 
     public short Province { get; set; }
 
-    public void UpdateProvince(short province)
+    public void UpdateProvince()
     {
         if (!Sea)
         {
-            if (LandUnits.TryGetValue(GetBtlIndex(province), out LandUnit landUnit))
+            if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
                 LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
                     ? Color.Color8(country.R, country.G, country.B)
                     : Colors.White;
             else LandColor = Colors.White;
-            Province = province;
         }
     }
 
@@ -68,32 +66,49 @@ public class LandUnit(MapController mapController)
 
     #region 归属
 
-    public byte Belong { get; set; }
+    public FlagSprite FlagSprite { get; private set; }
+    private byte _belong;
 
-    public void UpdateBelong(byte belong)
+    public byte Belong
     {
-        // TileMap.EraseCell(MapController.FlagLayer, Coords);
-        foreach (LandUnit landUnit in LandUnits)
-            if (landUnit.Province == RegionIndex)
-                landUnit.LandColor = Colors.White;
-
-        if (mapController.Countries.TryGetValue(belong, out Country country))
+        get => _belong;
+        set
         {
-            foreach (Wc4ResourceElement wc4ResourceElement in Tacticalmap.Images.ImageList)
-                if (wc4ResourceElement.Name == $"f_{country.国家:D2}.png")
+            _belong = value;
+            if (MapController.Instance.Countries.TryGetValue(Belong, out Country country))
+            {
+                if (FlagSprite == null)
                 {
-                    Vector2I atlasCoords = new(wc4ResourceElement.X, wc4ResourceElement.Y);
-                    // TileMap.SetCell(MapController.FlagLayer, Coords, MapController.TacticalmapTileSetAtlasId, atlasCoords);
-                    break;
+                    FlagSprite = new();
+                    MapController.FlagRender.AddChild(FlagSprite);
                 }
 
+                FlagSprite.Position = Position;
+                FlagSprite.Flag = country.国家;
+            }
+            else
+            {
+                FlagSprite?.QueueFree();
+                FlagSprite = null;
+            }
+        }
+    }
+
+    public void UpdateBelong()
+    {
+        if (MapController.Instance.Countries.TryGetValue(Belong, out Country country))
+        {
             Color color = Color.Color8(country.R, country.G, country.B);
             foreach (LandUnit landUnit in LandUnits)
                 if (landUnit.Province == RegionIndex)
                     landUnit.LandColor = color;
         }
-
-        Belong = belong;
+        else
+        {
+            foreach (LandUnit landUnit in LandUnits)
+                if (landUnit.Province == RegionIndex)
+                    landUnit.LandColor = Colors.White;
+        }
     }
 
     #endregion
@@ -164,19 +179,10 @@ public class LandUnit(MapController mapController)
     #region 军队
 
     private Army _army;
-    public ArmySprite ArmySprite { get; set; }
+    public ArmySprite ArmySprite { get; private set; }
+    public GeneralSprite GeneralSprite { get; private set; }
     public ArmyJson ArmyJson { get; private set; }
-    private GeneralJson _generalJson;
-
-    public GeneralJson GeneralJson
-    {
-        get => _generalJson;
-        private set
-        {
-            _generalJson = value;
-            ArmySprite.GeneralJson = value;
-        }
-    }
+    public GeneralJson GeneralJson { get; private set; }
 
     public Army Army
     {
@@ -184,54 +190,67 @@ public class LandUnit(MapController mapController)
 
         set
         {
-            if (value != null)
-            {
-                _army = value;
-                if (ArmySprite == null)
-                {
-                    ArmySprite = new();
-                    TileMap.AddChild(ArmySprite);
-                }
-
-                UpdateArmy();
-            }
-            else
-            {
-                _army = null;
-                ArmyJson = null;
-                GeneralJson = null;
-                ArmySprite?.QueueFree();
-                ArmySprite = null;
-            }
+            _army = value;
+            UpdateArmy();
         }
     }
 
     public void UpdateArmy()
     {
-        Army.坐标 = RegionIndex;
-        ArmySprite.Army = Army;
-        foreach (GeneralJson generalJson in GeneralSettings.GeneralJsons)
+        if (Army != null)
         {
-            if (generalJson.Id == Army.将领 && generalJson.Name != null)
-            {
-                GeneralJson = generalJson;
-                break;
-            }
-
             GeneralJson = null;
-        }
+            foreach (GeneralJson generalJson in GeneralSettings.GeneralJsons)
+                if (generalJson.Id == Army.将领 && generalJson.Name != null)
+                {
+                    if (GeneralSprite == null)
+                    {
+                        GeneralSprite = new();
+                        MapController.GeneralRender.AddChild(GeneralSprite);
+                    }
 
-        foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
-            if (armyJson.Army == Army.兵种)
+                    GeneralJson = generalJson;
+                    GeneralSprite.Position = Position;
+                    GeneralSprite.GeneralJson = generalJson;
+                    break;
+                }
+
+            if (GeneralJson == null)
             {
-                ArmyJson = armyJson;
-                break;
+                GeneralSprite?.QueueFree();
+                GeneralSprite = null;
             }
 
-        ArmySprite.Position = Position;
+            foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
+                if (armyJson.Army == Army.兵种)
+                {
+                    ArmyJson = armyJson;
+                    break;
+                }
+
+            if (ArmySprite == null)
+            {
+                ArmySprite = new();
+                MapController.ArmyRender.AddChild(ArmySprite);
+            }
+
+            Army.坐标 = RegionIndex;
+            ArmySprite.Army = Army;
+            ArmySprite.Position = Position;
+        }
+        else
+        {
+            _army = null;
+            ArmyJson = null;
+            GeneralJson = null;
+            GeneralSprite?.QueueFree();
+            GeneralSprite = null;
+            ArmySprite?.QueueFree();
+            ArmySprite = null;
+        }
     }
 
     #endregion
 
-    public void UpdateRender() => mapController.ApplyShader();
+    public static void UpdateRender() => MapController.ApplyShader();
 }

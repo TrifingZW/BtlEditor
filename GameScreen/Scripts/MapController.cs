@@ -17,6 +17,7 @@ namespace BtlEditor.GameScreen.Scripts;
 public partial class MapController : CanvasGroup
 {
     //节点
+    public Camera2D Camera2D { get; set; }
     private SubViewport _subViewport;
     private Sprite2D _land;
     private Node2D _topography;
@@ -24,8 +25,10 @@ public partial class MapController : CanvasGroup
     private Sprite2D _seaRender;
     private Sprite2D _landRender;
     private TileSet _tileSet;
-    private GameUI _gameUI;
-    public Node2D Additional { get; private set; }
+    private static GameUI GameUI => GameUI.Instance;
+    public Node2D ArmyRender { get; private set; }
+    public Node2D FlagRender { get; private set; }
+    public Node2D GeneralRender { get; private set; }
     public TileMap TileMap { get; private set; }
 
     //单位
@@ -61,9 +64,13 @@ public partial class MapController : CanvasGroup
     public Vector2I CanvasSize => new Vector2(TileMap.MapToLocal(new(Master.地图宽 - 1, 1)).X,
         TileMap.MapToLocal(new(1, Master.地图高 - 1)).Y).ToVector2I() + OffsetSize.ToVector2I();
 
+    public static MapController Instance { get; private set; }
+
     public override void _Ready()
     {
-        _gameUI = GetNode<GameUI>("%CanvasLayer");
+        Instance = this;
+
+        Camera2D = GetNode<Camera2D>("%Camera2D");
 
         //SubViewport
         _subViewport = GetNode<SubViewport>("%SubViewport");
@@ -74,7 +81,9 @@ public partial class MapController : CanvasGroup
         _seaRender = GetNode<Sprite2D>("%SeaRender");
         _landRender = GetNode<Sprite2D>("%LandRender");
         TileMap = GetNode<TileMap>("%TileMap");
-        Additional = GetNode<Node2D>("%Additional");
+        ArmyRender = GetNode<Node2D>("%ArmyRender");
+        FlagRender = GetNode<Node2D>("%FlagRender");
+        GeneralRender = GetNode<Node2D>("%GeneralRender");
         _tileSet = TileMap.TileSet;
 
         //读取图块集
@@ -130,7 +139,7 @@ public partial class MapController : CanvasGroup
             for (var x = 0; x < Master.地图宽; x++)
             {
                 var landIndex = ParserHelper.GetIndex(x, y, Master.地图宽);
-                LandUnit landUnit = new(this)
+                LandUnit landUnit = new()
                 {
                     Index = (short)landIndex,
                     RegionIndex = (short)ParserHelper.GetIndex(x + Master.地图截取x, y + Master.地图截取y, Bin.Width),
@@ -159,17 +168,7 @@ public partial class MapController : CanvasGroup
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
                     foreach (LandUnit landUnit in LandUnits[start..end])
-                    {
-                        landUnit.UpdateProvince(landUnit.Province);
-                        if (Countries.TryGetValue(landUnit.Belong, out Country country))
-                            foreach (Wc4ResourceElement wc4ResourceElement in Tacticalmap.Images.ImageList)
-                                if (wc4ResourceElement.Name == $"f_{country.国家:D2}.png")
-                                {
-                                    Vector2I atlasCoords = new(wc4ResourceElement.X, wc4ResourceElement.Y);
-                                    // TileMap.SetCell(FlagLayer, landUnit.Coords, TacticalmapTileSetAtlasId, atlasCoords);
-                                    break;
-                                }
-                    }
+                        landUnit.UpdateProvince();
 
                     // ReSharper disable once AccessToDisposedClosure
                     countdown.Signal();
@@ -225,7 +224,7 @@ public partial class MapController : CanvasGroup
             if (LandUnits.TryGetValue(GetBtlIndex(capital.坐标), out LandUnit landUnit))
                 landUnit.Capital = capital;
     }
-    
+
     //地形绘制
     private void DrawTopography()
     {
@@ -296,7 +295,7 @@ public partial class MapController : CanvasGroup
             }
         }
     }
-    
+
     //读取图块集
     private int LoadTileSetAtlasSource(Wc4ResourceParser wc4ResourceParser, Vector2I offset = default)
     {
@@ -585,7 +584,7 @@ public partial class MapController : CanvasGroup
                             else //释放
                             {
                                 if (_selectLand == null) return;
-                                
+
                                 //军队交换
                                 Vector2I vector2I = TileMap.LocalToMap(_selectLand.Position + _delta);
                                 if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
@@ -609,7 +608,10 @@ public partial class MapController : CanvasGroup
                         {
                             //计算位置
                             _delta = GetGlobalMousePosition() - _mousePosition;
-                            _selectLand.ArmySprite.Position = _selectLand.Position + _delta;
+                            if (_selectLand.ArmySprite is { } armySprite)
+                                armySprite.Position = _selectLand.Position + _delta;
+                            if (_selectLand.GeneralSprite is { } generalSprite)
+                                generalSprite.Position = _selectLand.Position + _delta;
 
                             //设置TileMap选中
                             Vector2I vector2I = TileMap.LocalToMap(_selectLand.Position + _delta);
@@ -630,7 +632,7 @@ public partial class MapController : CanvasGroup
                     {
                         Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
                         if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
-                            _gameUI.SingeLandUnit = landUnit;
+                            GameUI.SingeLandUnit = landUnit;
 
                         //设置TileMap选中
                         TileMap.ClearLayer(SingleLayer);
@@ -659,18 +661,18 @@ public partial class MapController : CanvasGroup
                                 switch (MultiMode)
                                 {
                                     case 0:
-                                        if (!_gameUI.MultiLandUnit.Contains(landUnit))
+                                        if (!GameUI.MultiLandUnit.Contains(landUnit))
                                         {
                                             TileMap.SetCell(MultiLayer, vector2I, MultiTileSetAtlasId, new());
-                                            _gameUI.MultiLandUnit.Add(landUnit);
+                                            GameUI.MultiLandUnit.Add(landUnit);
                                         }
 
                                         break;
                                     case 1:
-                                        if (_gameUI.MultiLandUnit.Contains(landUnit))
+                                        if (GameUI.MultiLandUnit.Contains(landUnit))
                                         {
                                             TileMap.EraseCell(MultiLayer, vector2I);
-                                            _gameUI.MultiLandUnit.Remove(landUnit);
+                                            GameUI.MultiLandUnit.Remove(landUnit);
                                         }
 
                                         break;

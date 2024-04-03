@@ -102,7 +102,8 @@ public partial class GameUI : CanvasLayer
             {
                 坐标 = landUnit.RegionIndex
             };
-            landUnit.UpdateProvince(landUnit.RegionIndex);
+            landUnit.Province = landUnit.RegionIndex;
+            landUnit.UpdateProvince();
         }
 
         _mapController.ApplyShader();
@@ -113,7 +114,11 @@ public partial class GameUI : CanvasLayer
         EditWindow.CreateEdit("设置省规划", province =>
         {
             foreach (LandUnit landUnit in MultiLandUnit)
-                landUnit.UpdateProvince((short)province);
+            {
+                landUnit.Province = (short)province;
+                landUnit.UpdateProvince();
+            }
+
             _mapController.ApplyShader();
         });
     }
@@ -123,7 +128,11 @@ public partial class GameUI : CanvasLayer
         EditWindow.CreateEdit("设置归属", belong =>
         {
             foreach (LandUnit landUnit in MultiLandUnit)
-                landUnit.UpdateBelong((byte)belong);
+            {
+                landUnit.Belong = (byte)belong;
+                landUnit.UpdateBelong();
+            }
+
             _mapController.ApplyShader();
         });
     }
@@ -132,7 +141,6 @@ public partial class GameUI : CanvasLayer
     {
         foreach (LandUnit landUnit in MultiLandUnit)
             landUnit.Army = null;
-        _mapController.Additional.QueueRedraw();
     }
 
     private void MultiModeDeleteCity()

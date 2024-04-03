@@ -30,7 +30,7 @@ public partial class CameraController : Camera2D
     private Vector2 _position;
     private float _wheelValue = 1f;
     public float MaxZoom = 20f;
-    public float MinZoom = 0.5f;
+    public float MinZoom = 1f;
 
     private void WindowsCameraSet()
     {

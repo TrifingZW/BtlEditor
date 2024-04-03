@@ -193,7 +193,6 @@ public class LandUnit(MapController mapController)
                     TileMap.AddChild(ArmySprite);
                 }
 
-                ArmySprite.Army = Army;
                 UpdateArmy();
             }
             else
@@ -210,7 +209,7 @@ public class LandUnit(MapController mapController)
     public void UpdateArmy()
     {
         Army.坐标 = RegionIndex;
-
+        ArmySprite.Army = Army;
         foreach (GeneralJson generalJson in GeneralSettings.GeneralJsons)
         {
             if (generalJson.Id == Army.将领 && generalJson.Name != null)

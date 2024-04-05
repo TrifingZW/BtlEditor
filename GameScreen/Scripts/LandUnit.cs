@@ -53,13 +53,10 @@ public class LandUnit
     public void UpdateProvince()
     {
         if (!Sea)
-        {
             if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
                 LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
                     ? Color.Color8(country.R, country.G, country.B)
                     : Colors.White;
-            else LandColor = Colors.White;
-        }
     }
 
     #endregion

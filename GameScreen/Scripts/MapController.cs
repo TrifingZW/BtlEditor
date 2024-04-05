@@ -17,7 +17,7 @@ namespace BtlEditor.GameScreen.Scripts;
 public partial class MapController : CanvasGroup
 {
     //节点
-    public Camera2D Camera2D { get; set; }
+    public Camera2D Camera2D { get; private set; }
     private SubViewport _subViewport;
     private Sprite2D _land;
     private Node2D _topography;

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
+using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.UserInterface;
 using Godot;
 
-namespace BtlEditor.GameScreen.Scripts.Single;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public abstract partial class BaseSingle : ScrollContainer
 {
@@ -78,7 +79,7 @@ public abstract partial class BaseSingle : ScrollContainer
             var fields = reflect.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (FieldInfo field in fields)
             {
-                EditorItem editorItem = EditorItem.Instance;
+                var editorItem = EditorItem.Instance;
                 if (field.GetCustomAttribute<EditorGroup>() is { } editorGroup)
                 {
                     if (editorGroup.Ignore) continue;
@@ -86,7 +87,7 @@ public abstract partial class BaseSingle : ScrollContainer
                         treeBar.Layout.AddChild(editorItem);
                     else
                     {
-                        TreeBar bar = TreeBar.Instance;
+                        var bar = TreeBar.Instance;
                         bar.Title = editorGroup.Group;
                         node.AddChild(bar);
                         TreeDirectory.Add(editorGroup.Group, bar);

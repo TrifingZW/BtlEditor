@@ -2,17 +2,18 @@
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
+using BtlEditor.GameScreen.Scripts.LandScripts.CustomSprite;
 using Godot;
 using static BtlEditor.CoreScripts.Parser.ParserHelper;
 using static BtlEditor.CoreScripts.StaticRes;
 
-namespace BtlEditor.GameScreen.Scripts;
+namespace BtlEditor.GameScreen.Scripts.LandScripts;
 
 public class LandUnit
 {
-    private static MapController MapController => MapController.Instance;
-    private LandUnit[] LandUnits => MapController.LandUnits;
-    private TileMap TileMap => MapController.TileMap;
+    private static MapController MapController => Game.Instance.MapController;
+    private static LandUnit[] LandUnits => MapController.LandUnits;
+    private static TileMap TileMap => MapController.TileMap;
     public short Index { get; init; }
     public short RegionIndex { get; init; }
     public int X { get; init; }
@@ -72,7 +73,7 @@ public class LandUnit
         set
         {
             _belong = value;
-            if (MapController.Instance.Countries.TryGetValue(Belong, out Country country))
+            if (MapController.Countries.TryGetValue(Belong, out Country country))
             {
                 if (FlagSprite == null)
                 {
@@ -93,9 +94,9 @@ public class LandUnit
 
     public void UpdateBelong()
     {
-        if (MapController.Instance.Countries.TryGetValue(Belong, out Country country))
+        if (MapController.Countries.TryGetValue(Belong, out Country country))
         {
-            Color color = Color.Color8(country.R, country.G, country.B);
+            var color = Color.Color8(country.R, country.G, country.B);
             foreach (LandUnit landUnit in LandUnits)
                 if (landUnit.Province == RegionIndex)
                     landUnit.LandColor = color;
@@ -248,6 +249,4 @@ public class LandUnit
     }
 
     #endregion
-
-    public static void UpdateRender() => MapController.ApplyShader();
 }

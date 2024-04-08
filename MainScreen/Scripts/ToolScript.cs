@@ -7,7 +7,7 @@ public partial class ToolScript : VBoxContainer
     public override void _Ready()
     {
         //设置
-        Button setting = GetNode<Button>("Setting");
+        var setting = GetNode<Button>("Setting");
         setting.Pressed += () =>
         {
             GetNode<SettingWindowScript>("SettingWindow").Load();
@@ -15,7 +15,7 @@ public partial class ToolScript : VBoxContainer
         };
 
         //退出
-        Button exit = GetNode<Button>("Exit");
+        var exit = GetNode<Button>("Exit");
         exit.Pressed += () => { GetTree().Quit(); };
     }
 }

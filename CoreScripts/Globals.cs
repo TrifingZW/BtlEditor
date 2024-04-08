@@ -7,10 +7,8 @@ public partial class Globals : Node
 {
     public static bool Win => OS.GetName() == "Windows";
 
-    private static readonly ConfigFile Setting = new();
-    private static readonly ConfigFile Work = new();
-    private static readonly string SettingFile = $"{FilePath}/config.cfg";
-    private static readonly string WorkFile = $"{FilePath}/work.cfg";
+    private static readonly ConfigFile Config = new();
+    private static readonly string ConfigPath = $"{FilePath}/config.cfg";
 
 
     public static float ShaderScale => Shader switch
@@ -51,16 +49,15 @@ public partial class Globals : Node
 
     public static void Load()
     {
-        Setting.Load(SettingFile);
-        Scale = Setting.GetValue("Setting", "Scale", Variant.From(1.0f)).AsSingle();
-        Fps = Setting.GetValue("Setting", "Fps", Variant.From(0)).AsInt32();
-        Shader = Setting.GetValue("Setting", "Shader", Variant.From(1)).AsInt32();
-        WindowMode = Setting.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
-        VSync = Setting.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
+        Config.Load(ConfigPath);
+        Scale = Config.GetValue("Setting", "Scale", Variant.From(1.0f)).AsSingle();
+        Fps = Config.GetValue("Setting", "Fps", Variant.From(0)).AsInt32();
+        Shader = Config.GetValue("Setting", "Shader", Variant.From(1)).AsInt32();
+        WindowMode = Config.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
+        VSync = Config.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
 
-        Work.Load(WorkFile);
-        WorkPath = Work.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
-        BtlPath = Work.GetValue("Work", "BtlPath", $"{StagePath}/conquest5.btl").AsString();
+        WorkPath = Config.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
+        BtlPath = Config.GetValue("Work", "BtlPath", $"{StagePath}/conquest5.btl").AsString();
 
         Save(Scale, Fps, Shader, WindowMode, VSync);
     }
@@ -73,15 +70,19 @@ public partial class Globals : Node
         WindowMode = windowMode;
         VSync = vSync;
 
-        Setting.SetValue("Setting", "Scale", Scale);
+        Config.SetValue("Setting", "Scale", Scale);
         _root.ContentScaleFactor = Scale;
-        Setting.SetValue("Setting", "Fps", Fps);
+        Config.SetValue("Setting", "Fps", Fps);
         Engine.MaxFps = FpsValue;
-        Setting.SetValue("Setting", "Shader", Shader);
-        Setting.SetValue("Setting", "WindowMode", WindowMode);
+        Config.SetValue("Setting", "Shader", Shader);
+        Config.SetValue("Setting", "WindowMode", WindowMode);
         DisplayServer.WindowSetMode((DisplayServer.WindowMode)WindowMode);
-        Setting.SetValue("Setting", "VSync", VSync);
+        Config.SetValue("Setting", "VSync", VSync);
         DisplayServer.WindowSetVsyncMode((DisplayServer.VSyncMode)VSync);
-        Setting.Save(SettingFile);
+
+        Config.SetValue("Work", "WorkPath", WorkPath);
+        Config.SetValue("Work", "BtlPath", BtlPath);
+
+        Config.Save(ConfigPath);
     }
 }

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using BtlEditor.CoreScripts.Structures;
-using BtlEditor.GameScreen.Scripts.Single;
+using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.GameScreen.Scripts.Windows;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using BaseSingle = BtlEditor.GameScreen.Scripts.MapUIScripts.Single.BaseSingle;
 
-namespace BtlEditor.GameScreen.Scripts;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts;
 
-public partial class GameUI : CanvasLayer
+public partial class MapUI : CanvasLayer
 {
     public LandUnit SingeLandUnit
     {
@@ -23,7 +24,7 @@ public partial class GameUI : CanvasLayer
 
     public List<LandUnit> MultiLandUnit { get; } = [];
 
-    private MapController _mapController;
+    private static MapController MapController => Game.Instance.MapController;
 
     //数据面板
     private PanelContainer _dataContainer;
@@ -38,13 +39,9 @@ public partial class GameUI : CanvasLayer
 
     //Windows
     public EditWindow EditWindow { get; private set; }
-    public static GameUI Instance { get; private set; }
 
     public override void _Ready()
     {
-        Instance = this;
-
-        _mapController = GetNode<MapController>("%CanvasGroup");
         _dataContainer = GetNode<PanelContainer>("%DataContainer");
         _dataTabContainer = GetNode<TabContainer>("%DataTabContainer");
         _multiContainer = GetNode<PanelContainer>("%MultiContainer");
@@ -72,15 +69,15 @@ public partial class GameUI : CanvasLayer
                 break;
         }
 
-        _mapController.UtilMode = (int)index;
+        MapController.UtilMode = (int)index;
     }
 
-    private void MultiModeTabSelect(long index) => _mapController.MultiMode = (int)index;
+    private void MultiModeTabSelect(long index) => MapController.MultiMode = (int)index;
 
     private void MultiModeClear()
     {
         MultiLandUnit.Clear();
-        _mapController.TileMap.ClearLayer(MapController.MultiLayer);
+        MapController.TileMap.ClearLayer(MapController.MultiLayer);
     }
 
     private void MultiModeCreateArmy()
@@ -98,7 +95,7 @@ public partial class GameUI : CanvasLayer
         foreach (LandUnit landUnit in MultiLandUnit)
         {
             if (landUnit.City != null) continue;
-            landUnit.City = new()
+            landUnit.City = new City
             {
                 坐标 = landUnit.RegionIndex
             };
@@ -106,7 +103,7 @@ public partial class GameUI : CanvasLayer
             landUnit.UpdateProvince();
         }
 
-        _mapController.ApplyShader();
+        MapController.UpdateShader();
     }
 
     private void MultiModeSetProvince()
@@ -119,7 +116,7 @@ public partial class GameUI : CanvasLayer
                 landUnit.UpdateProvince();
             }
 
-            _mapController.ApplyShader();
+            MapController.UpdateShader();
         });
     }
 
@@ -133,7 +130,7 @@ public partial class GameUI : CanvasLayer
                 landUnit.UpdateBelong();
             }
 
-            _mapController.ApplyShader();
+            MapController.UpdateShader();
         });
     }
 

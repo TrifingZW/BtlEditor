@@ -26,20 +26,47 @@ public partial class CameraController : Camera2D
     #region Windows视角控制器
 
     private bool _rightButtonPressed;
-    private Vector2 _mousePosition;
-    private Vector2 _position;
     private float _wheelValue = 1f;
-    public float MaxZoom = 20f;
-    public float MinZoom = 1f;
+    private float _maxZoom = 20f;
+    private float _minZoom = 1f;
+
+    private Vector2 _targetPosition = Vector2.Zero;
+
+    public Vector2 TargetPosition
+    {
+        get => _targetPosition;
+        set
+        {
+            if (value == Vector2.Zero) return;
+            _targetPosition = value;
+            _target = true;
+        }
+    }
+
+    private bool _target;
 
     private void WindowsCameraSet()
     {
-        _wheelValue = Mathf.Clamp(_wheelValue, MinZoom, MaxZoom);
+        _wheelValue = Mathf.Clamp(_wheelValue, _minZoom, _maxZoom);
         Zoom = Zoom.Lerp(Vector2.One * _wheelValue / 5f, 0.2f);
+
+        //目标位置插值
+        if (!_target || TargetPosition == Vector2.Zero) return;
+        Position = Position.Lerp(TargetPosition, 0.2f);
+        if (Position.DistanceTo(TargetPosition) < 1f)
+        {
+            _target = false;
+            Position = TargetPosition;
+            TargetPosition = Vector2.Zero;
+        }
     }
+
+    private Vector2 _mousePosition;
+    private Vector2 _position;
 
     private void WindowsController(InputEvent inputEvent)
     {
+        if (_target) return;
         if (inputEvent is InputEventMouseMotion eventMouseMotion && _rightButtonPressed)
         {
             Vector2 mousePosition = eventMouseMotion.Position;

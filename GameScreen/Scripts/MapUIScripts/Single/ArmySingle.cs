@@ -4,7 +4,7 @@ using BtlEditor.UserInterface;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 
-namespace BtlEditor.GameScreen.Scripts.Single;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class ArmySingle : BaseSingle
 {
@@ -37,7 +37,7 @@ public partial class ArmySingle : BaseSingle
 
         if (LandUnit.Army is { } army)
         {
-            EditorItem editorItem = EditorItem.Instance;
+            var editorItem = EditorItem.Instance;
             editorItem.Head.AddChild(new Label { Text = "方向" });
             MainTreeBar.Layout.AddChild(editorItem);
             OptionButton optionButton = new();

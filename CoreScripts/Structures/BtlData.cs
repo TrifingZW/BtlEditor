@@ -53,10 +53,10 @@ public class Country
     public int 战败条件;
     public float 兵种加成;
     public float 税率加成;
-    public byte R;
-    public byte G;
-    public byte B;
-    public byte A;
+    [EditorGroup(ignore: true)] public byte R;
+    [EditorGroup(ignore: true)] public byte G;
+    [EditorGroup(ignore: true)] public byte B;
+    [EditorGroup(ignore: true)] public byte A;
     public int 原子弹数量;
     public int 氢弹数量;
     public int 三相弹数量;

@@ -1,7 +1,7 @@
 ﻿using BtlEditor.UserInterface;
 using Godot;
 
-namespace BtlEditor.GameScreen.Scripts.Single;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class LandSingle : BaseSingle
 {
@@ -12,10 +12,10 @@ public partial class LandSingle : BaseSingle
         short province = -1;
         byte belong = 255;
 
-        TreeBar mainTreeBar = TreeBar.Instance;
+        var mainTreeBar = TreeBar.Instance;
         mainTreeBar.Title = "地块数据";
         TreeContainer.AddChild(mainTreeBar);
-        EditorItem coordsItem = EditorItem.Instance;
+        var coordsItem = EditorItem.Instance;
         mainTreeBar.Layout.AddChild(coordsItem);
         Label coordsLabel = new()
         {
@@ -30,10 +30,10 @@ public partial class LandSingle : BaseSingle
         };
         coordsItem.Content.AddChild(coords);
 
-        TreeBar provinceBar = TreeBar.Instance;
+        var provinceBar = TreeBar.Instance;
         provinceBar.Title = "省规划";
         TreeContainer.AddChild(provinceBar);
-        EditorItem provinceItem = EditorItem.Instance;
+        var provinceItem = EditorItem.Instance;
         provinceBar.Layout.AddChild(provinceItem);
         Label provinceLabel = new()
         {
@@ -54,14 +54,14 @@ public partial class LandSingle : BaseSingle
         {
             LandUnit.Province = province;
             LandUnit.UpdateProvince();
-            LandUnit.UpdateRender();
+            Game.Instance.MapController.UpdateShader();
         };
         provinceBar.Layout.AddChild(updateProvinceButton);
 
-        TreeBar belongBar = TreeBar.Instance;
+        var belongBar = TreeBar.Instance;
         belongBar.Title = "地块归属";
         TreeContainer.AddChild(belongBar);
-        EditorItem belongItem = EditorItem.Instance;
+        var belongItem = EditorItem.Instance;
         belongBar.Layout.AddChild(belongItem);
         Label belongLabel = new()
         {
@@ -82,7 +82,7 @@ public partial class LandSingle : BaseSingle
         {
             LandUnit.Belong = belong;
             LandUnit.UpdateBelong();
-            LandUnit.UpdateRender();
+            Game.Instance.MapController.UpdateShader();
         };
         belongBar.Layout.AddChild(updateBelongButton);
     }

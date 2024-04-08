@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace BtlEditor.GameScreen.Scripts.Single;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class CitySingle : BaseSingle
 {
@@ -19,7 +19,7 @@ public partial class CitySingle : BaseSingle
                     坐标 = LandUnit.RegionIndex
                 };
                 LandUnit.UpdateProvince();
-                LandUnit.UpdateRender();
+                Game.Instance.MapController.UpdateShader();
                 Update();
             };
             addCity.Text = "添加城市";

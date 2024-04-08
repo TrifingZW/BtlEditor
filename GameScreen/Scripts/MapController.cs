@@ -7,6 +7,8 @@ using BtlEditor.CoreScripts;
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
+using BtlEditor.GameScreen.Scripts.LandScripts;
+using BtlEditor.GameScreen.Scripts.MapUIScripts;
 using Godot;
 using static BtlEditor.CoreScripts.Parser.ParserHelper;
 using static BtlEditor.CoreScripts.StaticRes;
@@ -17,7 +19,9 @@ namespace BtlEditor.GameScreen.Scripts;
 public partial class MapController : CanvasGroup
 {
     //节点
-    public Camera2D Camera2D { get; private set; }
+    private static Game Game => Game.Instance;
+    public static Camera2D Camera2D => Game.CameraController;
+
     private SubViewport _subViewport;
     private Sprite2D _land;
     private Node2D _topography;
@@ -25,7 +29,8 @@ public partial class MapController : CanvasGroup
     private Sprite2D _seaRender;
     private Sprite2D _landRender;
     private TileSet _tileSet;
-    private static GameUI GameUI => GameUI.Instance;
+    private static MapUI MapUI => Game.MapUI;
+    private static DataUIScripts.DataUI DataUI => Game.DataUI;
     public Node2D ArmyRender { get; private set; }
     public Node2D FlagRender { get; private set; }
     public Node2D GeneralRender { get; private set; }
@@ -46,13 +51,13 @@ public partial class MapController : CanvasGroup
     public const int PitfallLayer = 3;
 
     //Btl数据
-    public List<Country> Countries { get; private set; }
+    public List<Country> Countries { get; } = Btl.Countries.ToList();
     public Topography[] Topographies { get; private set; }
-    public List<Weather> Weathers { get; private set; }
-    public List<Affair> Affairs { get; private set; }
-    public List<Strategy> Strategies { get; private set; }
-    public List<AirSupport> AirSupports { get; private set; }
-    public List<ArmyPlacement> ArmyPlacements { get; private set; }
+    public List<Weather> Weathers { get; } = Btl.Weathers.ToList();
+    public List<Affair> Affairs { get; } = Btl.Affairs.ToList();
+    public List<Strategy> Strategies { get; } = Btl.Strategies.ToList();
+    public List<AirSupport> AirSupports { get; } = Btl.AirSupports.ToList();
+    public List<ArmyPlacement> ArmyPlacements { get; } = Btl.ArmyPlacements.ToList();
 
     private static Master Master => Btl.Master;
 
@@ -64,14 +69,9 @@ public partial class MapController : CanvasGroup
     public Vector2I CanvasSize => new Vector2(TileMap.MapToLocal(new(Master.地图宽 - 1, 1)).X,
         TileMap.MapToLocal(new(1, Master.地图高 - 1)).Y).ToVector2I() + OffsetSize.ToVector2I();
 
-    public static MapController Instance { get; private set; }
 
     public override void _Ready()
     {
-        Instance = this;
-
-        Camera2D = GetNode<Camera2D>("%Camera2D");
-
         //SubViewport
         _subViewport = GetNode<SubViewport>("%SubViewport");
         _land = GetNode<Sprite2D>("%Land");
@@ -102,7 +102,7 @@ public partial class MapController : CanvasGroup
         SetSize();
 
         //应用着色器
-        ApplyShader();
+        UpdateShader();
     }
 
     //更新
@@ -111,13 +111,6 @@ public partial class MapController : CanvasGroup
     //设置数据
     private void SetData()
     {
-        Countries = Btl.Countries.ToList();
-        Weathers = Btl.Weathers.ToList();
-        Affairs = Btl.Affairs.ToList();
-        Strategies = Btl.Strategies.ToList();
-        AirSupports = Btl.AirSupports.ToList();
-        ArmyPlacements = Btl.ArmyPlacements.ToList();
-
         //读取地形
         if (Btl.IndependentTerrain)
             Topographies = Btl.Topographies;
@@ -354,9 +347,9 @@ public partial class MapController : CanvasGroup
     #endregion
 
     //应用着色器
-    public void ApplyShader()
+    public void UpdateShader()
     {
-        ShaderMaterial sprite2DMaterial1 = (ShaderMaterial)_landRender.Material;
+        var sprite2DMaterial1 = (ShaderMaterial)_landRender.Material;
         sprite2DMaterial1.SetShaderParameter("color_texture", ImageTexture.CreateFromImage(ColorUvImage));
     }
 
@@ -632,7 +625,7 @@ public partial class MapController : CanvasGroup
                     {
                         Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
                         if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
-                            GameUI.SingeLandUnit = landUnit;
+                            MapUI.SingeLandUnit = landUnit;
 
                         //设置TileMap选中
                         TileMap.ClearLayer(SingleLayer);
@@ -661,18 +654,18 @@ public partial class MapController : CanvasGroup
                                 switch (MultiMode)
                                 {
                                     case 0:
-                                        if (!GameUI.MultiLandUnit.Contains(landUnit))
+                                        if (!MapUI.MultiLandUnit.Contains(landUnit))
                                         {
                                             TileMap.SetCell(MultiLayer, vector2I, MultiTileSetAtlasId, new());
-                                            GameUI.MultiLandUnit.Add(landUnit);
+                                            MapUI.MultiLandUnit.Add(landUnit);
                                         }
 
                                         break;
                                     case 1:
-                                        if (GameUI.MultiLandUnit.Contains(landUnit))
+                                        if (MapUI.MultiLandUnit.Contains(landUnit))
                                         {
                                             TileMap.EraseCell(MultiLayer, vector2I);
-                                            GameUI.MultiLandUnit.Remove(landUnit);
+                                            MapUI.MultiLandUnit.Remove(landUnit);
                                         }
 
                                         break;
@@ -689,4 +682,28 @@ public partial class MapController : CanvasGroup
     }
 
     #endregion
+
+    public void RemoveCountry(int index)
+    {
+        foreach (Country country in Countries[index..Countries.Count])
+            country.序号--;
+
+        Countries.RemoveAt(index);
+
+        foreach (LandUnit landUnit in LandUnits)
+        {
+            if (landUnit.Belong == 0xff) continue;
+
+            if (landUnit.Belong == index)
+            {
+                landUnit.Belong = 0xff;
+                landUnit.UpdateBelong();
+            }
+
+            if (landUnit.Belong > index)
+                landUnit.Belong--;
+        }
+        
+        UpdateShader();
+    }
 }

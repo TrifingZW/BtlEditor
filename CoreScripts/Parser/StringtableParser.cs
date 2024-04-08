@@ -12,6 +12,7 @@ public class StringtableParser
     public GeneralName GeneralName { get; set; }
     public ArmyName ArmyName { get; set; }
     public CityName CityName { get; set; }
+    public CountryName CountryName { get; set; }
 
 
     public StringtableParser Parser()
@@ -28,6 +29,7 @@ public class StringtableParser
             GeneralName = new(Global);
             ArmyName = new(Global);
             CityName = new(Global);
+            CountryName = new(Global);
             return this;
         }
         catch (Exception e)
@@ -55,6 +57,11 @@ public class ArmyName(KeyDataCollection global)
 public class CityName(KeyDataCollection global)
 {
     public string this[string id] => global[$"battle_cityname_{id}"];
+}
+
+public class CountryName(KeyDataCollection global)
+{
+    public string this[int id] => global[$"country_{id}"];
 }
 
 public class Rank(KeyDataCollection global)

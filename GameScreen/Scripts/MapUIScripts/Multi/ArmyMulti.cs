@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using BtlEditor.CoreScripts.Structures;
+using BtlEditor.GameScreen.Scripts.LandScripts;
 using static BtlEditor.CoreScripts.StaticRes;
 
-namespace BtlEditor.GameScreen.Scripts.Multi;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Multi;
 
 public partial class ArmyMulti : BaseMulti
 {

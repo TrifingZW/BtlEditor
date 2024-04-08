@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using BtlEditor.CoreScripts.Structures;
+using BtlEditor.GameScreen.Scripts.LandScripts;
 
-namespace BtlEditor.GameScreen.Scripts.Multi;
+namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Multi;
 
 public partial class CityMulti : BaseMulti
 {

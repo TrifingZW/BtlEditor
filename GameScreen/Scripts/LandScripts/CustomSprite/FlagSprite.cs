@@ -3,7 +3,7 @@ using BtlEditor.CoreScripts.Utils;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 
-namespace BtlEditor.GameScreen.Scripts;
+namespace BtlEditor.GameScreen.Scripts.LandScripts.CustomSprite;
 
 public partial class FlagSprite : Sprite2D
 {
@@ -50,7 +50,7 @@ public partial class FlagSprite : Sprite2D
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector2 zoom = MapController.Instance.Camera2D.Zoom * 1.35f;
+        Vector2 zoom = MapController.Camera2D.Zoom * 1.35f;
         Scale = Vector2.One / zoom.ClampUV();
     }
 }

@@ -3,7 +3,7 @@ using BtlEditor.CoreScripts.Structures;
 using Godot;
 using static BtlEditor.CoreScripts.TileSetDictionary;
 
-namespace BtlEditor.GameScreen.Scripts;
+namespace BtlEditor.GameScreen.Scripts.LandScripts.CustomSprite;
 
 public partial class ArmySprite : AnimatedSprite2D
 {

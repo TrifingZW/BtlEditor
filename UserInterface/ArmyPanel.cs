@@ -6,7 +6,7 @@ public partial class ArmyPanel : PanelContainer
 {
     private static readonly PackedScene TreeItemScene = (PackedScene)ResourceLoader.Load("res://UserInterface/ArmyPanel.tscn");
     public static ArmyPanel Instance => TreeItemScene.Instantiate<ArmyPanel>();
-    public TextureRect GeneralRect => GetNode<TextureRect>("%TextureRect");
+    public Button GeneralButton => GetNode<Button>("%GeneralButton");
     public Label ArmyName => GetNode<Label>("%ArmyName");
     public VBoxContainer GeneralContainer => GetNode<VBoxContainer>("%GeneralContainer");
     public Label GeneralName => GetNode<Label>("%GeneralName");

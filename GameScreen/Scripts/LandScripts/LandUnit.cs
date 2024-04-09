@@ -51,13 +51,13 @@ public class LandUnit
 
     public short Province { get; set; }
 
-    public void UpdateProvince()
+    public void UpdateProvinceColor()
     {
-        if (!Sea)
-            if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
-                LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
-                    ? Color.Color8(country.R, country.G, country.B)
-                    : Colors.White;
+        if (Sea) return;
+        if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
+            LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
+                ? Color.Color8(country.R, country.G, country.B)
+                : Colors.White;
     }
 
     #endregion
@@ -72,7 +72,23 @@ public class LandUnit
         get => _belong;
         set
         {
-            _belong = value;
+            if (Army is null && City is null) _belong = 0xff;
+            else
+            {
+                _belong = value;
+
+                foreach (Reinforcement reinforcement in Reinforcements)
+                    switch (reinforcement)
+                    {
+                        case Reinforcement1 reinforcement1:
+                            reinforcement1.所属国家 = Belong;
+                            break;
+                        case Reinforcement3 reinforcement3:
+                            reinforcement3.所属国家 = Belong;
+                            break;
+                    }
+            }
+
             if (MapController.Countries.TryGetValue(Belong, out Country country))
             {
                 if (FlagSprite == null)
@@ -92,7 +108,7 @@ public class LandUnit
         }
     }
 
-    public void UpdateBelong()
+    public void UpdateBelongColor()
     {
         if (MapController.Countries.TryGetValue(Belong, out Country country))
         {
@@ -132,6 +148,10 @@ public class LandUnit
                 _cityLabel?.QueueFree();
                 _cityLabel = null;
                 TileMap.EraseCell(MapController.BuildLayer, Coords);
+                if (Army is not null || City is not null) return;
+                Belong = 0xff;
+                UpdateBelongColor();
+                MapController.UpdateShader();
             }
         }
     }
@@ -245,6 +265,10 @@ public class LandUnit
             GeneralSprite = null;
             ArmySprite?.QueueFree();
             ArmySprite = null;
+            if (Army is not null || City is not null) return;
+            Belong = 0xff;
+            UpdateBelongColor();
+            MapController.UpdateShader();
         }
     }
 

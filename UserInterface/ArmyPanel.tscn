@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://ncav1qig5xix"]
+[gd_scene load_steps=12 format=3 uid="uid://ncav1qig5xix"]
 
 [ext_resource type="Script" path="res://UserInterface/ArmyPanel.cs" id="1_xft3s"]
 [ext_resource type="Script" path="res://UserInterface/RibbonRect.cs" id="2_0xenl"]
 [ext_resource type="Script" path="res://UserInterface/MedalRect.cs" id="2_g0iy6"]
+[ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="2_wgdrp"]
 [ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="4_5uv6t"]
 [ext_resource type="Script" path="res://UserInterface/StarRect.cs" id="5_yqbh2"]
 [ext_resource type="Texture2D" uid="uid://cson2xtqv7ct0" path="res://Assets/Textures/general_ability_3.png" id="6_edw1e"]
@@ -37,13 +38,13 @@ theme_override_constants/margin_bottom = 16
 
 [node name="ArmyName" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 autowrap_mode = 1
 
 [node name="GeneralContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer"]
@@ -53,14 +54,16 @@ theme_override_constants/separation = 32
 [node name="VBoxContainer1" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
+[node name="GeneralButton" type="Button" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
-stretch_mode = 3
+focus_mode = 0
+icon = ExtResource("2_wgdrp")
 
 [node name="GeneralName" type="Label" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "无将领"
 horizontal_alignment = 1
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]

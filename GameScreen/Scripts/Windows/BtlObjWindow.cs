@@ -1,5 +1,7 @@
+using System;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
+using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
 using Godot;
 
@@ -7,82 +9,66 @@ namespace BtlEditor.GameScreen.Scripts.Windows;
 
 public partial class BtlObjWindow : Window
 {
-    private VBoxContainer _vboxContainer;
+    private VBoxContainer _windowContainer;
+    private VBoxContainer _editorContainer;
 
     public override void _Ready()
     {
         CloseRequested += () => Visible = false;
-        _vboxContainer = GetNode<VBoxContainer>("ScrollContainer/MarginContainer/VBoxContainer");
+        _windowContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer");
+        _editorContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer/ScrollContainer/EditorContainer");
     }
 
-    public void CreateEdit<T>(T obj)
+    public void CreateEdit<T>(T obj, Action<T> action) where T : ICloneable
     {
-        foreach (Node child in _vboxContainer.GetChildren())
+        var newObj = (T)obj.Clone();
+
+        foreach (Node child in _windowContainer.GetChildren())
+            if (child is Button)
+                child.QueueFree();
+        foreach (Node child in _editorContainer.GetChildren())
             child.QueueFree();
-        var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-        foreach (FieldInfo field in fields)
+
+        Type t = typeof(T);
+        if (t.BaseType is { } baseType)
+            Parser(baseType);
+        Parser(t);
+
+        Button button = new()
         {
-            if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
-
-            var editorItem = EditorItem.Instance;
-            editorItem.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-
-            _vboxContainer.AddChild(editorItem);
-            Label label = new()
-            {
-                Text = Tr(field.Name),
-                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
-            };
-            editorItem.Head.AddChild(label);
-            SpinBox spinBox = new();
-            spinBox.UpdateOnTextChanged = true;
-            switch (field.FieldType)
-            {
-                case { } type when type == typeof(byte):
-                    if (field.GetValue(obj) is byte b)
-                    {
-                        spinBox.MinValue = byte.MinValue;
-                        spinBox.MaxValue = byte.MaxValue;
-                        spinBox.Value = b;
-                        spinBox.ValueChanged += value => field.SetValue(obj, (byte)value);
-                    }
-
-                    break;
-                case { } type when type == typeof(short):
-                    if (field.GetValue(obj) is short s)
-                    {
-                        spinBox.MinValue = short.MinValue;
-                        spinBox.MaxValue = short.MaxValue;
-                        spinBox.Value = s;
-                        spinBox.ValueChanged += value => field.SetValue(obj, (short)value);
-                    }
-
-                    break;
-                case { } type when type == typeof(int):
-                    if (field.GetValue(obj) is int i)
-                    {
-                        spinBox.MinValue = int.MinValue;
-                        spinBox.MaxValue = int.MaxValue;
-                        spinBox.Value = i;
-                        spinBox.ValueChanged += value => field.SetValue(obj, (int)value);
-                    }
-
-                    break;
-                case { } type when type == typeof(float):
-                    if (field.GetValue(obj) is float f)
-                    {
-                        spinBox.MinValue = float.MinValue;
-                        spinBox.MaxValue = float.MaxValue;
-                        spinBox.Value = f;
-                        spinBox.ValueChanged += value => field.SetValue(obj, (float)value);
-                    }
-
-                    break;
-            }
-
-            editorItem.Content.AddChild(spinBox);
-        }
-
+            Text = Tr("确定保存"),
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
+        };
+        button.Pressed += () =>
+        {
+            action(newObj);
+            Visible = false;
+        };
+        _windowContainer.AddChild(button);
         Show();
+
+        return;
+
+        void Parser(IReflect reflect)
+        {
+            var fields = reflect.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            foreach (FieldInfo field in fields)
+            {
+                if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
+
+                var editorItem = EditorItem.Instance;
+                editorItem.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+
+                Label label = new()
+                {
+                    Text = Tr(field.Name),
+                    SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
+                };
+                editorItem.Head.AddChild(label);
+                SpinBox spinBox = Helpers.ReflectionSpinBox(newObj, field);
+                editorItem.Content.AddChild(spinBox);
+                _editorContainer.AddChild(editorItem);
+            }
+        }
     }
 }

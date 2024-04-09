@@ -17,7 +17,7 @@ public class BtlParser
     public byte[] Belongs;
     public City[] Cities;
     public Army1[] Armies1;
-    public Army3[] Armies3;
+    public Army2[] Armies2;
     public Pitfall[] Pitfalls;
     public Scheme[] Schemes;
     public Weather[] Weathers;
@@ -56,13 +56,13 @@ public class BtlParser
             Belongs = reader.ReadBytes(Master.地块总数);
             Cities = ReadToClassArray<City>(reader, Master.建筑总数);
             if (Version1) Armies1 = ReadToClassArray<Army1>(reader, Master.军队总数);
-            if (Version2 || Version3) Armies3 = ReadToClassArray<Army3>(reader, Master.军队总数);
+            if (Version2 || Version3) Armies2 = ReadToClassArray<Army2>(reader, Master.军队总数);
             Pitfalls = ReadToClassArray<Pitfall>(reader, Master.陷阱总数);
             Schemes = ReadToClassArray<Scheme>(reader, Master.方案总数);
             Weathers = ReadToClassArray<Weather>(reader, Master.天气总数);
             Affairs = ReadToClassArray<Affair>(reader, Master.事件总数);
-            if (Version1) Reinforcements1 = ReadToClassArray<Reinforcement1>(reader, Master.援军总数);
-            if (Version2 || Version3) Reinforcements3 = ReadToClassArray<Reinforcement3>(reader, Master.援军总数);
+            if (Version1 || Version2) Reinforcements1 = ReadToClassArray<Reinforcement1>(reader, Master.援军总数);
+            if (Version3) Reinforcements3 = ReadToClassArray<Reinforcement3>(reader, Master.援军总数);
             AirRaids = ReadToClassArray<AirRaid>(reader, Master.空袭总数);
             ArmyPlacements = ReadToClassArray<ArmyPlacement>(reader, Master.放置单位A + Master.放置单位B);
             Capitals = ReadToClassArray<Capital>(reader, Master.国家首都);

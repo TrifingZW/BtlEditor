@@ -1,4 +1,5 @@
-﻿using BtlEditor.CoreScripts.Attributes;
+﻿using System;
+using BtlEditor.CoreScripts.Attributes;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnassignedField.Global
@@ -7,43 +8,43 @@ namespace BtlEditor.CoreScripts.Structures;
 
 public class Master
 {
-    public int Btl版本;
-    public int 地图序号;
-    public int 地图截取x;
-    public int 地图截取y;
-    public int 地图宽;
-    public int 地图高;
-    public int 军团总数;
-    public int 建筑总数;
-    public int 军队总数;
-    public int 方案总数;
-    public int 事件总数;
-    public int 天气总数;
+    [EditorGroup(ignore: true)] public int Btl版本;
+    [EditorGroup(ignore: true)] public int 地图序号;
+    [EditorGroup(ignore: true)] public int 地图截取x;
+    [EditorGroup(ignore: true)] public int 地图截取y;
+    [EditorGroup(ignore: true)] public int 地图宽;
+    [EditorGroup(ignore: true)] public int 地图高;
+    [EditorGroup(ignore: true)] public int 军团总数;
+    [EditorGroup(ignore: true)] public int 建筑总数;
+    [EditorGroup(ignore: true)] public int 军队总数;
+    [EditorGroup(ignore: true)] public int 方案总数;
+    [EditorGroup(ignore: true)] public int 事件总数;
+    [EditorGroup(ignore: true)] public int 天气总数;
     public int 胜利条件;
     public int 最小回合;
     public int 最大回合;
-    public int 援军总数;
-    public int 空袭总数;
-    public int 放置单位A;
-    public int 放置单位B;
-    public int 国家首都;
+    [EditorGroup(ignore: true)] public int 援军总数;
+    [EditorGroup(ignore: true)] public int 空袭总数;
+    [EditorGroup(ignore: true)] public int 放置单位A;
+    [EditorGroup(ignore: true)] public int 放置单位B;
+    [EditorGroup(ignore: true)] public int 国家首都;
     public int 战役时代;
     public int empty4;
-    public int 地块总数;
+    [EditorGroup(ignore: true)] public int 地块总数;
     public int 积攒金钱;
     public int 积攒齿轮;
     public int 积攒原子;
-    public int 陷阱总数;
+    [EditorGroup(ignore: true)] public int 陷阱总数;
     public int empty5;
-    public int 战略总数;
+    [EditorGroup(ignore: true)] public int 战略总数;
     public int empty6;
     public int empty7;
-    public int 空中支援;
+    [EditorGroup(ignore: true)] public int 空中支援;
 }
 
-public class Country
+public class Country : ICloneable
 {
-    public int 序号;
+    [EditorGroup(ignore: true)] public int 序号;
     public int 国家;
     public int 金钱;
     public int 齿轮;
@@ -121,6 +122,8 @@ public class Country
     public int 科技等级;
     public int empty5;
     public int empty6;
+
+    public object Clone() => MemberwiseClone();
 }
 
 public class Topography
@@ -232,7 +235,7 @@ public class Army
 
 public class Army1 : Army
 {
-    public static explicit operator Army1(Army3 a3)
+    public static explicit operator Army1(Army2 a3)
     {
         return new()
         {
@@ -276,7 +279,7 @@ public class Army1 : Army
     }
 }
 
-public class Army3 : Army
+public class Army2 : Army
 {
     public byte empty3;
     public byte empty4;
@@ -289,7 +292,7 @@ public class Army3 : Army
     [EditorGroup("将领")] public short 勋带3;
     public int empty9;
 
-    public static explicit operator Army3(Army1 a)
+    public static explicit operator Army2(Army1 a)
     {
         return new()
         {
@@ -345,7 +348,7 @@ public class Army3 : Army
 
 public class Pitfall
 {
-    public short 坐标;
+    [EditorGroup(ignore: true)] public short 坐标;
     public short 所属军团;
     public short 陷阱编制;
     public int 陷阱血量;
@@ -360,15 +363,16 @@ public class Scheme
     public int 目标地块;
 }
 
-public class Weather
+public class Weather : ICloneable
 {
     public int 天气类型;
     public int empty;
     public int 触发回合;
     public int 持续回合;
+    public object Clone() => MemberwiseClone();
 }
 
-public class Affair
+public class Affair : ICloneable
 {
     public int 事件ID;
     public int 关联事件;
@@ -380,12 +384,13 @@ public class Affair
     public int Zero;
     public int 触发回合;
     public int 对话代码;
-    public int 默认结束段;
+    public int 默认结束段 = -858993664;
+    public object Clone() => MemberwiseClone();
 }
 
-public class Reinforcement
+public class Reinforcement : ICloneable
 {
-    public int 坐标;
+    [EditorGroup(ignore: true)] public int 坐标;
     public int 兵种;
     public int 等级;
     public int 编制;
@@ -400,6 +405,7 @@ public class Reinforcement
     public int 技能等级3;
     public int 技能等级4;
     public int 技能等级5;
+    public object Clone() => MemberwiseClone();
 }
 
 public class Reinforcement1 : Reinforcement
@@ -440,9 +446,9 @@ public class Reinforcement1 : Reinforcement
 
 public class Reinforcement3 : Reinforcement
 {
-    public int 勋章1;
-    public int 勋章2;
-    public int 勋章3;
+    [EditorGroup(ignore: true)] public int 勋章1;
+    [EditorGroup(ignore: true)] public int 勋章2;
+    [EditorGroup(ignore: true)] public int 勋章3;
     public int 所属国家;
     public int 爆兵回合;
     public int 胸章1;
@@ -486,17 +492,18 @@ public class Reinforcement3 : Reinforcement
     }
 }
 
-public class AirRaid
+public class AirRaid : ICloneable
 {
-    public int 坐标;
+    [EditorGroup(ignore: true)] public int 坐标;
     public short 兵种;
     public short 精英兵种;
     public int 弹药;
     public int 军团;
     public int 回合;
+    public object Clone() => MemberwiseClone();
 }
 
-public class ArmyPlacement
+public class ArmyPlacement : ICloneable
 {
     public short 坐标;
     public short empty;
@@ -504,6 +511,7 @@ public class ArmyPlacement
     public byte Id;
     public byte 运输船;
     public byte empty2;
+    public object Clone() => MemberwiseClone();
 }
 
 public class Capital
@@ -512,18 +520,20 @@ public class Capital
     public short empty;
 }
 
-public class Strategy
+public class Strategy : ICloneable
 {
     public int 军团序号;
     public int empty;
     public int 回合;
     public int 建设代码;
+    public object Clone() => MemberwiseClone();
 }
 
-public class AirSupport
+public class AirSupport : ICloneable
 {
     public int 兵种;
     public int 弹药;
     public int 军团;
     public int 回合;
+    public object Clone() => MemberwiseClone();
 }

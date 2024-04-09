@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
+using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.UserInterface;
 using Godot;
@@ -18,6 +19,7 @@ public abstract partial class BaseSingle : ScrollContainer
         set
         {
             _landUnit = value;
+            Clear();
             Update();
         }
     }
@@ -27,7 +29,7 @@ public abstract partial class BaseSingle : ScrollContainer
     protected VBoxContainer TreeContainer { get; }
     protected VBoxContainer EndContainer { get; }
 
-    protected TreeBar MainTreeBar { get;  set; }
+    protected TreeBar MainTreeBar { get; set; }
     protected readonly Dictionary<string, TreeBar> TreeDirectory = [];
 
     public BaseSingle()
@@ -49,7 +51,7 @@ public abstract partial class BaseSingle : ScrollContainer
 
     protected abstract void Update();
 
-    public virtual void Clear()
+    public void Clear()
     {
         foreach (Node child in HeadContainer.GetChildren())
             child.QueueFree();
@@ -102,42 +104,7 @@ public abstract partial class BaseSingle : ScrollContainer
                     SizeFlagsHorizontal = SizeFlags.ExpandFill
                 };
                 editorItem.Head.AddChild(label);
-                SpinBox spinBox = new();
-                spinBox.UpdateOnTextChanged = true;
-                switch (field.FieldType)
-                {
-                    case { } type when type == typeof(byte):
-                        if (field.GetValue(obj) is byte b)
-                        {
-                            spinBox.MinValue = byte.MinValue;
-                            spinBox.MaxValue = byte.MaxValue;
-                            spinBox.Value = b;
-                            spinBox.ValueChanged += value => field.SetValue(obj, (byte)value);
-                        }
-
-                        break;
-                    case { } type when type == typeof(short):
-                        if (field.GetValue(obj) is short s)
-                        {
-                            spinBox.MinValue = short.MinValue;
-                            spinBox.MaxValue = short.MaxValue;
-                            spinBox.Value = s;
-                            spinBox.ValueChanged += value => field.SetValue(obj, (short)value);
-                        }
-
-                        break;
-                    case { } type when type == typeof(int):
-                        if (field.GetValue(obj) is int i)
-                        {
-                            spinBox.MinValue = int.MinValue;
-                            spinBox.MaxValue = int.MaxValue;
-                            spinBox.Value = i;
-                            spinBox.ValueChanged += value => field.SetValue(obj, (int)value);
-                        }
-
-                        break;
-                }
-
+                SpinBox spinBox = Helpers.ReflectionSpinBox(obj, field);
                 spinBox.ValueChanged += _ => save();
                 editorItem.Content.AddChild(spinBox);
             }

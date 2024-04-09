@@ -27,7 +27,10 @@ mouse_filter = 1
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 30
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="Layout" type="VBoxContainer" parent="Panel/MarginContainer"]
 layout_mode = 2

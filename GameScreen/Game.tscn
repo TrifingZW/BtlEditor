@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c78ax6yhf632"]
+[gd_scene load_steps=42 format=3 uid="uid://c78ax6yhf632"]
 
 [ext_resource type="Script" path="res://GameScreen/Scripts/Game.cs" id="1_mv65n"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
@@ -16,13 +16,28 @@
 [ext_resource type="PackedScene" uid="uid://2un2y08h3sph" path="res://UserInterface/TreeBar.tscn" id="14_1irfd"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/DataUI.cs" id="14_q5mnu"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/LandSingle.cs" id="14_qxfg2"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/ReinforcementSingle.cs" id="15_d2f5v"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/EditWindow.cs" id="15_twsgt"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/CountryItemList.cs" id="16_gx6sn"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/ArmyMulti.cs" id="16_p4sxu"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/PitfallSingle.cs" id="16_x4yhr"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/CityMulti.cs" id="17_5lx2v"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/FlagItemList.cs" id="17_vpoy1"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/BtlObjWindow.cs" id="20_150s2"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/MasterContainer.cs" id="21_f7htb"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Dialog.cs" id="22_52ur2"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/WeatherItemList.cs" id="22_i713q"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AffairItemList.cs" id="23_7eqaa"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/StrategyItemList.cs" id="24_an2yb"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportItemList.cs" id="25_qafdh"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchWindow.cs" id="30_jmnxu"]
+[ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
+[ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="32_rr5n1"]
+[ext_resource type="Script" path="res://UserInterface/StarRect.cs" id="33_vv0hw"]
+[ext_resource type="Texture2D" uid="uid://cson2xtqv7ct0" path="res://Assets/Textures/general_ability_3.png" id="34_qtmey"]
+[ext_resource type="Texture2D" uid="uid://b835hsaec4s7q" path="res://Assets/Textures/general_ability_2.png" id="35_ijv8h"]
+[ext_resource type="Texture2D" uid="uid://gelx3i1nrqqw" path="res://Assets/Textures/general_ability_4.png" id="36_pvj65"]
+[ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="37_6i305"]
+[ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ffr3h"]
 shader = ExtResource("4_fbyr2")
@@ -123,6 +138,11 @@ tab_1/icon = ExtResource("9_3ud52")
 tab_2/title = "多选"
 tab_2/icon = ExtResource("10_x3imk")
 
+[node name="Save" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "保存文件"
+
 [node name="DataContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
 visible = false
@@ -141,6 +161,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 
 [node name="军队" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
@@ -168,6 +190,48 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
+
+[node name="爆兵" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+script = ExtResource("15_d2f5v")
+
+[node name="陷阱" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+script = ExtResource("16_x4yhr")
+
+[node name="方案" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+
+[node name="空袭" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
+
+[node name="国旗" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+vertical_scroll_mode = 3
 
 [node name="MultiContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
@@ -319,36 +383,6 @@ text = "确定"
 visible = false
 script = ExtResource("14_q5mnu")
 
-[node name="BtlObjWindow" type="Window" parent="DataUI"]
-unique_name_in_owner = true
-title = "国家设置"
-initial_position = 1
-size = Vector2i(800, 800)
-visible = false
-wrap_controls = true
-transient = true
-exclusive = true
-script = ExtResource("20_150s2")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="DataUI/BtlObjWindow"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="DataUI/BtlObjWindow/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="VBoxContainer" type="VBoxContainer" parent="DataUI/BtlObjWindow/ScrollContainer/MarginContainer"]
-layout_mode = 2
-
 [node name="PanelContainer" type="PanelContainer" parent="DataUI"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -364,9 +398,13 @@ theme_override_constants/separation = 0
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 60
-tab_count = 2
-tab_0/title = "国家列表"
-tab_1/title = "国旗列表"
+tab_count = 6
+tab_0/title = "主数据"
+tab_1/title = "国家列表"
+tab_2/title = "天气列表"
+tab_3/title = "事件列表"
+tab_4/title = "策略列表"
+tab_5/title = "空中支援"
 
 [node name="HSeparator" type="HSeparator" parent="DataUI/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -385,8 +423,24 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_tpis0")
 tabs_visible = false
 tab_focus_mode = 0
 
+[node name="ScrollContainer" type="ScrollContainer" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+
+[node name="PanelContainer" type="PanelContainer" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MasterContainer" type="VBoxContainer" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer/ScrollContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("21_f7htb")
+
 [node name="CountryItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
-unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -396,13 +450,49 @@ allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("16_gx6sn")
 
-[node name="FlagItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
-unique_name_in_owner = true
+[node name="WeatherItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-script = ExtResource("17_vpoy1")
+theme_override_font_sizes/font_size = 50
+allow_reselect = true
+icon_scale = 2.0
+script = ExtResource("22_i713q")
+
+[node name="AffairItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+mouse_force_pass_scroll_events = false
+theme_override_font_sizes/font_size = 50
+allow_reselect = true
+icon_scale = 2.0
+script = ExtResource("23_7eqaa")
+
+[node name="StrategyItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+mouse_force_pass_scroll_events = false
+theme_override_font_sizes/font_size = 50
+allow_reselect = true
+icon_scale = 2.0
+script = ExtResource("24_an2yb")
+
+[node name="AirSupportItemList" type="ItemList" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+mouse_force_pass_scroll_events = false
+theme_override_font_sizes/font_size = 50
+allow_reselect = true
+icon_scale = 2.0
+script = ExtResource("25_qafdh")
 
 [node name="PanelContainer" type="PanelContainer" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(400, 0)
@@ -434,12 +524,246 @@ text = "复制"
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 title = "警告"
 initial_position = 1
-size = Vector2i(400, 186)
+size = Vector2i(600, 200)
 ok_button_text = "确定"
 dialog_autowrap = true
 cancel_button_text = "取消"
 script = ExtResource("22_52ur2")
 
+[node name="BtlObjWindow" type="Window" parent="."]
+title = "设置"
+initial_position = 1
+size = Vector2i(800, 800)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+script = ExtResource("20_150s2")
+
+[node name="MarginContainer" type="MarginContainer" parent="BtlObjWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="WindowContainer" type="VBoxContainer" parent="BtlObjWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BtlObjWindow/MarginContainer/WindowContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EditorContainer" type="VBoxContainer" parent="BtlObjWindow/MarginContainer/WindowContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SearchGeneralWindow" type="Window" parent="."]
+title = "搜索将领"
+initial_position = 1
+size = Vector2i(900, 839)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+script = ExtResource("30_jmnxu")
+
+[node name="MarginContainer" type="MarginContainer" parent="SearchGeneralWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SearchGeneralWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "搜索"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+allow_search = false
+
+[node name="PanelContainer2" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer"]
+layout_mode = 2
+
+[node name="GeneralContainer" type="VBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="VBoxContainer1" type="VBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GeneralTexture" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("31_sotk3")
+stretch_mode = 3
+
+[node name="GeneralName" type="Label" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "无将领"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="VBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("32_rr5n1")
+
+[node name="Star1" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="PanelContainer2" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("34_qtmey")
+
+[node name="Star2" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="PanelContainer3" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("35_ijv8h")
+
+[node name="Star3" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="PanelContainer4" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("36_pvj65")
+
+[node name="Star4" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="PanelContainer5" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("37_6i305")
+
+[node name="Star5" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="PanelContainer6" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("38_vr06f")
+
+[node name="Star6" type="TextureRect" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
+unique_name_in_owner = true
+texture_repeat = 2
+layout_mode = 2
+stretch_mode = 3
+script = ExtResource("33_vv0hw")
+
+[node name="Button" type="Button" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "确定选择"
+
+[connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
 [connection signal="tab_selected" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="MapUI" method="MultiModeTabSelect"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI" method="MultiModeClear"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="MapUI" method="MultiModeCreateArmy"]
@@ -452,7 +776,7 @@ script = ExtResource("22_52ur2")
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button1" to="DataUI" method="Add"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button2" to="DataUI" method="Delete"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button3" to="DataUI" method="Set"]
-[connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button4" to="DataUI" method="Set"]
+[connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button4" to="DataUI" method="Copy"]
 
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel"]
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel"]

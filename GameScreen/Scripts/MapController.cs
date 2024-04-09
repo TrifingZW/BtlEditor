@@ -141,34 +141,9 @@ public partial class MapController : CanvasGroup
                     Position = TileMap.MapToLocal(new(x, y)),
                     Topography = Topographies[landIndex],
                     Province = Btl.Provinces[landIndex],
-                    Belong = Btl.Belongs[landIndex]
                 };
                 LandUnits[landIndex] = landUnit;
             }
-        }
-
-        var tasks = Master.地图高; //任务数
-        var handleCount = Master.地图宽; //每个任务的遍历数
-        using (CountdownEvent countdown = new(tasks))
-        {
-            for (var i = 0; i < tasks; i++)
-            {
-                var start = i * handleCount;
-                var end = (i + 1) * handleCount;
-                // 确保最后一个任务能够处理所有剩余的列表
-                if (i == tasks - 1)
-                    end = LandUnits.Length;
-                ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    foreach (LandUnit landUnit in LandUnits[start..end])
-                        landUnit.UpdateProvince();
-
-                    // ReSharper disable once AccessToDisposedClosure
-                    countdown.Signal();
-                });
-            }
-
-            countdown.Wait();
         }
 
         //读取城市
@@ -182,7 +157,7 @@ public partial class MapController : CanvasGroup
                 if (LandUnits.TryGetValue(GetBtlIndex(army.坐标), out LandUnit landUnit))
                     landUnit.Army = army;
         if (Btl.Version2 || Btl.Version3)
-            foreach (Army3 army in Btl.Armies3)
+            foreach (Army2 army in Btl.Armies2)
                 if (LandUnits.TryGetValue(GetBtlIndex(army.坐标), out LandUnit landUnit))
                     landUnit.Army = army;
 
@@ -216,6 +191,33 @@ public partial class MapController : CanvasGroup
         foreach (Capital capital in Btl.Capitals)
             if (LandUnits.TryGetValue(GetBtlIndex(capital.坐标), out LandUnit landUnit))
                 landUnit.Capital = capital;
+
+        //读取归属
+        for (var index = 0; index < Btl.Belongs.Length; index++)
+            LandUnits[index].Belong = Btl.Belongs[index];
+
+        //更新绘制
+        var tasks = Master.地图高; //任务数
+        var handleCount = Master.地图宽; //每个任务的遍历数
+        using CountdownEvent countdown = new(tasks);
+        for (var i = 0; i < tasks; i++)
+        {
+            var start = i * handleCount;
+            var end = (i + 1) * handleCount;
+            // 确保最后一个任务能够处理所有剩余的列表
+            if (i == tasks - 1)
+                end = LandUnits.Length;
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                foreach (LandUnit landUnit in LandUnits[start..end])
+                    landUnit.UpdateProvinceColor();
+
+                // ReSharper disable once AccessToDisposedClosure
+                countdown.Signal();
+            });
+        }
+
+        countdown.Wait();
     }
 
     //地形绘制
@@ -227,20 +229,20 @@ public partial class MapController : CanvasGroup
         {
             Topography topography = landUnit.Topography;
             foreach (Terrain terrain in terrains.ImageList)
-                if (topography.装饰类型A == terrain.TerrainG)
+                if (topography.装饰类型B == terrain.TerrainG)
                     foreach (Tile tile in terrain.Tiles)
-                        if (topography.装饰AID == tile.Idx)
-                            SetTexture(landUnit, new((sbyte)topography.装饰AX, (sbyte)topography.装饰AY), tile);
+                        if (topography.装饰BID == tile.Idx)
+                            SetTexture(landUnit, new((sbyte)topography.装饰BX, (sbyte)topography.装饰BY), tile);
         }
 
         foreach (LandUnit landUnit in LandUnits)
         {
             Topography topography = landUnit.Topography;
             foreach (Terrain terrain in terrains.ImageList)
-                if (topography.装饰类型B == terrain.TerrainG)
+                if (topography.装饰类型A == terrain.TerrainG)
                     foreach (Tile tile in terrain.Tiles)
-                        if (topography.装饰BID == tile.Idx)
-                            SetTexture(landUnit, new((sbyte)topography.装饰BX, (sbyte)topography.装饰BY), tile);
+                        if (topography.装饰AID == tile.Idx)
+                            SetTexture(landUnit, new((sbyte)topography.装饰AX, (sbyte)topography.装饰AY), tile);
         }
 
         foreach (LandUnit landUnit in LandUnits)
@@ -484,7 +486,7 @@ public partial class MapController : CanvasGroup
                 case Army1 army1:
                     army1.Serializable(binaryWriter);
                     break;
-                case Army3 army3:
+                case Army2 army3:
                     army3.Serializable(binaryWriter);
                     break;
             }
@@ -682,28 +684,4 @@ public partial class MapController : CanvasGroup
     }
 
     #endregion
-
-    public void RemoveCountry(int index)
-    {
-        foreach (Country country in Countries[index..Countries.Count])
-            country.序号--;
-
-        Countries.RemoveAt(index);
-
-        foreach (LandUnit landUnit in LandUnits)
-        {
-            if (landUnit.Belong == 0xff) continue;
-
-            if (landUnit.Belong == index)
-            {
-                landUnit.Belong = 0xff;
-                landUnit.UpdateBelong();
-            }
-
-            if (landUnit.Belong > index)
-                landUnit.Belong--;
-        }
-        
-        UpdateShader();
-    }
 }

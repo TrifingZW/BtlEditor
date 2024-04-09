@@ -1,4 +1,7 @@
+using BtlEditor.CoreScripts.Structures;
+using BtlEditor.GameScreen.Scripts.DataUIScripts;
 using BtlEditor.GameScreen.Scripts.MapUIScripts;
+using BtlEditor.GameScreen.Scripts.Windows;
 using Godot;
 
 namespace BtlEditor.GameScreen.Scripts;
@@ -8,8 +11,10 @@ public partial class Game : Node2D
     public MapController MapController { get; private set; }
     public CameraController CameraController { get; private set; }
     public MapUI MapUI { get; private set; }
-    public DataUIScripts.DataUI DataUI { get; private set; }
+    public DataUI DataUI { get; private set; }
     public static Dialog Dialog { get; private set; }
+    public static BtlObjWindow BtlObjWindow { get; private set; }
+    public static SearchWindow SearchWindow { get; private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -33,13 +38,21 @@ public partial class Game : Node2D
         }
     }
 
+    #region 粘贴板
+
+    public static Reinforcement ReinforcementCopy { get; set; }
+    
+    #endregion
+
     public override void _EnterTree()
     {
+        Instance = this;
         MapController = GetNode<MapController>("MapController");
         CameraController = GetNode<CameraController>("Camera2D");
-        Instance = this;
         MapUI = GetNode<MapUI>("MapUI");
-        DataUI = GetNode<DataUIScripts.DataUI>("DataUI");
+        DataUI = GetNode<DataUI>("DataUI");
+        BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
+        SearchWindow = GetNode<SearchWindow>("SearchGeneralWindow");
         Dialog = GetNode<Dialog>("Dialog");
     }
 

@@ -86,7 +86,7 @@ public partial class MapUI : CanvasLayer
         {
             if (landUnit.Army != null) continue;
             if (Btl.Version1) landUnit.Army = new Army1 { 坐标 = landUnit.RegionIndex };
-            if (Btl.Version2 || Btl.Version3) landUnit.Army = new Army3 { 坐标 = landUnit.RegionIndex };
+            if (Btl.Version2 || Btl.Version3) landUnit.Army = new Army2 { 坐标 = landUnit.RegionIndex };
         }
     }
 
@@ -100,7 +100,7 @@ public partial class MapUI : CanvasLayer
                 坐标 = landUnit.RegionIndex
             };
             landUnit.Province = landUnit.RegionIndex;
-            landUnit.UpdateProvince();
+            landUnit.UpdateProvinceColor();
         }
 
         MapController.UpdateShader();
@@ -113,7 +113,7 @@ public partial class MapUI : CanvasLayer
             foreach (LandUnit landUnit in MultiLandUnit)
             {
                 landUnit.Province = (short)province;
-                landUnit.UpdateProvince();
+                landUnit.UpdateProvinceColor();
             }
 
             MapController.UpdateShader();
@@ -127,7 +127,7 @@ public partial class MapUI : CanvasLayer
             foreach (LandUnit landUnit in MultiLandUnit)
             {
                 landUnit.Belong = (byte)belong;
-                landUnit.UpdateBelong();
+                landUnit.UpdateBelongColor();
             }
 
             MapController.UpdateShader();

@@ -7,8 +7,6 @@ public partial class LandSingle : BaseSingle
 {
     protected override void Update()
     {
-        Clear();
-
         short province = -1;
         byte belong = 255;
 
@@ -53,7 +51,7 @@ public partial class LandSingle : BaseSingle
         updateProvinceButton.Pressed += () =>
         {
             LandUnit.Province = province;
-            LandUnit.UpdateProvince();
+            LandUnit.UpdateProvinceColor();
             Game.Instance.MapController.UpdateShader();
         };
         provinceBar.Layout.AddChild(updateProvinceButton);
@@ -81,7 +79,7 @@ public partial class LandSingle : BaseSingle
         updateBelongButton.Pressed += () =>
         {
             LandUnit.Belong = belong;
-            LandUnit.UpdateBelong();
+            LandUnit.UpdateBelongColor();
             Game.Instance.MapController.UpdateShader();
         };
         belongBar.Layout.AddChild(updateBelongButton);

@@ -11,7 +11,7 @@ public partial class ArmyMulti : BaseMulti
     public override void Initialize()
     {
         if (Btl.Version1) ReflexStruct<Army1>();
-        if (Btl.Version2 || Btl.Version3) ReflexStruct<Army3>();
+        if (Btl.Version2 || Btl.Version3) ReflexStruct<Army2>();
     }
 
     protected override void Update(FieldInfo field, int value, LandUnit landUnit)

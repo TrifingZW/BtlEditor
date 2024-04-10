@@ -7,8 +7,7 @@ public partial class ArmyPanel : PanelContainer
     private static readonly PackedScene TreeItemScene = (PackedScene)ResourceLoader.Load("res://UserInterface/ArmyPanel.tscn");
     public static ArmyPanel Instance => TreeItemScene.Instantiate<ArmyPanel>();
     public Button GeneralButton => GetNode<Button>("%GeneralButton");
-    public Label ArmyName => GetNode<Label>("%ArmyName");
-    public VBoxContainer GeneralContainer => GetNode<VBoxContainer>("%GeneralContainer");
+    public Button ArmyButton => GetNode<Button>("%ArmyButton");
     public Label GeneralName => GetNode<Label>("%GeneralName");
     public MedalRect MedalRect1 => GetNode<MedalRect>("%MedalRect1");
     public MedalRect MedalRect2 => GetNode<MedalRect>("%MedalRect2");

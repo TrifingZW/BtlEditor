@@ -239,6 +239,7 @@ public class LandUnit
                 GeneralSprite = null;
             }
 
+            ArmyJson = null;
             foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
                 if (armyJson.Army == Army.兵种)
                 {

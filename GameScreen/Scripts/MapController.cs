@@ -103,6 +103,9 @@ public partial class MapController : CanvasGroup
 
         //应用着色器
         UpdateShader();
+
+        Texture2D texture2D = new ImageTexture();
+        texture2D.draw
     }
 
     //更新
@@ -135,7 +138,7 @@ public partial class MapController : CanvasGroup
                 LandUnit landUnit = new()
                 {
                     Index = (short)landIndex,
-                    RegionIndex = (short)ParserHelper.GetIndex(x + Master.地图截取x, y + Master.地图截取y, Bin.Width),
+                    RegionIndex = (short)(Btl.IndependentTerrain ? landIndex : ParserHelper.GetIndex(x + Master.地图截取x, y + Master.地图截取y, Bin.Width)),
                     X = x,
                     Y = y,
                     Position = TileMap.MapToLocal(new(x, y)),
@@ -172,12 +175,11 @@ public partial class MapController : CanvasGroup
                 landUnit.Scheme = btlParserScheme;
 
         //读取援军
-        if (Btl.Version1)
-            if (Btl.Version2 || Btl.Version3)
-                foreach (Reinforcement3 btlParserReinforcement in Btl.Reinforcements1)
-                    if (LandUnits.TryGetValue(GetBtlIndex(btlParserReinforcement.坐标), out LandUnit landUnit))
-                        landUnit.Reinforcements.Add(btlParserReinforcement);
-        if (Btl.Version2 || Btl.Version3)
+        if (Btl.Version1 || Btl.Version2)
+            foreach (Reinforcement1 btlParserReinforcement in Btl.Reinforcements1)
+                if (LandUnits.TryGetValue(GetBtlIndex(btlParserReinforcement.坐标), out LandUnit landUnit))
+                    landUnit.Reinforcements.Add(btlParserReinforcement);
+        if (Btl.Version3)
             foreach (Reinforcement3 btlParserReinforcement in Btl.Reinforcements3)
                 if (LandUnits.TryGetValue(GetBtlIndex(btlParserReinforcement.坐标), out LandUnit landUnit))
                     landUnit.Reinforcements.Add(btlParserReinforcement);
@@ -486,8 +488,8 @@ public partial class MapController : CanvasGroup
                 case Army1 army1:
                     army1.Serializable(binaryWriter);
                     break;
-                case Army2 army3:
-                    army3.Serializable(binaryWriter);
+                case Army2 army2:
+                    army2.Serializable(binaryWriter);
                     break;
             }
 

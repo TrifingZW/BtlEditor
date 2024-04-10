@@ -14,7 +14,8 @@ public partial class Game : Node2D
     public DataUI DataUI { get; private set; }
     public static Dialog Dialog { get; private set; }
     public static BtlObjWindow BtlObjWindow { get; private set; }
-    public static SearchWindow SearchWindow { get; private set; }
+    public static SearchGeneralWindow SearchGeneralWindow { get; private set; }
+    public static SearchArmyWindow SearchArmyWindow { get; private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -52,7 +53,8 @@ public partial class Game : Node2D
         MapUI = GetNode<MapUI>("MapUI");
         DataUI = GetNode<DataUI>("DataUI");
         BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
-        SearchWindow = GetNode<SearchWindow>("SearchGeneralWindow");
+        SearchGeneralWindow = GetNode<SearchGeneralWindow>("SearchGeneralWindow");
+        SearchArmyWindow = GetNode<SearchArmyWindow>("SearchArmyWindow");
         Dialog = GetNode<Dialog>("Dialog");
     }
 

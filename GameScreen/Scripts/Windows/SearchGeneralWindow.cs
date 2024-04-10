@@ -9,7 +9,7 @@ using static BtlEditor.CoreScripts.StaticRes;
 
 namespace BtlEditor.GameScreen.Scripts.Windows;
 
-public partial class SearchWindow : Window
+public partial class SearchGeneralWindow : Window
 {
     private LineEdit LineEdit { get; set; }
     private ItemList ItemList { get; set; }
@@ -29,9 +29,9 @@ public partial class SearchWindow : Window
     public override void _Ready()
     {
         CloseRequested += () => Visible = false;
-        LineEdit = GetNode<LineEdit>("%LineEdit");
-        ItemList = GetNode<ItemList>("%ItemList");
-        Button = GetNode<Button>("%Button");
+        LineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/LineEdit");
+        ItemList = GetNode<ItemList>("MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/ItemList");
+        Button = GetNode<Button>("MarginContainer/VBoxContainer/Button");
 
         LineEdit.TextChanged += Update;
         ItemList.ItemSelected += ItemSelect;
@@ -71,8 +71,10 @@ public partial class SearchWindow : Window
         for (var index = 0; index < GeneralSettings.GeneralJsons.Length; index++)
         {
             GeneralJson generalJson = GeneralSettings.GeneralJsons[index];
-            if (generalJson.Name == null || !Stringtable.GeneralName[generalJson.EName].Contains(text)) continue;
-            ItemList.AddItem($"{generalJson.Name} {generalJson.Id}");
+            if (generalJson.EName is not { } eName) continue;
+            if (Stringtable.GeneralName[eName] is not { } name) continue;
+            if (!name.Contains(text)) continue;
+            ItemList.AddItem($"{name} {generalJson.Id}");
             SelectedGenerals.Add(index);
         }
     }

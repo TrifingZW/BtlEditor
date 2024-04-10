@@ -15,11 +15,8 @@ public partial class MasterContainer : VBoxContainer
         var fields = typeof(Master).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         foreach (FieldInfo field in fields)
         {
-            if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
-
             var editorItem = EditorItem.Instance;
             editorItem.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
             Label label = new()
             {
                 Text = Tr(field.Name),
@@ -27,6 +24,8 @@ public partial class MasterContainer : VBoxContainer
             };
             editorItem.Head.AddChild(label);
             SpinBox spinBox = Helpers.ReflectionSpinBox(Btl.Master, field);
+            if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true })
+                spinBox.Editable = false;
             editorItem.Content.AddChild(spinBox);
             AddChild(editorItem);
         }

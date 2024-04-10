@@ -55,7 +55,6 @@ public partial class BtlObjWindow : Window
             foreach (FieldInfo field in fields)
             {
                 if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
-
                 var editorItem = EditorItem.Instance;
                 editorItem.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
 

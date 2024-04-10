@@ -54,10 +54,21 @@ public partial class ArmySingle : BaseSingle
         _armyPanel = ArmyPanel.Instance;
         HeadContainer.AddChild(_armyPanel);
         UpdateArmyPanel();
+        //选择军队
+        _armyPanel.ArmyButton.Pressed += () =>
+        {
+            Game.SearchArmyWindow.CreateEdit(armyJson =>
+            {
+                LandUnit.Army.兵种 = (byte)armyJson.Army;
+                LandUnit.UpdateArmy();
+                Clear();
+                Update();
+            });
+        };
         //选择将领
         _armyPanel.GeneralButton.Pressed += () =>
         {
-            Game.SearchWindow.CreateEdit(general =>
+            Game.SearchGeneralWindow.CreateEdit(general =>
             {
                 LandUnit.Army.将领 = (short)general.Id;
                 LandUnit.Army.军衔 = (byte)general.Hp;
@@ -72,7 +83,7 @@ public partial class ArmySingle : BaseSingle
                     LandUnit.Army.技能等级4 = (byte)(skill4 % 10);
                 if (general.Skills.TryGetValue(4, out var skill5))
                     LandUnit.Army.技能等级5 = (byte)(skill5 % 10);
-                
+
                 LandUnit.UpdateArmy();
                 Clear();
                 Update();
@@ -98,12 +109,15 @@ public partial class ArmySingle : BaseSingle
 
     private void UpdateArmyPanel()
     {
-        if (LandUnit.ArmyJson is not { } armyJson) return;
-        Army army = LandUnit.Army;
-        _armyPanel.ArmyName.Text = Stringtable.ArmyName[armyJson.Id];
+        //设置军队名称
+        if (LandUnit.ArmyJson is { } armyJson)
+            _armyPanel.ArmyButton.Text = Stringtable.ArmyName[armyJson.Id];
+        else _armyPanel.ArmyButton.Text = "未知兵种";
 
         //设置将领相关
         if (LandUnit.GeneralJson is not { } generalJson) return;
+        
+        Army army = LandUnit.Army;
 
         //设置勋带
         if (army is Army2 army3)

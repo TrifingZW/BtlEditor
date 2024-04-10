@@ -81,6 +81,7 @@ public partial class MainUIScript : Control
 
 				//GeneralSettings
 				GeneralSettings.Parser();
+				CallDeferred(nameof(PrintGreen), "已导入GeneralSettings.json");
 
 				//ArmySettings
 				ArmySettings.Parser();

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://c78ax6yhf632"]
+[gd_scene load_steps=43 format=3 uid="uid://c78ax6yhf632"]
 
 [ext_resource type="Script" path="res://GameScreen/Scripts/Game.cs" id="1_mv65n"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
@@ -29,7 +29,7 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AffairItemList.cs" id="23_7eqaa"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/StrategyItemList.cs" id="24_an2yb"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportItemList.cs" id="25_qafdh"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchWindow.cs" id="30_jmnxu"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchGeneralWindow.cs" id="30_djdrc"]
 [ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
 [ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="32_rr5n1"]
 [ext_resource type="Script" path="res://UserInterface/StarRect.cs" id="33_vv0hw"]
@@ -38,6 +38,7 @@
 [ext_resource type="Texture2D" uid="uid://gelx3i1nrqqw" path="res://Assets/Textures/general_ability_4.png" id="36_pvj65"]
 [ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="37_6i305"]
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchArmyWindow.cs" id="39_asn33"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ffr3h"]
 shader = ExtResource("4_fbyr2")
@@ -98,6 +99,7 @@ script = ExtResource("2_n3m31")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 unique_name_in_owner = true
+disable_3d = true
 transparent_bg = true
 render_target_update_mode = 1
 
@@ -146,7 +148,7 @@ text = "保存文件"
 [node name="DataContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(800, 0)
+custom_minimum_size = Vector2(810, 0)
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
@@ -573,7 +575,7 @@ visible = false
 wrap_controls = true
 transient = true
 exclusive = true
-script = ExtResource("30_jmnxu")
+script = ExtResource("30_djdrc")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchGeneralWindow"]
 anchors_preset = 15
@@ -590,7 +592,6 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 
 [node name="LineEdit" type="LineEdit" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "搜索"
 
@@ -604,7 +605,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 allow_search = false
 
@@ -758,7 +758,48 @@ stretch_mode = 3
 script = ExtResource("33_vv0hw")
 
 [node name="Button" type="Button" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "确定选择"
+
+[node name="SearchArmyWindow" type="Window" parent="."]
+title = "搜索军队"
+initial_position = 1
+size = Vector2i(900, 847)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+script = ExtResource("39_asn33")
+
+[node name="MarginContainer" type="MarginContainer" parent="SearchArmyWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SearchArmyWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SearchArmyWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "搜索"
+
+[node name="PanelContainer" type="PanelContainer" parent="SearchArmyWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="SearchArmyWindow/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+allow_search = false
+
+[node name="Button" type="Button" parent="SearchArmyWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "确定选择"

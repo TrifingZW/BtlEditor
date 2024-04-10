@@ -82,9 +82,19 @@ public partial class ReinforcementSingle : BaseSingle
         var armyPanel = ArmyPanel.Instance;
         treeBar.Layout.AddChild(armyPanel);
         UpdateArmyPanel(reinforcement, armyPanel);
+        //选择军队
+        armyPanel.ArmyButton.Pressed += () =>
+        {
+            Game.SearchArmyWindow.CreateEdit(armyJson =>
+            {
+                reinforcement.兵种 = (byte)armyJson.Army;
+                UpdateArmyPanel(reinforcement, armyPanel);
+            });
+        };
+        //选择将领
         armyPanel.GeneralButton.Pressed += () =>
         {
-            Game.SearchWindow.CreateEdit(general =>
+            Game.SearchGeneralWindow.CreateEdit(general =>
             {
                 reinforcement.将领 = (short)general.Id;
                 reinforcement.军衔 = (byte)general.Hp;
@@ -96,10 +106,10 @@ public partial class ReinforcementSingle : BaseSingle
                 if (general.Skills.TryGetValue(2, out var skill3))
                     reinforcement.技能等级3 = (byte)(skill3 % 10);
                 if (general.Skills.TryGetValue(3, out var skill4))
-                    reinforcement.技能等级4 = (byte)(skill4 % 10);  
+                    reinforcement.技能等级4 = (byte)(skill4 % 10);
                 if (general.Skills.TryGetValue(4, out var skill5))
                     reinforcement.技能等级5 = (byte)(skill5 % 10);
-                
+
                 UpdateArmyPanel(reinforcement, armyPanel);
             });
         };
@@ -175,55 +185,54 @@ public partial class ReinforcementSingle : BaseSingle
 
     private static void UpdateArmyPanel(Reinforcement reinforcement, ArmyPanel armyPanel)
     {
+        armyPanel.ArmyButton.Text = "未知兵种";
         foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
             if (armyJson.Army == reinforcement.兵种)
             {
                 var title = Stringtable.ArmyName[armyJson.Id];
-                armyPanel.ArmyName.Text = title;
-
-                if (GeneralSettings.GeneralJsons.FirstOrDefault(g => g.Id == reinforcement.将领 && g.Name != null) is { } generalJson)
-                {
-                    //设置勋带和勋章
-                    switch (reinforcement)
-                    {
-                        case Reinforcement3 reinforcement3:
-                            armyPanel.RibbonRect1.SetRibbon(reinforcement3.勋带1);
-                            armyPanel.RibbonRect2.SetRibbon(reinforcement3.勋带2);
-                            armyPanel.RibbonRect3.SetRibbon(reinforcement3.勋带3);
-
-                            armyPanel.MedalRect1.SetMedal(reinforcement3.胸章1);
-                            armyPanel.MedalRect2.SetMedal(reinforcement3.胸章2);
-                            armyPanel.MedalRect3.SetMedal(reinforcement3.胸章3);
-                            break;
-                        case Reinforcement1 reinforcement1:
-                            armyPanel.RibbonRect1.SetRibbon(reinforcement1.胸章一);
-                            armyPanel.RibbonRect2.SetRibbon(reinforcement1.胸章二);
-                            armyPanel.RibbonRect3.SetRibbon(reinforcement1.胸章三);
-                            break;
-                    }
-
-
-                    //设置头像
-                    var path = $"{ImageHeadPath}/general_circle_{generalJson.Photo}.webp";
-                    if (File.Exists(path))
-                    {
-                        Image image = Image.LoadFromFile(path);
-                        ImageTexture texture = new();
-                        texture.SetImage(image);
-                        armyPanel.GeneralButton.Icon = texture;
-                        armyPanel.GeneralName.Text = Stringtable.GeneralName[generalJson.EName];
-                    }
-
-                    //设置数值
-                    armyPanel.Star1.SetStar(generalJson.Infantry);
-                    armyPanel.Star2.SetStar(generalJson.Artillery);
-                    armyPanel.Star3.SetStar(generalJson.Armor);
-                    armyPanel.Star4.SetStar(generalJson.Navy);
-                    armyPanel.Star5.SetStar(generalJson.AirForce);
-                    armyPanel.Star6.SetStar(generalJson.March);
-                }
-
+                armyPanel.ArmyButton.Text = title;
                 break;
             }
+
+        if (GeneralSettings.GeneralJsons.FirstOrDefault(g => g.Id == reinforcement.将领 && g.Name != null) is not { } generalJson) return;
+
+        //设置勋带和勋章
+        switch (reinforcement)
+        {
+            case Reinforcement3 reinforcement3:
+                armyPanel.RibbonRect1.SetRibbon(reinforcement3.勋带1);
+                armyPanel.RibbonRect2.SetRibbon(reinforcement3.勋带2);
+                armyPanel.RibbonRect3.SetRibbon(reinforcement3.勋带3);
+
+                armyPanel.MedalRect1.SetMedal(reinforcement3.胸章1);
+                armyPanel.MedalRect2.SetMedal(reinforcement3.胸章2);
+                armyPanel.MedalRect3.SetMedal(reinforcement3.胸章3);
+                break;
+            case Reinforcement1 reinforcement1:
+                armyPanel.MedalRect1.SetMedal(reinforcement1.胸章一);
+                armyPanel.MedalRect2.SetMedal(reinforcement1.胸章二);
+                armyPanel.MedalRect3.SetMedal(reinforcement1.胸章三);
+                break;
+        }
+
+
+        //设置头像
+        var path = $"{ImageHeadPath}/general_circle_{generalJson.Photo}.webp";
+        if (File.Exists(path))
+        {
+            Image image = Image.LoadFromFile(path);
+            ImageTexture texture = new();
+            texture.SetImage(image);
+            armyPanel.GeneralButton.Icon = texture;
+            armyPanel.GeneralName.Text = Stringtable.GeneralName[generalJson.EName];
+        }
+
+        //设置数值
+        armyPanel.Star1.SetStar(generalJson.Infantry);
+        armyPanel.Star2.SetStar(generalJson.Artillery);
+        armyPanel.Star3.SetStar(generalJson.Armor);
+        armyPanel.Star4.SetStar(generalJson.Navy);
+        armyPanel.Star5.SetStar(generalJson.AirForce);
+        armyPanel.Star6.SetStar(generalJson.March);
     }
 }

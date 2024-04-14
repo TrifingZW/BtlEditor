@@ -41,6 +41,7 @@ public abstract partial class BaseMulti : VBoxContainer
 
                 Button button = new() { Text = field.Name };
                 button.FocusMode = FocusModeEnum.None;
+                button.MouseFilter = MouseFilterEnum.Pass;
                 button.Pressed += () =>
                 {
                     MapUI.EditWindow.CreateEdit(field.Name, value =>

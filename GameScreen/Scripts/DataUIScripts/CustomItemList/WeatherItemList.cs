@@ -7,6 +7,7 @@ public partial class WeatherItemList : BaseItemList
 {
     public override void _Ready()
     {
+        base._Ready();
         ItemActivated += _ => Set();
         foreach (Weather weather in MapController.Weathers)
             AddItem(GetText(weather));

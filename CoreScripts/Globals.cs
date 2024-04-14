@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.IO;
+using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 
 namespace BtlEditor.CoreScripts;
@@ -51,13 +52,13 @@ public partial class Globals : Node
     {
         Config.Load(ConfigPath);
         Scale = Config.GetValue("Setting", "Scale", Variant.From(1.0f)).AsSingle();
-        Fps = Config.GetValue("Setting", "Fps", Variant.From(0)).AsInt32();
-        Shader = Config.GetValue("Setting", "Shader", Variant.From(1)).AsInt32();
+        Fps = Config.GetValue("Setting", "Fps", Variant.From(2)).AsInt32();
+        Shader = Config.GetValue("Setting", "Shader", Variant.From(0)).AsInt32();
         WindowMode = Config.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
         VSync = Config.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
 
-        WorkPath = Config.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
-        BtlPath = Config.GetValue("Work", "BtlPath", $"{StagePath}/conquest5.btl").AsString();
+        WorkPath = File.ReadAllText($"{FilePath}/WorkPath.txt");
+        BtlPath = File.ReadAllText($"{FilePath}/BtlPath.txt");
 
         Save(Scale, Fps, Shader, WindowMode, VSync);
     }

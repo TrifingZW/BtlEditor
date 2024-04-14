@@ -7,6 +7,7 @@ public partial class StrategyItemList : BaseItemList
 {
     public override void _Ready()
     {
+        base._Ready();
         ItemActivated += _ => Set();
         foreach (Strategy strategy in MapController.Strategies)
             AddItem(GetText(strategy));

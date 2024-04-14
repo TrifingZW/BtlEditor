@@ -39,10 +39,12 @@ public partial class Game : Node2D
         }
     }
 
+    private void Handoff() => DataMode = !DataMode;
+
     #region 粘贴板
 
     public static Reinforcement ReinforcementCopy { get; set; }
-    
+
     #endregion
 
     public override void _EnterTree()

@@ -11,6 +11,7 @@ public partial class CountryItemList : BaseItemList
 {
     public override void _Ready()
     {
+        base._Ready();
         ItemSelected += ItemSelect;
         ItemActivated += _ => Set();
         for (var index = 0; index < Btl.Countries.Length; index++)

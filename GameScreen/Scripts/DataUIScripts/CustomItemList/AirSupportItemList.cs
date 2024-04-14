@@ -7,6 +7,7 @@ public partial class AirSupportItemList : BaseItemList
 {
     public override void _Ready()
     {
+        base._Ready();
         ItemActivated += _ => Set();
         foreach (AirSupport airSupport in MapController.AirSupports)
             AddItem(GetText(airSupport));

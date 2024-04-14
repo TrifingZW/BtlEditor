@@ -7,6 +7,7 @@ public partial class AffairItemList : BaseItemList
 {
     public override void _Ready()
     {
+        base._Ready();
         ItemActivated += _ => Set();
         foreach (Affair affair in MapController.Affairs)
             AddItem(GetText(affair));

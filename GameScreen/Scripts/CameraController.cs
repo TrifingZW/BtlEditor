@@ -6,12 +6,35 @@ namespace BtlEditor.GameScreen.Scripts;
 
 public partial class CameraController : Camera2D
 {
+    private Vector2 _targetPosition = Vector2.Zero;
+
+    public Vector2 TargetPosition
+    {
+        get => _targetPosition;
+        set
+        {
+            if (value == Vector2.Zero) return;
+            _targetPosition = value;
+            _target = true;
+        }
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         if (Globals.Win)
             WindowsCameraSet();
         else
             AndroidCameraSet();
+
+        //目标位置插值
+        if (!_target || TargetPosition == Vector2.Zero) return;
+        Position = Position.Lerp(TargetPosition, 0.2f);
+        if (Position.DistanceTo(TargetPosition) < 1f)
+        {
+            _target = false;
+            Position = TargetPosition;
+            TargetPosition = Vector2.Zero;
+        }
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -30,35 +53,12 @@ public partial class CameraController : Camera2D
     private float _maxZoom = 20f;
     private float _minZoom = 1f;
 
-    private Vector2 _targetPosition = Vector2.Zero;
-
-    public Vector2 TargetPosition
-    {
-        get => _targetPosition;
-        set
-        {
-            if (value == Vector2.Zero) return;
-            _targetPosition = value;
-            _target = true;
-        }
-    }
-
     private bool _target;
 
     private void WindowsCameraSet()
     {
         _wheelValue = Mathf.Clamp(_wheelValue, _minZoom, _maxZoom);
         Zoom = Zoom.Lerp(Vector2.One * _wheelValue / 5f, 0.2f);
-
-        //目标位置插值
-        if (!_target || TargetPosition == Vector2.Zero) return;
-        Position = Position.Lerp(TargetPosition, 0.2f);
-        if (Position.DistanceTo(TargetPosition) < 1f)
-        {
-            _target = false;
-            Position = TargetPosition;
-            TargetPosition = Vector2.Zero;
-        }
     }
 
     private Vector2 _mousePosition;
@@ -109,6 +109,7 @@ public partial class CameraController : Camera2D
     private float _zoomDelta;
     private float _zoomValue = 1f;
     private Vector2 _cameraPosition;
+    public bool AndroidCameraController { get; set; } = true;
 
     private void AndroidCameraSet()
     {
@@ -118,6 +119,8 @@ public partial class CameraController : Camera2D
 
     private void AndroidController(InputEvent inputEvent)
     {
+        if (_target) return;
+        if (AndroidCameraController) return;
         if (inputEvent is InputEventScreenTouch touchEvent)
         {
             if (touchEvent.Pressed)

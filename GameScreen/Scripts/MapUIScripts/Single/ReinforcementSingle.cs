@@ -123,6 +123,7 @@ public partial class ReinforcementSingle : BaseSingle
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         set.FocusMode = FocusModeEnum.None;
+        set.MouseFilter = MouseFilterEnum.Pass;
         set.Pressed += () =>
         {
             switch (reinforcement)
@@ -156,6 +157,7 @@ public partial class ReinforcementSingle : BaseSingle
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         copy.FocusMode = FocusModeEnum.None;
+        copy.MouseFilter = MouseFilterEnum.Pass;
         copy.Pressed += () => { Game.ReinforcementCopy = reinforcement; };
         buttonContainer.AddChild(copy);
 
@@ -165,6 +167,7 @@ public partial class ReinforcementSingle : BaseSingle
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         delete.FocusMode = FocusModeEnum.None;
+        delete.MouseFilter = MouseFilterEnum.Pass;
         delete.Pressed += () =>
         {
             LandUnit.Reinforcements.Remove(reinforcement);

@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/MapUI.cs" id="8_vjv26"]
 [ext_resource type="Texture2D" uid="uid://c5uqnry1pxbk3" path="res://Assets/Textures/UI/select.svg" id="9_3ud52"]
 [ext_resource type="Texture2D" uid="uid://vyfm4hd0b5e2" path="res://Assets/Textures/UI/multi.svg" id="10_x3imk"]
+[ext_resource type="Texture2D" uid="uid://b3lm83wp6gu5b" path="res://Assets/Textures/UI/Camera2D.svg" id="12_3mmmc"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/ArmySingle.cs" id="12_ni0yi"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/CitySingle.cs" id="13_t38vd"]
 [ext_resource type="PackedScene" uid="uid://2un2y08h3sph" path="res://UserInterface/TreeBar.tscn" id="14_1irfd"]
@@ -20,7 +21,6 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/EditWindow.cs" id="15_twsgt"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/CountryItemList.cs" id="16_gx6sn"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/ArmyMulti.cs" id="16_p4sxu"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/PitfallSingle.cs" id="16_x4yhr"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/CityMulti.cs" id="17_5lx2v"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/BtlObjWindow.cs" id="20_150s2"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/MasterContainer.cs" id="21_f7htb"]
@@ -117,14 +117,17 @@ unique_name_in_owner = true
 layer = 0
 script = ExtResource("8_vjv26")
 
-[node name="MainPanel" type="PanelContainer" parent="MapUI"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="MainContainer" type="VBoxContainer" parent="MapUI"]
+offset_right = 612.0
+offset_bottom = 265.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MapUI/MainPanel"]
+[node name="MainPanel" type="PanelContainer" parent="MapUI/MainContainer"]
 layout_mode = 2
 
-[node name="Utils" type="TabBar" parent="MapUI/MainPanel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MapUI/MainContainer/MainPanel"]
+layout_mode = 2
+
+[node name="Utils" type="TabBar" parent="MapUI/MainContainer/MainPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -140,10 +143,24 @@ tab_1/icon = ExtResource("9_3ud52")
 tab_2/title = "多选"
 tab_2/icon = ExtResource("10_x3imk")
 
-[node name="Save" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
+[node name="Handoff" type="Button" parent="MapUI/MainContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
+
+[node name="Save" type="Button" parent="MapUI/MainContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "保存文件"
+
+[node name="AndroidCameraController" type="Button" parent="MapUI/MainContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+theme_override_colors/icon_pressed_color = Color(1, 0, 0, 1)
+toggle_mode = true
+icon = ExtResource("12_3mmmc")
 
 [node name="DataContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
@@ -202,39 +219,6 @@ mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
 
-[node name="陷阱" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-vertical_scroll_mode = 3
-script = ExtResource("16_x4yhr")
-
-[node name="方案" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-vertical_scroll_mode = 3
-
-[node name="空袭" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-vertical_scroll_mode = 3
-
-[node name="国旗" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-vertical_scroll_mode = 3
-
 [node name="MultiContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
 visible = false
@@ -270,6 +254,7 @@ tab_2/title = "占位空体"
 [node name="Clear" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "清空选中"
 
 [node name="CreatePanel" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
@@ -284,11 +269,13 @@ theme_override_constants/separation = 0
 [node name="CreateArmy" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout" index="0"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "创建军队"
 
 [node name="CreateCity" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout" index="1"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "创建城市"
 
 [node name="SetPanel" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
@@ -323,11 +310,13 @@ script = ExtResource("17_5lx2v")
 [node name="SetProvince" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="2"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "设置省规划"
 
 [node name="SetBelong" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout" index="3"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "设置归属"
 
 [node name="DeletePanel" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer" instance=ExtResource("14_1irfd")]
@@ -342,11 +331,13 @@ theme_override_constants/separation = 0
 [node name="DeleteArmy" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout" index="0"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "删除军队"
 
 [node name="DeleteCity" type="Button" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout" index="1"]
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 text = "删除城市"
 
 [node name="EditWindow" type="Window" parent="MapUI"]
@@ -434,6 +425,7 @@ mouse_force_pass_scroll_events = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 1
 
 [node name="MasterContainer" type="VBoxContainer" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/TabContainer/ScrollContainer/PanelContainer"]
 layout_mode = 2
@@ -446,7 +438,6 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
@@ -457,7 +448,6 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
@@ -468,7 +458,6 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
@@ -479,7 +468,6 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
@@ -490,7 +478,6 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
@@ -506,22 +493,32 @@ layout_mode = 2
 [node name="Button1" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 50
 text = "新建"
 
 [node name="Button2" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 50
 text = "删除"
 
 [node name="Button3" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 50
 text = "设置"
 
 [node name="Button4" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 50
 text = "复制"
+
+[node name="Button5" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
 
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 title = "警告"
@@ -804,7 +801,8 @@ layout_mode = 2
 focus_mode = 0
 text = "确定选择"
 
-[connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
+[connection signal="pressed" from="MapUI/MainContainer/MainPanel/VBoxContainer/Handoff" to="." method="Handoff"]
+[connection signal="pressed" from="MapUI/MainContainer/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
 [connection signal="tab_selected" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="MapUI" method="MultiModeTabSelect"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI" method="MultiModeClear"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="MapUI" method="MultiModeCreateArmy"]
@@ -818,6 +816,7 @@ text = "确定选择"
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button2" to="DataUI" method="Delete"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button3" to="DataUI" method="Set"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button4" to="DataUI" method="Copy"]
+[connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button5" to="." method="Handoff"]
 
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel"]
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel"]

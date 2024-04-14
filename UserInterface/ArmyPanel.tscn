@@ -14,6 +14,7 @@
 
 [node name="ArmyPanel" type="PanelContainer"]
 size_flags_horizontal = 3
+mouse_filter = 1
 script = ExtResource("1_xft3s")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -30,6 +31,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 theme_override_font_sizes/font_size = 50
 text = "未知军队"
 
@@ -47,6 +49,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+mouse_filter = 1
 icon = ExtResource("2_wgdrp")
 
 [node name="GeneralName" type="Label" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
@@ -114,6 +117,7 @@ columns = 2
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer"]
 layout_mode = 2
@@ -132,6 +136,7 @@ script = ExtResource("5_yqbh2")
 [node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2"]
 layout_mode = 2
@@ -150,6 +155,7 @@ script = ExtResource("5_yqbh2")
 [node name="PanelContainer3" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3"]
 layout_mode = 2
@@ -168,6 +174,7 @@ script = ExtResource("5_yqbh2")
 [node name="PanelContainer4" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4"]
 layout_mode = 2
@@ -186,6 +193,7 @@ script = ExtResource("5_yqbh2")
 [node name="PanelContainer5" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5"]
 layout_mode = 2
@@ -204,6 +212,7 @@ script = ExtResource("5_yqbh2")
 [node name="PanelContainer6" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6"]
 layout_mode = 2

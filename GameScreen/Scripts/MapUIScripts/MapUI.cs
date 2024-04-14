@@ -50,6 +50,9 @@ public partial class MapUI : CanvasLayer
         _utils.TabSelected += UtilsSelect;
 
         EditWindow = GetNode<EditWindow>("%EditWindow");
+
+        var androidCameraController = GetNode<Button>("%AndroidCameraController");
+        androidCameraController.Pressed += () => { Game.Instance.CameraController.AndroidCameraController = !androidCameraController.ButtonPressed; };
     }
 
     private void UtilsSelect(long index)
@@ -72,8 +75,6 @@ public partial class MapUI : CanvasLayer
         MapController.UtilMode = (int)index;
     }
 
-    private void MultiModeTabSelect(long index) => MapController.MultiMode = (int)index;
-
     private void MultiModeClear()
     {
         MultiLandUnit.Clear();
@@ -95,7 +96,7 @@ public partial class MapUI : CanvasLayer
         foreach (LandUnit landUnit in MultiLandUnit)
         {
             if (landUnit.City != null) continue;
-            landUnit.City = new City
+            landUnit.City = new()
             {
                 坐标 = landUnit.RegionIndex
             };

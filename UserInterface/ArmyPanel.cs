@@ -4,8 +4,7 @@ namespace BtlEditor.UserInterface;
 
 public partial class ArmyPanel : PanelContainer
 {
-    private static readonly PackedScene TreeItemScene = (PackedScene)ResourceLoader.Load("res://UserInterface/ArmyPanel.tscn");
-    public static ArmyPanel Instance => TreeItemScene.Instantiate<ArmyPanel>();
+    public static ArmyPanel Instance => ResourceLoader.Load<PackedScene>("res://UserInterface/ArmyPanel.tscn").Instantiate<ArmyPanel>();
     public Button GeneralButton => GetNode<Button>("%GeneralButton");
     public Button ArmyButton => GetNode<Button>("%ArmyButton");
     public Label GeneralName => GetNode<Label>("%GeneralName");

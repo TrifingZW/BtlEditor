@@ -103,9 +103,6 @@ public partial class MapController : CanvasGroup
 
         //应用着色器
         UpdateShader();
-
-        Texture2D texture2D = new ImageTexture();
-        texture2D.draw
     }
 
     //更新

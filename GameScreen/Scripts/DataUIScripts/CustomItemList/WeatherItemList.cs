@@ -17,7 +17,7 @@ public partial class WeatherItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Weathers.TryGetValue(index, out Weather weather)) return;
-        Game.Dialog.Builder($"确定要删除这个天气？\n({GetText(weather)})", () =>
+        Game.Instance.Dialog.Builder($"确定要删除这个天气？\n({GetText(weather)})", () =>
         {
             MapController.Weathers.RemoveAt(index);
             RemoveItem(index);
@@ -26,7 +26,7 @@ public partial class WeatherItemList : BaseItemList
 
     public override void Add()
     {
-        Game.Dialog.Builder("确定要新建天气？", () =>
+        Game.Instance.Dialog.Builder("确定要新建天气？", () =>
         {
             Weather weather = new()
             {
@@ -44,7 +44,7 @@ public partial class WeatherItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Weathers.TryGetValue(index, out Weather weather)) return;
-        Game.BtlObjWindow.CreateEdit(weather, w =>
+        Game.Instance.BtlObjWindow.CreateEdit(weather, w =>
         {
             MapController.Weathers[index] = w;
             SetItemText(index, GetText(w));
@@ -55,7 +55,7 @@ public partial class WeatherItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Weathers.TryGetValue(index, out Weather weather)) return;
-        Game.Dialog.Builder($"确定要复制这个天气？\n({GetText(weather)})", () =>
+        Game.Instance.Dialog.Builder($"确定要复制这个天气？\n({GetText(weather)})", () =>
         {
             var newWeather = (Weather)weather.Clone();
             MapController.Weathers.Add(newWeather);

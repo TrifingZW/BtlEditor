@@ -85,7 +85,10 @@ public abstract partial class BaseSingle : ScrollContainer
                 if (field.GetCustomAttribute<EditorGroup>() is { } editorGroup)
                 {
                     if (editorGroup.Ignore) continue;
-                    if (TreeDirectory.TryGetValue(editorGroup.Group, out TreeBar treeBar))
+
+                    if (editorGroup.Group == string.Empty)
+                        MainTreeBar.Layout.AddChild(editorItem);
+                    else if (TreeDirectory.TryGetValue(editorGroup.Group, out TreeBar treeBar))
                         treeBar.Layout.AddChild(editorItem);
                     else
                     {
@@ -104,9 +107,25 @@ public abstract partial class BaseSingle : ScrollContainer
                     SizeFlagsHorizontal = SizeFlags.ExpandFill
                 };
                 editorItem.Head.AddChild(label);
-                SpinBox spinBox = Helpers.ReflectionSpinBox(obj, field);
-                spinBox.ValueChanged += _ => save();
-                editorItem.Content.AddChild(spinBox);
+                if (field.GetCustomAttribute<EditorGroup>() is { Type: EditorGroupType.Direction })
+                {
+                    OptionButton optionButton = new();
+                    optionButton.AddItem("左");
+                    optionButton.AddItem("右");
+                    optionButton.Selected = (byte)field.GetValue(obj)!;
+                    optionButton.ItemSelected += index =>
+                    {
+                        field.SetValue(obj, (byte)index);
+                        save();
+                    };
+                    editorItem.Content.AddChild(optionButton);
+                }
+                else
+                {
+                    SpinBox spinBox = Helpers.ReflectionSpinBox(obj, field);
+                    spinBox.ValueChanged += _ => save();
+                    editorItem.Content.AddChild(spinBox);
+                }
             }
         }
     }

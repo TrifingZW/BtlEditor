@@ -35,13 +35,12 @@ public class LandUnit
     public Color? LandColor
     {
         get => _color;
-        private set
+        set
         {
-            if (value is { } color)
-            {
-                MapController.SetUvColorV(Coords, color);
-                _color = color;
-            }
+            if (Sea) return;
+            if (value is not { } color) return;
+            MapController.SetUvColorV(Coords, color);
+            _color = color;
         }
     }
 
@@ -56,7 +55,7 @@ public class LandUnit
         if (Sea) return;
         if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
             LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
-                ? Color.Color8(country.R, country.G, country.B)
+                ? Color.Color8(country.R8, country.G8, country.B8)
                 : Colors.White;
     }
 
@@ -112,7 +111,7 @@ public class LandUnit
     {
         if (MapController.Countries.TryGetValue(Belong, out Country country))
         {
-            var color = Color.Color8(country.R, country.G, country.B);
+            var color = Color.Color8(country.R8, country.G8, country.B8);
             foreach (LandUnit landUnit in LandUnits)
                 if (landUnit.Province == RegionIndex)
                     landUnit.LandColor = color;
@@ -217,6 +216,8 @@ public class LandUnit
     {
         if (Army != null)
         {
+            if (Army.方向 > 1) Army.方向 = 1;
+
             GeneralJson = null;
             foreach (GeneralJson generalJson in GeneralSettings.GeneralJsons)
                 if (generalJson.Id == Army.将领 && generalJson.Name != null)

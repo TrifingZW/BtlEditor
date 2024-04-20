@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Utils;
 using Godot;
@@ -42,6 +43,7 @@ public partial class SearchArmyWindow : Window
         {
             ArmyJson armyJson = ArmySettings.ArmyJsons[index];
             if (!armyJson.Name.Contains(text)) continue;
+            if (SelectedArmies.Any(i => ArmySettings.ArmyJsons[i].Army == armyJson.Army)) continue;
             ItemList.AddItem($"{armyJson.Name} {armyJson.Army}");
             SelectedArmies.Add(index);
         }

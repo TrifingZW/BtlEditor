@@ -1,4 +1,3 @@
-using System.IO;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
@@ -35,21 +34,7 @@ public partial class ArmySingle : BaseSingle
                 break;
         }
 
-        if (LandUnit.Army is not { } army) return;
-        var editorItem = EditorItem.Instance;
-        editorItem.Head.AddChild(new Label { Text = "方向" });
-        MainTreeBar.Layout.AddChild(editorItem);
-        OptionButton optionButton = new();
-        optionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        optionButton.AddItem("左");
-        optionButton.AddItem("右");
-        optionButton.Selected = army.方向;
-        optionButton.ItemSelected += index =>
-        {
-            army.方向 = (byte)index;
-            LandUnit.UpdateArmy();
-        };
-        editorItem.AddChild(optionButton);
+        if (LandUnit.Army is null) return;
 
         _armyPanel = ArmyPanel.Instance;
         HeadContainer.AddChild(_armyPanel);
@@ -57,7 +42,7 @@ public partial class ArmySingle : BaseSingle
         //选择军队
         _armyPanel.ArmyButton.Pressed += () =>
         {
-            Game.SearchArmyWindow.CreateEdit(armyJson =>
+            Game.Instance.SearchArmyWindow.CreateEdit(armyJson =>
             {
                 LandUnit.Army.兵种 = (byte)armyJson.Army;
                 LandUnit.UpdateArmy();
@@ -68,10 +53,10 @@ public partial class ArmySingle : BaseSingle
         //选择将领
         _armyPanel.GeneralButton.Pressed += () =>
         {
-            Game.SearchGeneralWindow.CreateEdit(general =>
+            Game.Instance.SearchGeneralWindow.CreateEdit(general =>
             {
                 LandUnit.Army.将领 = (short)general.Id;
-                LandUnit.Army.军衔 = (byte)general.Hp;
+                LandUnit.Army.军衔 = (byte)general.MilitaryRank;
 
                 if (general.Skills.TryGetValue(0, out var skill1))
                     LandUnit.Army.技能等级1 = (byte)(skill1 % 10);
@@ -111,12 +96,12 @@ public partial class ArmySingle : BaseSingle
     {
         //设置军队名称
         if (LandUnit.ArmyJson is { } armyJson)
-            _armyPanel.ArmyButton.Text = Stringtable.ArmyName[armyJson.Id];
+            _armyPanel.ArmyButton.Text = armyJson.Name;
         else _armyPanel.ArmyButton.Text = "未知兵种";
 
         //设置将领相关
         if (LandUnit.GeneralJson is not { } generalJson) return;
-        
+
         Army army = LandUnit.Army;
 
         //设置勋带
@@ -133,14 +118,21 @@ public partial class ArmySingle : BaseSingle
         _armyPanel.MedalRect3.SetMedal(army.胸章三);
 
         //设置头像
-        var path = $"{ImageHeadPath}/general_circle_{generalJson.Photo}.webp";
-        if (File.Exists(path))
+        var path = Helpers.GetValidImagePath($"{ImageHeadPath}/general_circle_{generalJson.Photo}");
+        if (path is not null)
         {
             Image image = Image.LoadFromFile(path);
             ImageTexture texture = new();
             texture.SetImage(image);
             _armyPanel.GeneralButton.Icon = texture;
-            _armyPanel.GeneralName.Text = Stringtable.GeneralName[generalJson.EName];
+        }
+
+        //设置名称
+        if (generalJson.EName is { } eName)
+        {
+            if (Stringtable.GeneralName[eName] is not { } name)
+                name = eName;
+            _armyPanel.GeneralName.Text = name;
         }
 
         //设置数值

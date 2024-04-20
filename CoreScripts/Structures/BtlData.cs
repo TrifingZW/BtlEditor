@@ -54,10 +54,10 @@ public class Country : ICloneable
     public int 战败条件;
     public float 兵种加成;
     public float 税率加成;
-    [EditorGroup(ignore: true)] public byte R;
-    [EditorGroup(ignore: true)] public byte G;
-    [EditorGroup(ignore: true)] public byte B;
-    [EditorGroup(ignore: true)] public byte A;
+    [EditorGroup(ignore: true)] public byte R8;
+    [EditorGroup(ignore: true)] public byte G8;
+    [EditorGroup(ignore: true)] public byte B8;
+    [EditorGroup(ignore: true)] public byte A8;
     public int 原子弹数量;
     public int 氢弹数量;
     public int 三相弹数量;
@@ -146,7 +146,7 @@ public class Topography
     public byte empty4;
 }
 
-public class City
+public class City : ICloneable
 {
     [EditorGroup(ignore: true)] public short 坐标;
     public short 名称;
@@ -181,15 +181,20 @@ public class City
     {
         等级 = 11;
     }
+
+    public object Clone() => MemberwiseClone();
 }
 
-public class Army
+public class Army : ICloneable
 {
     [EditorGroup(ignore: true)] public short 坐标;
     public byte 兵种;
     public byte 等级;
     public byte 编制;
-    [EditorGroup(ignore: true)] public byte 方向;
+
+    [EditorGroup(type: EditorGroupType.Direction)]
+    public byte 方向;
+
     public byte 移动力;
     public byte 建造回合;
     public short 兵种经验;
@@ -231,6 +236,8 @@ public class Army
         当前血量 = 100;
         血量上限 = 100;
     }
+
+    public object Clone() => MemberwiseClone();
 }
 
 public class Army1 : Army

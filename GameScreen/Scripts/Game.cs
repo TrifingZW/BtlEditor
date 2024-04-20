@@ -44,6 +44,9 @@ public partial class Game : Node2D
     #region 粘贴板
 
     public static Reinforcement ReinforcementCopy { get; set; }
+    public static Army ArmyCopy { get; set; }
+    public static City CityCopy { get; set; }
+    public static byte BelongCopy { get; set; }
 
     #endregion
 

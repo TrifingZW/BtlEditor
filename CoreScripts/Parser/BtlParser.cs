@@ -68,6 +68,20 @@ public class BtlParser
             Capitals = ReadToClassArray<Capital>(reader, Master.国家首都);
             Strategies = ReadToClassArray<Strategy>(reader, Master.战略总数);
             AirSupports = ReadToClassArray<AirSupport>(reader, Master.空中支援);
+            for (short index = 0; index < Btl.Countries.Length; index++)
+            {
+                Country country = Btl.Countries[index];
+                foreach (Pitfall pitfall in Pitfalls)
+                    if (pitfall.所属军团 == country.序号)
+                        pitfall.所属军团 = index;
+                foreach (Strategy strategy in Strategies)
+                    if (strategy.军团序号 == country.序号)
+                        strategy.军团序号 = index;
+                foreach (AirSupport airSupport in AirSupports)
+                    if (airSupport.军团 == country.序号)
+                        airSupport.军团 = index;
+                country.序号 = index;
+            }
         }
         catch (Exception e)
         {

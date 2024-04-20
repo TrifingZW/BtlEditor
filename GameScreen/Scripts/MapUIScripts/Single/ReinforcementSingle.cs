@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
@@ -85,7 +84,7 @@ public partial class ReinforcementSingle : BaseSingle
         //选择军队
         armyPanel.ArmyButton.Pressed += () =>
         {
-            Game.SearchArmyWindow.CreateEdit(armyJson =>
+            Game.Instance.SearchArmyWindow.CreateEdit(armyJson =>
             {
                 reinforcement.兵种 = (byte)armyJson.Army;
                 UpdateArmyPanel(reinforcement, armyPanel);
@@ -94,7 +93,7 @@ public partial class ReinforcementSingle : BaseSingle
         //选择将领
         armyPanel.GeneralButton.Pressed += () =>
         {
-            Game.SearchGeneralWindow.CreateEdit(general =>
+            Game.Instance.SearchGeneralWindow.CreateEdit(general =>
             {
                 reinforcement.将领 = (short)general.Id;
                 reinforcement.军衔 = (byte)general.Hp;
@@ -129,7 +128,7 @@ public partial class ReinforcementSingle : BaseSingle
             switch (reinforcement)
             {
                 case Reinforcement3 reinforcement3:
-                    Game.BtlObjWindow.CreateEdit(reinforcement3, r3 =>
+                    Game.Instance.BtlObjWindow.CreateEdit(reinforcement3, r3 =>
                     {
                         Reinforcements[index] = r3;
                         reinforcement = r3;
@@ -139,7 +138,7 @@ public partial class ReinforcementSingle : BaseSingle
                     break;
 
                 case Reinforcement1 reinforcement1:
-                    Game.BtlObjWindow.CreateEdit(reinforcement1, r1 =>
+                    Game.Instance.BtlObjWindow.CreateEdit(reinforcement1, r1 =>
                     {
                         Reinforcements[index] = r1;
                         reinforcement = r1;
@@ -192,8 +191,7 @@ public partial class ReinforcementSingle : BaseSingle
         foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
             if (armyJson.Army == reinforcement.兵种)
             {
-                var title = Stringtable.ArmyName[armyJson.Id];
-                armyPanel.ArmyButton.Text = title;
+                armyPanel.ArmyButton.Text = armyJson.Name;
                 break;
             }
 
@@ -220,14 +218,21 @@ public partial class ReinforcementSingle : BaseSingle
 
 
         //设置头像
-        var path = $"{ImageHeadPath}/general_circle_{generalJson.Photo}.webp";
-        if (File.Exists(path))
+        var path = Helpers.GetValidImagePath($"{ImageHeadPath}/general_circle_{generalJson.Photo}");
+        if (path is not null)
         {
             Image image = Image.LoadFromFile(path);
             ImageTexture texture = new();
             texture.SetImage(image);
             armyPanel.GeneralButton.Icon = texture;
-            armyPanel.GeneralName.Text = Stringtable.GeneralName[generalJson.EName];
+        }
+
+        //设置名称
+        if (generalJson.EName is { } eName)
+        {
+            if (Stringtable.GeneralName[eName] is not { } name)
+                name = eName;
+            armyPanel.GeneralName.Text = name;
         }
 
         //设置数值

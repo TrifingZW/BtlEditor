@@ -50,7 +50,7 @@ public partial class GeneralSprite : Sprite2D
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector2 zoom = MapController.Camera2D.Zoom;
+        Vector2 zoom = MapController.CameraController.Zoom;
         Scale = Vector2.One / zoom.ClampUV();
     }
 }

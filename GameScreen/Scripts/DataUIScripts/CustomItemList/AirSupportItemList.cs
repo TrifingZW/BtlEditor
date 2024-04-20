@@ -17,7 +17,7 @@ public partial class AirSupportItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.AirSupports.TryGetValue(index, out AirSupport airSupport)) return;
-        Game.Dialog.Builder($"确定要删除这个空中支援？\n({GetText(airSupport)})", () =>
+        Game.Instance.Dialog.Builder($"确定要删除这个空中支援？\n({GetText(airSupport)})", () =>
         {
             MapController.AirSupports.RemoveAt(index);
             RemoveItem(index);
@@ -26,7 +26,7 @@ public partial class AirSupportItemList : BaseItemList
 
     public override void Add()
     {
-        Game.Dialog.Builder("确定要新建空中支援？", () =>
+        Game.Instance.Dialog.Builder("确定要新建空中支援？", () =>
         {
             AirSupport airSupport = new();
             MapController.AirSupports.Add(airSupport);
@@ -40,7 +40,7 @@ public partial class AirSupportItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.AirSupports.TryGetValue(index, out AirSupport airSupport)) return;
-        Game.BtlObjWindow.CreateEdit(airSupport, a =>
+        Game.Instance.BtlObjWindow.CreateEdit(airSupport, a =>
         {
             MapController.AirSupports[index] = a;
             SetItemText(index, GetText(a));
@@ -51,7 +51,7 @@ public partial class AirSupportItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.AirSupports.TryGetValue(index, out AirSupport airSupport)) return;
-        Game.Dialog.Builder($"确定要复制这个空中支援？\n({GetText(airSupport)})", () =>
+        Game.Instance.Dialog.Builder($"确定要复制这个空中支援？\n({GetText(airSupport)})", () =>
         {
             var newAirSupport = (AirSupport)airSupport.Clone();
             MapController.AirSupports.Add(newAirSupport);

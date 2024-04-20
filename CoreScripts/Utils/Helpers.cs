@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using Godot;
 using Vector2 = Godot.Vector2;
@@ -82,5 +84,11 @@ public static class Helpers
         }
 
         return spinBox;
+    }
+
+    public static string GetValidImagePath(string basePath)
+    {
+        var extensions = new[] { ".webp", ".png" }; // 支持的文件扩展名列表
+        return extensions.Select(ext => $"{basePath}{ext}").FirstOrDefault(File.Exists);
     }
 }

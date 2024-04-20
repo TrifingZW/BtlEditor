@@ -20,7 +20,7 @@ public partial class MapController : CanvasGroup
 {
     //节点
     private static Game Game => Game.Instance;
-    public static CameraController Camera2D => Game.CameraController;
+    public static CameraController CameraController => Game.CameraController;
 
     private SubViewport _subViewport;
     private Sprite2D _land;
@@ -563,7 +563,7 @@ public partial class MapController : CanvasGroup
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!Camera2D.AndroidCameraController) return;
+        if (!CameraController.AndroidCameraController) return;
         switch (UtilMode)
         {
             case 0:

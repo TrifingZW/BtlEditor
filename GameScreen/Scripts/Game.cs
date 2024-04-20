@@ -12,10 +12,10 @@ public partial class Game : Node2D
     public CameraController CameraController { get; private set; }
     public MapUI MapUI { get; private set; }
     public DataUI DataUI { get; private set; }
-    public static Dialog Dialog { get; private set; }
-    public static BtlObjWindow BtlObjWindow { get; private set; }
-    public static SearchGeneralWindow SearchGeneralWindow { get; private set; }
-    public static SearchArmyWindow SearchArmyWindow { get; private set; }
+    public Dialog Dialog { get; private set; }
+    public BtlObjWindow BtlObjWindow { get; private set; }
+    public SearchGeneralWindow SearchGeneralWindow { get; private set; }
+    public SearchArmyWindow SearchArmyWindow { get; private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;

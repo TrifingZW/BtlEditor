@@ -70,7 +70,7 @@ public class BtlParser
             AirSupports = ReadToClassArray<AirSupport>(reader, Master.空中支援);
             for (short index = 0; index < Btl.Countries.Length; index++)
             {
-                Country country = Btl.Countries[index];
+                Country country = Countries[index];
                 foreach (Pitfall pitfall in Pitfalls)
                     if (pitfall.所属军团 == country.序号)
                         pitfall.所属军团 = index;

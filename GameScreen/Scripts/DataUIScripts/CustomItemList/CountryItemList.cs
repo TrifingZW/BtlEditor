@@ -13,12 +13,8 @@ public partial class CountryItemList : BaseItemList
     {
         ItemSelected += ItemSelect;
         ItemActivated += _ => Set();
-        for (var index = 0; index < Btl.Countries.Length; index++)
-        {
-            Country country = Btl.Countries[index];
-            country.序号 = index;
+        foreach (Country country in Btl.Countries)
             SetItem(AddItem("无数据"), country);
-        }
     }
 
     private void SetItem(int index, Country country)
@@ -59,7 +55,7 @@ public partial class CountryItemList : BaseItemList
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;
 
-        Game.Dialog.Builder($"确定要删除这个国家?\n(归属:{index} {Stringtable.CountryName[country.国家]})", () =>
+        Game.Instance.Dialog.Builder($"确定要删除这个国家?\n(归属:{index} {Stringtable.CountryName[country.国家]})", () =>
         {
             MapController.Countries.RemoveAt(index);
             RemoveItem(index);
@@ -90,7 +86,7 @@ public partial class CountryItemList : BaseItemList
 
     public override void Add()
     {
-        Game.Dialog.Builder("确定要新建国家？", () =>
+        Game.Instance.Dialog.Builder("确定要新建国家？", () =>
         {
             Country country = new()
             {
@@ -108,7 +104,7 @@ public partial class CountryItemList : BaseItemList
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;
 
-        Game.BtlObjWindow.CreateEdit(country, c =>
+        Game.Instance.BtlObjWindow.CreateEdit(country, c =>
         {
             if (country.国家 != c.国家)
             {
@@ -119,7 +115,23 @@ public partial class CountryItemList : BaseItemList
                 SetItem(index, c);
             }
 
+            if (country.R8 != c.R8 || country.G8 != c.G8 || country.B8 != c.B8)
+                MapController.UpdateCountryColor(index, Color.Color8(c.R8, c.G8, c.B8));
+
             MapController.Countries[index] = c;
+        }, newCountry =>
+        {
+            ColorPickerButton colorPickerButton = new();
+            colorPickerButton.FocusMode = FocusModeEnum.None;
+            colorPickerButton.CustomMinimumSize = new(0, 60);
+            colorPickerButton.Color = Color.Color8(country.R8, country.G8, country.B8);
+            colorPickerButton.ColorChanged += color =>
+            {
+                newCountry.R8 = (byte)color.R8;
+                newCountry.G8 = (byte)color.G8;
+                newCountry.B8 = (byte)color.B8;
+            };
+            return colorPickerButton;
         });
     }
 
@@ -128,7 +140,7 @@ public partial class CountryItemList : BaseItemList
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;
 
-        Game.Dialog.Builder($"确定要复制这个国家？\n(归属:{index} {Stringtable.CountryName[country.国家]})", () =>
+        Game.Instance.Dialog.Builder($"确定要复制这个国家？\n(归属:{index} {Stringtable.CountryName[country.国家]})", () =>
         {
             var newCountry = (Country)country.Clone();
             newCountry.序号 = ItemCount;

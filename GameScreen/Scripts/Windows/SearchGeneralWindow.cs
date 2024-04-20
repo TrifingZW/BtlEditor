@@ -56,12 +56,16 @@ public partial class SearchGeneralWindow : Window
         Star5.SetStar(generalJson.AirForce);
         Star6.SetStar(generalJson.March);
 
-        var path = $"{ImageHeadPath}/general_circle_{generalJson.Photo}.webp";
-        if (!File.Exists(path)) return;
-        Image image = Image.LoadFromFile(path);
-        ImageTexture texture = new();
-        texture.SetImage(image);
-        GeneralTexture.Texture = texture;
+        var path = Helpers.GetValidImagePath($"{ImageHeadPath}/general_circle_{generalJson.Photo}");
+        if (path is null)
+            GeneralTexture.Texture = ResourceLoader.Load<Texture2D>("res://Assets/Textures/UI/avatar.png");
+        else
+        {
+            Image image = Image.LoadFromFile(path);
+            ImageTexture texture = new();
+            texture.SetImage(image);
+            GeneralTexture.Texture = texture;
+        }
     }
 
     private void Update(string text)
@@ -72,7 +76,7 @@ public partial class SearchGeneralWindow : Window
         {
             GeneralJson generalJson = GeneralSettings.GeneralJsons[index];
             if (generalJson.EName is not { } eName) continue;
-            if (Stringtable.GeneralName[eName] is not { } name) continue;
+            if (Stringtable.GeneralName[eName] is not { } name) name = eName;
             if (!name.Contains(text)) continue;
             ItemList.AddItem($"{name} {generalJson.Id}");
             SelectedGenerals.Add(index);

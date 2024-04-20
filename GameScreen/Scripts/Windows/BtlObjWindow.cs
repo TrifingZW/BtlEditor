@@ -19,7 +19,7 @@ public partial class BtlObjWindow : Window
         _editorContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer/ScrollContainer/EditorContainer");
     }
 
-    public void CreateEdit<T>(T obj, Action<T> action) where T : ICloneable
+    public void CreateEdit<T>(T obj, Action<T> action, Func<T,Node> head = null) where T : ICloneable
     {
         var newObj = (T)obj.Clone();
 
@@ -28,6 +28,8 @@ public partial class BtlObjWindow : Window
                 child.QueueFree();
         foreach (Node child in _editorContainer.GetChildren())
             child.QueueFree();
+
+        if (head != null) _editorContainer.AddChild(head(newObj));
 
         Type t = typeof(T);
         if (t.BaseType is { } baseType)

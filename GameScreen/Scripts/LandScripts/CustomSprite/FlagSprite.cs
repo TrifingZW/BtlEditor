@@ -50,7 +50,7 @@ public partial class FlagSprite : Sprite2D
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector2 zoom = MapController.Camera2D.Zoom * 1.35f;
+        Vector2 zoom = MapController.CameraController.Zoom * 1.35f;
         Scale = Vector2.One / zoom.ClampUV();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using BtlEditor.CoreScripts.Utils;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 using FileAccess = Godot.FileAccess;
@@ -19,8 +20,8 @@ public class Wc4ResourceParser(string fileName, bool external = false, string pa
         if (external)
         {
             var xmlPath = $"{TexturesPath}/{path}{fileName}.xml";
-            var texPath = $"{TexturesPath}/{path}{fileName}.webp";
-            if (!File.Exists(texPath)) texPath = $"{TexturesPath}/{path}{fileName}.png";
+            var texPath = Helpers.GetValidImagePath($"{TexturesPath}/{path}{fileName}");
+
             //判断文件是否存在
             if (!File.Exists(xmlPath) || !File.Exists(texPath))
                 throw new($"没有导入{fileName}资源");

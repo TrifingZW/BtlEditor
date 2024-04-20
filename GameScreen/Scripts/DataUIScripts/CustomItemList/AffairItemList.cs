@@ -16,7 +16,7 @@ public partial class AffairItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;
-        Game.Dialog.Builder($"确定要删除这个事件？\n({GetText(affair)})", () =>
+        Game.Instance.Dialog.Builder($"确定要删除这个事件？\n({GetText(affair)})", () =>
         {
             MapController.Affairs.RemoveAt(index);
             RemoveItem(index);
@@ -25,7 +25,7 @@ public partial class AffairItemList : BaseItemList
 
     public override void Add()
     {
-        Game.Dialog.Builder("确定要新建事件？", () =>
+        Game.Instance.Dialog.Builder("确定要新建事件？", () =>
         {
             Affair affair = new();
             MapController.Affairs.Add(affair);
@@ -39,7 +39,7 @@ public partial class AffairItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;
-        Game.BtlObjWindow.CreateEdit(affair, w =>
+        Game.Instance.BtlObjWindow.CreateEdit(affair, w =>
         {
             MapController.Affairs[index] = w;
             SetItemText(index, GetText(w));
@@ -50,7 +50,7 @@ public partial class AffairItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;
-        Game.Dialog.Builder($"确定要复制这个事件？\n({GetText(affair)})", () =>
+        Game.Instance.Dialog.Builder($"确定要复制这个事件？\n({GetText(affair)})", () =>
         {
             var newWeather = (Affair)affair.Clone();
             MapController.Affairs.Add(newWeather);

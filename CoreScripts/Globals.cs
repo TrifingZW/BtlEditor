@@ -11,7 +11,7 @@ public partial class Globals : Node
     private static readonly string ConfigPath = $"{FilePath}/config.cfg";
 
 
-    public static float ShaderScale => Shader switch
+    public static float RenderScaleValue => RenderScale switch
     {
         0 => 0.2f,
         1 => 0.5f,
@@ -33,7 +33,7 @@ public partial class Globals : Node
 
     public static float Scale { get; private set; }
     public static int Fps { get; private set; }
-    public static int Shader { get; private set; }
+    public static int RenderScale { get; private set; }
     public static long WindowMode { get; private set; }
     public static long VSync { get; private set; }
     public static string WorkPath { get; private set; }
@@ -52,21 +52,21 @@ public partial class Globals : Node
         Config.Load(ConfigPath);
         Scale = Config.GetValue("Setting", "Scale", Variant.From(1.0f)).AsSingle();
         Fps = Config.GetValue("Setting", "Fps", Variant.From(0)).AsInt32();
-        Shader = Config.GetValue("Setting", "Shader", Variant.From(1)).AsInt32();
+        RenderScale = Config.GetValue("Setting", "Shader", Variant.From(2)).AsInt32();
         WindowMode = Config.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
         VSync = Config.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
 
         WorkPath = Config.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
         BtlPath = Config.GetValue("Work", "BtlPath", $"{StagePath}/conquest5.btl").AsString();
 
-        Save(Scale, Fps, Shader, WindowMode, VSync);
+        Save(Scale, Fps, RenderScale, WindowMode, VSync);
     }
 
     public static void Save(float scale, int fps, int shader, long windowMode, long vSync)
     {
         Scale = scale;
         Fps = fps;
-        Shader = shader;
+        RenderScale = shader;
         WindowMode = windowMode;
         VSync = vSync;
 
@@ -74,7 +74,7 @@ public partial class Globals : Node
         _root.ContentScaleFactor = Scale;
         Config.SetValue("Setting", "Fps", Fps);
         Engine.MaxFps = FpsValue;
-        Config.SetValue("Setting", "Shader", Shader);
+        Config.SetValue("Setting", "Shader", RenderScale);
         Config.SetValue("Setting", "WindowMode", WindowMode);
         DisplayServer.WindowSetMode((DisplayServer.WindowMode)WindowMode);
         Config.SetValue("Setting", "VSync", VSync);

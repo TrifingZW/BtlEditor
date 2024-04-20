@@ -16,7 +16,7 @@ public partial class StrategyItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;
-        Game.Dialog.Builder($"确定要删除这个战略？\n({GetText(strategy)})", () =>
+        Game.Instance.Dialog.Builder($"确定要删除这个战略？\n({GetText(strategy)})", () =>
         {
             MapController.Strategies.RemoveAt(index);
             RemoveItem(index);
@@ -25,7 +25,7 @@ public partial class StrategyItemList : BaseItemList
 
     public override void Add()
     {
-        Game.Dialog.Builder("确定要新建战略？", () =>
+        Game.Instance.Dialog.Builder("确定要新建战略？", () =>
         {
             Strategy strategy = new();
             MapController.Strategies.Add(strategy);
@@ -39,7 +39,7 @@ public partial class StrategyItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;
-        Game.BtlObjWindow.CreateEdit(strategy, s =>
+        Game.Instance.BtlObjWindow.CreateEdit(strategy, s =>
         {
             MapController.Strategies[index] = s;
             SetItemText(index, GetText(s));
@@ -50,7 +50,7 @@ public partial class StrategyItemList : BaseItemList
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;
-        Game.Dialog.Builder($"确定要复制这个战略？\n({GetText(strategy)})", () =>
+        Game.Instance.Dialog.Builder($"确定要复制这个战略？\n({GetText(strategy)})", () =>
         {
             var newStrategy = (Strategy)strategy.Clone();
             MapController.Strategies.Add(newStrategy);

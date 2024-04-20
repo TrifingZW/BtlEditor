@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using BtlEditor.CoreScripts;
 using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.GameScreen.Scripts.MapUIScripts;
 using Godot;
+using static BtlEditor.CoreScripts.Globals;
 using static BtlEditor.CoreScripts.Parser.ParserHelper;
 using static BtlEditor.CoreScripts.StaticRes;
 using FileAccess = Godot.FileAccess;
@@ -20,7 +20,7 @@ public partial class MapController : CanvasGroup
 {
     //节点
     private static Game Game => Game.Instance;
-    public static Camera2D Camera2D => Game.CameraController;
+    public static CameraController CameraController => Game.CameraController;
 
     private SubViewport _subViewport;
     private Sprite2D _land;
@@ -267,8 +267,8 @@ public partial class MapController : CanvasGroup
                 };
                 Rect2 rect = new()
                 {
-                    Position = landUnit.Position - new Vector2(element.RefX, element.RefY) + offset,
-                    Size = new(element.Width, element.Height)
+                    Position = (landUnit.Position - new Vector2(element.RefX, element.RefY) + offset) * RenderScaleValue,
+                    Size = new Vector2(element.Width, element.Height) * RenderScaleValue
                 };
                 _topography.DrawTextureRectRegion(TerrainHd.Texture2D, rect, scrRect);
             }
@@ -282,8 +282,8 @@ public partial class MapController : CanvasGroup
                 };
                 Rect2 rect = new()
                 {
-                    Position = landUnit.Position - new Vector2(element2.RefX, element2.RefY) + offset,
-                    Size = new(element2.Width, element2.Height)
+                    Position = (landUnit.Position - new Vector2(element2.RefX, element2.RefY) + offset) * RenderScaleValue,
+                    Size = new Vector2(element2.Width, element2.Height) * RenderScaleValue
                 };
                 _topography.DrawTextureRectRegion(PlantHd.Texture2D, rect, scrRect);
             }
@@ -322,23 +322,24 @@ public partial class MapController : CanvasGroup
     {
         LoadHex(out var points);
         _points = points;
-        ColorUvImage = Image.Create(Mathf.CeilToInt(CanvasSize.X * Globals.ShaderScale), Mathf.CeilToInt(CanvasSize.Y * Globals.ShaderScale), false,
+        ColorUvImage = Image.Create(Mathf.CeilToInt(CanvasSize.X / 2f), Mathf.CeilToInt(CanvasSize.Y / 2f), false,
             Image.Format.Rgba8);
     }
 
     private void SetSize()
     {
         Vector2I size = CanvasSize;
-        _subViewport.Size = size;
+        _subViewport.Size = (new Vector2(size.X, size.Y) * RenderScaleValue).ToVector2I();
+        _land.RegionRect = new() { Size = _subViewport.Size };
+        _landRender.Scale /= RenderScaleValue;
         _seaRender.RegionRect = new() { Size = size };
-        _land.RegionRect = new() { Size = size };
     }
 
     #region 设置UV颜色
 
     public void SetUvColor(int w, int h, Color color)
     {
-        Vector2 position = (TileMap.MapToLocal(new(w, h)) - OffsetSize) * Globals.ShaderScale;
+        Vector2 position = (TileMap.MapToLocal(new(w, h)) - OffsetSize) / 2f;
         foreach (Vector2I vector2I in _points)
             ColorUvImage.SetPixelv(vector2I + position.ToVector2I(), color);
     }
@@ -347,25 +348,12 @@ public partial class MapController : CanvasGroup
 
     #endregion
 
-    //应用着色器
-    public void UpdateShader()
-    {
-        var sprite2DMaterial1 = (ShaderMaterial)_landRender.Material;
-        sprite2DMaterial1.SetShaderParameter("color_texture", ImageTexture.CreateFromImage(ColorUvImage));
-    }
-
     //读取Hex
     private static void LoadHex(out List<Vector2I> points)
     {
         List<Vector2I> vector2Is = [];
         Image image = new();
-        var hexName = Globals.Shader switch
-        {
-            0 => "hex_min.bin",
-            1 => "hex_small.bin",
-            2 => "hex_large.bin",
-            _ => "hex_small.bin"
-        };
+        const string hexName = "hex_small.bin";
         image.LoadPngFromBuffer(FileAccess.GetFileAsBytes($"res://Assets/Textures/{hexName}"));
         for (var x = 0; x < image.GetWidth(); x++)
         for (var y = 0; y < image.GetHeight(); y++)
@@ -459,7 +447,7 @@ public partial class MapController : CanvasGroup
         Master.陷阱总数 = 陷阱总数;
         Master.战略总数 = 战略总数;
 
-        using BinaryWriter binaryWriter = new(File.Create(Globals.BtlPath));
+        using BinaryWriter binaryWriter = new(File.Create(BtlPath));
 
         Master.Serializable(binaryWriter);
 
@@ -527,7 +515,33 @@ public partial class MapController : CanvasGroup
 
         foreach (AirSupport airSupport in AirSupports)
             airSupport.Serializable(binaryWriter);
+
+        Game.AcceptDialog.DialogText = "保存成功";
+        Game.AcceptDialog.Show();
     }
+
+    #region 更新函数
+
+    public void UpdateCountryColor(int index, Color color)
+    {
+        Country country = Countries[index];
+        country.R8 = (byte)color.R8;
+        country.G8 = (byte)color.G8;
+        country.B8 = (byte)color.B8;
+        foreach (LandUnit landUnit in LandUnits)
+            if (landUnit.Belong == index)
+                landUnit.UpdateBelongColor();
+        UpdateShader();
+    }
+
+    //更新着色器
+    public void UpdateShader()
+    {
+        var sprite2DMaterial1 = (ShaderMaterial)_landRender.Material;
+        sprite2DMaterial1.SetShaderParameter("color_texture", ImageTexture.CreateFromImage(ColorUvImage));
+    }
+
+    #endregion
 
     #region 工具模式
 
@@ -582,7 +596,11 @@ public partial class MapController : CanvasGroup
                                 //军队交换
                                 Vector2I vector2I = TileMap.LocalToMap(_selectLand.Position + _delta);
                                 if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                                {
+                                    var belong = _selectLand.Belong;
                                     (_selectLand.Army, landUnit.Army) = (landUnit.Army, _selectLand.Army);
+                                    if (landUnit.Belong == 0xff) landUnit.Belong = belong;
+                                }
                                 else _selectLand.UpdateArmy();
 
                                 //清除记录
@@ -631,6 +649,10 @@ public partial class MapController : CanvasGroup
                         //设置TileMap选中
                         TileMap.ClearLayer(SingleLayer);
                         TileMap.SetCell(SingleLayer, vector2I, SingleTileSetAtlasId, new());
+
+                        foreach (LandUnit unit in LandUnits)
+                            if (unit.Province == landUnit.RegionIndex)
+                                TileMap.SetCell(SingleLayer, unit.Coords, SingleTileSetAtlasId, new(), 1);
                     }
 
                 break;
@@ -643,7 +665,31 @@ public partial class MapController : CanvasGroup
                     case InputEventMouseButton inputEventMouseButton:
                     {
                         if (inputEventMouseButton.ButtonIndex == MouseButton.Left)
+                        {
                             _multiPressed = inputEventMouseButton.Pressed;
+                            Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
+                            if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                                switch (MultiMode)
+                                {
+                                    case 0:
+                                        if (!MapUI.MultiLandUnit.Contains(landUnit))
+                                        {
+                                            TileMap.SetCell(MultiLayer, vector2I, MultiTileSetAtlasId, new());
+                                            MapUI.MultiLandUnit.Add(landUnit);
+                                        }
+
+                                        break;
+                                    case 1:
+                                        if (MapUI.MultiLandUnit.Contains(landUnit))
+                                        {
+                                            TileMap.EraseCell(MultiLayer, vector2I);
+                                            MapUI.MultiLandUnit.Remove(landUnit);
+                                        }
+
+                                        break;
+                                }
+                        }
+
                         break;
                     }
                     case InputEventMouseMotion:
@@ -680,7 +726,88 @@ public partial class MapController : CanvasGroup
                 break;
             }
         }
+
+        if (@event is not InputEventKey keyEvent) return;
+        if (UtilMode == 1)
+        {
+            if (MapUI.SingeLandUnit is not { } landUnit) return;
+            if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Up)
+                if (landUnit.Y > 0)
+                    MapUI.SingeLandUnit = LandUnits[landUnit.Index - Master.地图宽];
+            if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Down)
+                if (landUnit.Y < Master.地图高 - 1)
+                    MapUI.SingeLandUnit = LandUnits[landUnit.Index + Master.地图宽];
+            if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Left)
+                if (landUnit.X > 0)
+                    MapUI.SingeLandUnit = LandUnits[landUnit.Index - 1];
+            if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Right)
+                if (landUnit.X < Master.地图宽 - 1)
+                    MapUI.SingeLandUnit = LandUnits[landUnit.Index + 1];
+
+            if (keyEvent.Pressed)
+                if (keyEvent.KeyLabel is Key.Right or Key.Left or Key.Up or Key.Down)
+                {
+                    //设置TileMap选中
+                    TileMap.ClearLayer(SingleLayer);
+                    TileMap.SetCell(SingleLayer, landUnit.Coords, SingleTileSetAtlasId, new());
+
+                    CameraController.TargetPosition = landUnit.Position;
+                }
+        }
     }
 
     #endregion
+
+    private static void Copy()
+    {
+        if (MapUI.SingeLandUnit is not { } landUnit) return;
+        if (landUnit.Army is { } army)
+            Game.ArmyCopy = army;
+        else Game.ArmyCopy = null;
+        if (landUnit.City is { } city)
+            Game.CityCopy = city;
+        else Game.CityCopy = null;
+        Game.BelongCopy = landUnit.Belong;
+    }
+
+    private void PasteArmy()
+    {
+        if (MapUI.SingeLandUnit is not { } landUnit) return;
+        if (Game.ArmyCopy is not { } army) return;
+        landUnit.Army = army.Clone() switch
+        {
+            Army1 army1 => army1,
+            Army2 army2 => army2,
+            _ => landUnit.Army
+        };
+        if (landUnit.Belong == 0xff)
+            landUnit.Belong = Game.BelongCopy;
+        landUnit.UpdateArmy();
+    }
+
+    private void PasteCity()
+    {
+        if (MapUI.SingeLandUnit is not { } landUnit) return;
+        if (Game.CityCopy is not { } city) return;
+        landUnit.City = (City)city.Clone();
+        if (landUnit.Belong == 0xff)
+            landUnit.Belong = Game.BelongCopy;
+        landUnit.Province = landUnit.RegionIndex;
+        landUnit.UpdateProvinceColor();
+        UpdateShader();
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is not InputEventKey keyEvent) return;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.C)
+            if (keyEvent.CtrlPressed)
+                Copy();
+
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.A)
+            PasteArmy();
+
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.C)
+            PasteCity();
+    }
 }

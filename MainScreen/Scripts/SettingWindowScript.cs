@@ -23,7 +23,7 @@ public partial class SettingWindowScript : Window
 
         _sc = Globals.Scale;
         _fp = Globals.Fps;
-        _sh = Globals.Shader;
+        _sh = Globals.RenderScale;
         _wi = Globals.WindowMode;
         _vs = Globals.VSync;
 
@@ -68,7 +68,7 @@ public partial class SettingWindowScript : Window
     {
         _scale.Value = Globals.Scale;
         _fps.Selected = Globals.Fps;
-        _shader.Selected = Globals.Shader;
+        _shader.Selected = Globals.RenderScale;
         _windowMode.Selected = Globals.WindowMode == 0 ? 0 : 1;
         _vSync.Selected = Globals.VSync == 2 ? 0 : 1;
     }

@@ -20,15 +20,9 @@ script = ExtResource("1_2nprm")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -700.0
-offset_top = -450.0
-offset_right = 700.0
-offset_bottom = 450.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -53,7 +47,9 @@ text = "[center][img={60}x{60}]res://icon.svg[/img][color=red][font_size=60][b]W
 Developer:[url=https://qm.qq.com/q/pLcdsbQMI8][color=red][i][b]TrifingZW[/b][/i][/color][/url]    编辑器反馈群：[url=https://qm.qq.com/q/pLcdsbQMI8][color=green]点击加入[/color][/url]
 本编辑器基于[hint=Godot是一个跨平台、免费、开源的游戏引擎，采用宽松的MIT许可证发布][color=red][b][url=https://godotengine.org/]Godot[/url][/b][/color][/hint]引擎
 本编辑器的BTL结构数据来自:
-[indent][color=green][ul]表格编辑器[/ul][ul]Btl结构整理[/ul][/color][/indent][color=red]本编辑器仅限学习交流使用，涉及破解等不正当行为请自觉退出！[/color]"
+[indent][color=green][ul]表格编辑器[/ul][ul]Btl结构整理[/ul][/color][/indent][color=red]本编辑器仅限学习交流使用，涉及破解等不正当行为请自觉退出！[/color]
+"
+scroll_following = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -131,7 +127,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow/MarginContainer/VBoxContainer/EditorItem2/MarginContainer1/Head" index="0"]
 layout_mode = 2
-text = "颜色UV映射细节"
+text = "底图大小"
 
 [node name="Shader" type="OptionButton" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow/MarginContainer/VBoxContainer/EditorItem2/MarginContainer2/Content" index="0"]
 unique_name_in_owner = true
@@ -214,7 +210,16 @@ popup/item_1/id = 1
 layout_mode = 2
 text = "保存设置"
 
+[node name="StartButton" type="Button" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 80
+disabled = true
+text = "启动地图编辑器"
+
 [connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow/MarginContainer/VBoxContainer/Save" to="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow" method="Save"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/StartButton" to="." method="Start"]
 
 [editable path="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow/MarginContainer/VBoxContainer/EditorItem"]
 [editable path="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer/SettingWindow/MarginContainer/VBoxContainer/EditorItem2"]

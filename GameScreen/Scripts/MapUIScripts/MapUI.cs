@@ -10,14 +10,18 @@ namespace BtlEditor.GameScreen.Scripts.MapUIScripts;
 
 public partial class MapUI : CanvasLayer
 {
+    private LandUnit _singeLandUnit;
+
     public LandUnit SingeLandUnit
     {
+        get => _singeLandUnit;
         set
         {
+            _singeLandUnit = value;
             foreach (Node node in _dataTabContainer.GetChildren())
                 if (node is BaseSingle baseContainer)
-                    if (value != null)
-                        baseContainer.LandUnit = value;
+                    if (SingeLandUnit != null)
+                        baseContainer.LandUnit = SingeLandUnit;
                     else baseContainer.Clear();
         }
     }
@@ -50,6 +54,17 @@ public partial class MapUI : CanvasLayer
         _utils.TabSelected += UtilsSelect;
 
         EditWindow = GetNode<EditWindow>("%EditWindow");
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is not InputEventKey keyEvent) return;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F1)
+            _utils.CurrentTab = 0;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F2)
+            _utils.CurrentTab = 1;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F3)
+            _utils.CurrentTab = 2;
     }
 
     private void UtilsSelect(long index)

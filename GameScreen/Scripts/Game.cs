@@ -12,10 +12,11 @@ public partial class Game : Node2D
     public CameraController CameraController { get; private set; }
     public MapUI MapUI { get; private set; }
     public DataUI DataUI { get; private set; }
-    public static Dialog Dialog { get; private set; }
-    public static BtlObjWindow BtlObjWindow { get; private set; }
-    public static SearchGeneralWindow SearchGeneralWindow { get; private set; }
-    public static SearchArmyWindow SearchArmyWindow { get; private set; }
+    public Dialog Dialog { get; private set; }
+    public BtlObjWindow BtlObjWindow { get; private set; }
+    public SearchGeneralWindow SearchGeneralWindow { get; private set; }
+    public SearchArmyWindow SearchArmyWindow { get; private set; }
+    public AcceptDialog AcceptDialog { get; private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -42,7 +43,10 @@ public partial class Game : Node2D
     #region 粘贴板
 
     public static Reinforcement ReinforcementCopy { get; set; }
-    
+    public static Army ArmyCopy { get; set; }
+    public static City CityCopy { get; set; }
+    public static byte BelongCopy { get; set; }
+
     #endregion
 
     public override void _EnterTree()
@@ -55,13 +59,17 @@ public partial class Game : Node2D
         BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
         SearchGeneralWindow = GetNode<SearchGeneralWindow>("SearchGeneralWindow");
         SearchArmyWindow = GetNode<SearchArmyWindow>("SearchArmyWindow");
+        AcceptDialog = GetNode<AcceptDialog>("AcceptDialog");
         Dialog = GetNode<Dialog>("Dialog");
     }
 
     public override void _Input(InputEvent @event)
     {
         if (@event is not InputEventKey keyEvent) return;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Tab)
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Capslock)
             DataMode = !DataMode;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.S)
+            if (keyEvent.CtrlPressed)
+                MapController.Save();
     }
 }

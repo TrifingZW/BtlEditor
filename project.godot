@@ -42,5 +42,4 @@ locale/fallback="cn"
 
 [rendering]
 
-driver/threads/thread_model=2
 textures/vram_compression/import_etc2_astc=true

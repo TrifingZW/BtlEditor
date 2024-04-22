@@ -324,7 +324,7 @@ public partial class MapController : CanvasGroup
     {
         LoadHex(out var points);
         _points = points;
-        ColorUvImage = Image.Create(Mathf.CeilToInt(CanvasSize.X / 2f), Mathf.CeilToInt(CanvasSize.Y / 2f), false,
+        ColorUvImage = Image.Create(Mathf.CeilToInt(CanvasSize.X * 0.2f), Mathf.CeilToInt(CanvasSize.Y * 0.2f), false,
             Image.Format.Rgba8);
         _currentTexture = ImageTexture.CreateFromImage(ColorUvImage);
         var sprite2DMaterial = (ShaderMaterial)_landRender.Material;
@@ -344,7 +344,7 @@ public partial class MapController : CanvasGroup
 
     public void SetUvColor(int w, int h, Color color)
     {
-        Vector2 position = (TileMap.MapToLocal(new(w, h)) - OffsetSize) / 2f;
+        Vector2 position = (TileMap.MapToLocal(new(w, h)) - OffsetSize) * 0.2f;
         foreach (Vector2I vector2I in _points)
             ColorUvImage.SetPixelv(vector2I + position.ToVector2I(), color);
     }
@@ -358,7 +358,7 @@ public partial class MapController : CanvasGroup
     {
         List<Vector2I> vector2Is = [];
         Image image = new();
-        const string hexName = "hex_small.bin";
+        const string hexName = "hex_min.bin";
         image.LoadPngFromBuffer(FileAccess.GetFileAsBytes($"res://Assets/Textures/{hexName}"));
         for (var x = 0; x < image.GetWidth(); x++)
         for (var y = 0; y < image.GetHeight(); y++)
@@ -599,32 +599,33 @@ public partial class MapController : CanvasGroup
                     }
                     else
                     {
-                        if (_androidSelect)
-                        {
-                            Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
-                            if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                        if (!_selectMotion)
+                            if (_androidSelect)
                             {
-                                if (landUnit == _oldSelectLand)
-                                    return;
+                                Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
+                                if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                                {
+                                    if (landUnit == _oldSelectLand)
+                                        return;
 
-                                TileMap.ClearLayer(SingleLayer);
-                                Game.Instance.AudioStreamPlayer.Play();
+                                    TileMap.ClearLayer(SingleLayer);
+                                    Game.Instance.AudioStreamPlayer.Play();
 
-                                MapUI.SingeLandUnit = landUnit;
-                                Indicator.Visible = true;
-                                Indicator.Position = landUnit.Position;
+                                    MapUI.SingeLandUnit = landUnit;
+                                    Indicator.Visible = true;
+                                    Indicator.Position = landUnit.Position;
 
-                                foreach (LandUnit unit in LandUnits)
-                                    if (unit.Province == landUnit.RegionIndex)
-                                        TileMap.SetCell(SingleLayer, unit.Coords, SingleTileSetAtlasId, new());
+                                    foreach (LandUnit unit in LandUnits)
+                                        if (unit.Province == landUnit.RegionIndex)
+                                            TileMap.SetCell(SingleLayer, unit.Coords, SingleTileSetAtlasId, new());
 
-                                if (_oldSelectLand?.ArmySprite is { } oldArmySprite) oldArmySprite.Select = false;
-                                if (landUnit.ArmySprite is { } armySprite) armySprite.Select = true;
+                                    if (_oldSelectLand?.ArmySprite is { } oldArmySprite) oldArmySprite.Select = false;
+                                    if (landUnit.ArmySprite is { } armySprite) armySprite.Select = true;
 
-                                _oldSelectLand = landUnit;
+                                    _oldSelectLand = landUnit;
+                                }
                             }
-                        }
-                        else _androidSelect = true;
+                            else _androidSelect = true;
 
                         if (!_selectMotion) return;
 
@@ -637,6 +638,8 @@ public partial class MapController : CanvasGroup
                                 var belong = _oldSelectLand.Belong;
                                 (_oldSelectLand.Army, landUnit.Army) = (landUnit.Army, _oldSelectLand.Army);
                                 if (landUnit.Belong == 0xff) landUnit.Belong = belong;
+                                MapUI.SingeLandUnit = null;
+                                
                             }
                             else _oldSelectLand.UpdateArmy();
 
@@ -644,6 +647,7 @@ public partial class MapController : CanvasGroup
                             Game.Instance.MapUI.TemporarilyHidden = false;
                             CameraController.AndroidCameraController = true;
                             _selectMotion = false;
+                            _androidSelect = true;
                             _mousePosition = default;
                             _delta = default;
 

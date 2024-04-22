@@ -49,7 +49,7 @@ public partial class MapUI : CanvasLayer
         set
         {
             _temporarilyHidden = value;
-            Visible = value;
+            Visible = !value;
             UtilsSelect(_utils.CurrentTab);
         }
     }

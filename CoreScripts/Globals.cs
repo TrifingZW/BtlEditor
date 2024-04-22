@@ -53,7 +53,7 @@ public partial class Globals : Node
         Config.Load(ConfigPath);
         Scale = Config.GetValue("Setting", "Scale", Variant.From(1.0f)).AsSingle();
         Fps = Config.GetValue("Setting", "Fps", Variant.From(0)).AsInt32();
-        RenderScale = Config.GetValue("Setting", "Shader", Variant.From(2)).AsInt32();
+        RenderScale = Config.GetValue("Setting", "RenderScale", Variant.From(2)).AsInt32();
         WindowMode = Config.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
         VSync = Config.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
 

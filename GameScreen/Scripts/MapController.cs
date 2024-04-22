@@ -549,6 +549,8 @@ public partial class MapController : CanvasGroup
     private LandUnit _oldSelectLand;
     private bool _selectMotion;
     private Vector2 _mousePosition;
+    private Vector2 _androidMousePosition;
+    private bool _androidSelect = true;
     private Vector2 _delta;
     private int _utilMode;
 
@@ -567,7 +569,6 @@ public partial class MapController : CanvasGroup
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!CameraController.AndroidCameraController) return;
         switch (UtilMode)
         {
             case 0:
@@ -576,6 +577,8 @@ public partial class MapController : CanvasGroup
                 {
                     if (mouseButton.Pressed)
                     {
+                        _androidMousePosition = GetGlobalMousePosition();
+
                         Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
                         if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
                         {
@@ -583,6 +586,8 @@ public partial class MapController : CanvasGroup
                             {
                                 if (_oldSelectLand?.ArmySprite is { Select: true })
                                 {
+                                    Game.Instance.MapUI.TemporarilyHidden = true;
+                                    CameraController.AndroidCameraController = false;
                                     _mousePosition = GetGlobalMousePosition();
                                     Indicator.Visible = false;
                                     _selectMotion = true;
@@ -590,50 +595,70 @@ public partial class MapController : CanvasGroup
 
                                 return;
                             }
-
-                            TileMap.ClearLayer(SingleLayer);
-                            Game.Instance.AudioStreamPlayer.Play();
-
-                            MapUI.SingeLandUnit = landUnit;
-                            Indicator.Visible = true;
-                            Indicator.Position = landUnit.Position;
-
-                            foreach (LandUnit unit in LandUnits)
-                                if (unit.Province == landUnit.RegionIndex)
-                                    TileMap.SetCell(SingleLayer, unit.Coords, SingleTileSetAtlasId, new());
-
-                            if (_oldSelectLand?.ArmySprite is { } oldArmySprite) oldArmySprite.Select = false;
-                            if (landUnit.ArmySprite is { } armySprite) armySprite.Select = true;
-
-                            _oldSelectLand = landUnit;
                         }
                     }
                     else
                     {
+                        if (_androidSelect)
+                        {
+                            Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
+                            if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                            {
+                                if (landUnit == _oldSelectLand)
+                                    return;
+
+                                TileMap.ClearLayer(SingleLayer);
+                                Game.Instance.AudioStreamPlayer.Play();
+
+                                MapUI.SingeLandUnit = landUnit;
+                                Indicator.Visible = true;
+                                Indicator.Position = landUnit.Position;
+
+                                foreach (LandUnit unit in LandUnits)
+                                    if (unit.Province == landUnit.RegionIndex)
+                                        TileMap.SetCell(SingleLayer, unit.Coords, SingleTileSetAtlasId, new());
+
+                                if (_oldSelectLand?.ArmySprite is { } oldArmySprite) oldArmySprite.Select = false;
+                                if (landUnit.ArmySprite is { } armySprite) armySprite.Select = true;
+
+                                _oldSelectLand = landUnit;
+                            }
+                        }
+                        else _androidSelect = true;
+
                         if (!_selectMotion) return;
 
-                        //军队交换
-                        Vector2I vector2I = TileMap.LocalToMap(_oldSelectLand.Position + _delta);
-                        if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                        #region 军队交换
+
                         {
-                            var belong = _oldSelectLand.Belong;
-                            (_oldSelectLand.Army, landUnit.Army) = (landUnit.Army, _oldSelectLand.Army);
-                            if (landUnit.Belong == 0xff) landUnit.Belong = belong;
+                            Vector2I vector2I = TileMap.LocalToMap(_oldSelectLand.Position + _delta);
+                            if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Master.地图宽), out LandUnit landUnit))
+                            {
+                                var belong = _oldSelectLand.Belong;
+                                (_oldSelectLand.Army, landUnit.Army) = (landUnit.Army, _oldSelectLand.Army);
+                                if (landUnit.Belong == 0xff) landUnit.Belong = belong;
+                            }
+                            else _oldSelectLand.UpdateArmy();
+
+                            //清除记录
+                            Game.Instance.MapUI.TemporarilyHidden = false;
+                            CameraController.AndroidCameraController = true;
+                            _selectMotion = false;
+                            _mousePosition = default;
+                            _delta = default;
+
+                            //清除TileMap选中
+                            TileMap.ClearLayer(SingleLayer);
                         }
-                        else _oldSelectLand.UpdateArmy();
 
-                        //清除记录
-                        _selectMotion = false;
-                        _mousePosition = default;
-                        _delta = default;
-
-                        //清除TileMap选中
-                        TileMap.ClearLayer(SingleLayer);
+                        #endregion
                     }
                 }
 
                 if (@event is InputEventMouseMotion)
                 {
+                    if (_androidMousePosition.DistanceTo(GetGlobalMousePosition()) > 1f) _androidSelect = false;
+
                     if (_selectMotion)
                     {
                         //计算位置
@@ -659,7 +684,7 @@ public partial class MapController : CanvasGroup
                 {
                     case InputEventMouseButton inputEventMouseButton:
                     {
-                        if (inputEventMouseButton.ButtonIndex == MouseButton.Left)
+                        if (inputEventMouseButton.ButtonIndex == MouseButton.Right)
                         {
                             _multiPressed = inputEventMouseButton.Pressed;
                             Vector2I vector2I = TileMap.LocalToMap(GetGlobalMousePosition());
@@ -724,43 +749,4 @@ public partial class MapController : CanvasGroup
     }
 
     #endregion
-
-    private static void Copy()
-    {
-        if (MapUI.SingeLandUnit is not { } landUnit) return;
-        if (landUnit.Army is { } army)
-            Game.ArmyCopy = army;
-        else Game.ArmyCopy = null;
-        if (landUnit.City is { } city)
-            Game.CityCopy = city;
-        else Game.CityCopy = null;
-        Game.BelongCopy = landUnit.Belong;
-    }
-
-    private void PasteArmy()
-    {
-        if (MapUI.SingeLandUnit is not { } landUnit) return;
-        if (Game.ArmyCopy is not { } army) return;
-        landUnit.Army = army.Clone() switch
-        {
-            Army1 army1 => army1,
-            Army2 army2 => army2,
-            _ => landUnit.Army
-        };
-        if (landUnit.Belong == 0xff)
-            landUnit.Belong = Game.BelongCopy;
-        landUnit.UpdateArmy();
-    }
-
-    private void PasteCity()
-    {
-        if (MapUI.SingeLandUnit is not { } landUnit) return;
-        if (Game.CityCopy is not { } city) return;
-        landUnit.City = (City)city.Clone();
-        if (landUnit.Belong == 0xff)
-            landUnit.Belong = Game.BelongCopy;
-        landUnit.Province = landUnit.RegionIndex;
-        landUnit.UpdateProvinceColor();
-        UpdateColorUV();
-    }
 }

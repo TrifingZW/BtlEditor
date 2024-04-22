@@ -120,7 +120,7 @@ public partial class CameraController : Camera2D
     private void AndroidController(InputEvent inputEvent)
     {
         if (_target) return;
-        if (AndroidCameraController) return;
+        if (!AndroidCameraController) return;
         if (inputEvent is InputEventScreenTouch touchEvent)
         {
             if (touchEvent.Pressed)

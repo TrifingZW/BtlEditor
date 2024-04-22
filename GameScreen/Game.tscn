@@ -149,6 +149,11 @@ theme_override_font_sizes/font_size = 50
 button_pressed = true
 text = "显示面板"
 
+[node name="Mode" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
+
 [node name="Save" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
@@ -503,6 +508,11 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "复制"
 
+[node name="Mode" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
+
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 title = "警告"
 initial_position = 1
@@ -793,6 +803,7 @@ ok_button_text = "收到,收到,Over!"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("41_outve")
 
+[connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Mode" to="." method="Handoff"]
 [connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
 [connection signal="tab_selected" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="MapUI" method="MultiModeTabSelect"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI" method="MultiModeClear"]
@@ -807,6 +818,7 @@ stream = ExtResource("41_outve")
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button2" to="DataUI" method="Delete"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button3" to="DataUI" method="Set"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button4" to="DataUI" method="Copy"]
+[connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Mode" to="." method="Handoff"]
 
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel"]
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel"]

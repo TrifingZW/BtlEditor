@@ -41,6 +41,18 @@ public partial class MapUI : CanvasLayer
     // private TerrainContainer _terrainContainer;
     private TabBar _utils;
     private CheckButton _panelVisible;
+    private bool _temporarilyHidden;
+
+    public bool TemporarilyHidden
+    {
+        get => _temporarilyHidden;
+        set
+        {
+            _temporarilyHidden = value;
+            Visible = value;
+            UtilsSelect(_utils.CurrentTab);
+        }
+    }
 
     //Windows
     public EditWindow EditWindow { get; private set; }
@@ -58,9 +70,6 @@ public partial class MapUI : CanvasLayer
         _panelVisible.Pressed += () => { UtilsSelect(_utils.CurrentTab); };
 
         EditWindow = GetNode<EditWindow>("%EditWindow");
-
-        var androidCameraController = GetNode<Button>("%AndroidCameraController");
-        androidCameraController.Pressed += () => { Game.Instance.CameraController.AndroidCameraController = !androidCameraController.ButtonPressed; };
     }
 
     public override void _Input(InputEvent @event)
@@ -76,9 +85,9 @@ public partial class MapUI : CanvasLayer
     {
         _singleContainer.Visible = false;
         _multiContainer.Visible = false;
-        SingeLandUnit = null;
         MapController.UtilMode = (int)index;
         if (!_panelVisible.ButtonPressed) return;
+        if (TemporarilyHidden) return;
         switch (index)
         {
             case 0:

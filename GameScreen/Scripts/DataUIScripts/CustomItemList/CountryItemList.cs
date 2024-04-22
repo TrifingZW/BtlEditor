@@ -80,7 +80,7 @@ public partial class CountryItemList : BaseItemList
                     landUnit.Belong--;
             }
 
-            MapController.UpdateShader();
+            MapController.UpdateColorUV();
         });
     }
 

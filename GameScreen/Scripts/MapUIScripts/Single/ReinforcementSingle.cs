@@ -97,6 +97,8 @@ public partial class ReinforcementSingle : BaseSingle
             {
                 reinforcement.将领 = (short)general.Id;
                 reinforcement.军衔 = (byte)general.Hp;
+                reinforcement.爵位 = (byte)general.Hp;
+
 
                 if (general.Skills.TryGetValue(0, out var skill1))
                     reinforcement.技能等级1 = (byte)(skill1 % 10);

@@ -17,6 +17,7 @@ public partial class Game : Node2D
     public SearchGeneralWindow SearchGeneralWindow { get; private set; }
     public SearchArmyWindow SearchArmyWindow { get; private set; }
     public AcceptDialog AcceptDialog { get; private set; }
+    public AudioStreamPlayer AudioStreamPlayer { get;private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -61,6 +62,7 @@ public partial class Game : Node2D
         SearchArmyWindow = GetNode<SearchArmyWindow>("SearchArmyWindow");
         AcceptDialog = GetNode<AcceptDialog>("AcceptDialog");
         Dialog = GetNode<Dialog>("Dialog");
+        AudioStreamPlayer = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
     }
 
     public override void _Input(InputEvent @event)

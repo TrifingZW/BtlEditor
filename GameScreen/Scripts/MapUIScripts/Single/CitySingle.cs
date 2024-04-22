@@ -27,7 +27,7 @@ public partial class CitySingle : BaseSingle
                 LandUnit.City = new() { 坐标 = LandUnit.RegionIndex };
                 LandUnit.Province = LandUnit.RegionIndex;
                 LandUnit.UpdateProvinceColor();
-                Game.Instance.MapController.UpdateShader();
+                Game.Instance.MapController.UpdateColorUV();
                 Clear();
                 Update();
             };

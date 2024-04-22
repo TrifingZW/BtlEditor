@@ -31,7 +31,7 @@ public partial class MapUI : CanvasLayer
     private static MapController MapController => Game.Instance.MapController;
 
     //数据面板
-    private PanelContainer _dataContainer;
+    private PanelContainer _singleContainer;
     private PanelContainer _multiContainer;
     private TabContainer _dataTabContainer;
 
@@ -40,18 +40,22 @@ public partial class MapUI : CanvasLayer
     // private CapitalContainer _capitalContainer;
     // private TerrainContainer _terrainContainer;
     private TabBar _utils;
+    private CheckButton _panelVisible;
 
     //Windows
     public EditWindow EditWindow { get; private set; }
 
     public override void _Ready()
     {
-        _dataContainer = GetNode<PanelContainer>("%DataContainer");
+        _singleContainer = GetNode<PanelContainer>("%SingleContainer");
         _dataTabContainer = GetNode<TabContainer>("%DataTabContainer");
         _multiContainer = GetNode<PanelContainer>("%MultiContainer");
 
         _utils = GetNode<TabBar>("%Utils");
         _utils.TabSelected += UtilsSelect;
+
+        _panelVisible = GetNode<CheckButton>("%PanelVisible");
+        _panelVisible.Pressed += () => { UtilsSelect(_utils.CurrentTab); };
 
         EditWindow = GetNode<EditWindow>("%EditWindow");
     }
@@ -63,28 +67,24 @@ public partial class MapUI : CanvasLayer
             _utils.CurrentTab = 0;
         if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F2)
             _utils.CurrentTab = 1;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F3)
-            _utils.CurrentTab = 2;
     }
 
     private void UtilsSelect(long index)
     {
-        _dataContainer.Visible = false;
+        _singleContainer.Visible = false;
         _multiContainer.Visible = false;
         SingeLandUnit = null;
+        MapController.UtilMode = (int)index;
+        if (!_panelVisible.ButtonPressed) return;
         switch (index)
         {
             case 0:
+                _singleContainer.Visible = true;
                 break;
             case 1:
-                _dataContainer.Visible = true;
-                break;
-            case 2:
                 _multiContainer.Visible = true;
                 break;
         }
-
-        MapController.UtilMode = (int)index;
     }
 
     private void MultiModeTabSelect(long index) => MapController.MultiMode = (int)index;
@@ -110,7 +110,7 @@ public partial class MapUI : CanvasLayer
         foreach (LandUnit landUnit in MultiLandUnit)
         {
             if (landUnit.City != null) continue;
-            landUnit.City = new City
+            landUnit.City = new()
             {
                 坐标 = landUnit.RegionIndex
             };
@@ -118,7 +118,7 @@ public partial class MapUI : CanvasLayer
             landUnit.UpdateProvinceColor();
         }
 
-        MapController.UpdateShader();
+        MapController.UpdateColorUV();
     }
 
     private void MultiModeSetProvince()
@@ -131,7 +131,7 @@ public partial class MapUI : CanvasLayer
                 landUnit.UpdateProvinceColor();
             }
 
-            MapController.UpdateShader();
+            MapController.UpdateColorUV();
         });
     }
 
@@ -145,19 +145,29 @@ public partial class MapUI : CanvasLayer
                 landUnit.UpdateBelongColor();
             }
 
-            MapController.UpdateShader();
+            MapController.UpdateColorUV();
         });
     }
 
     private void MultiModeDeleteArmy()
     {
         foreach (LandUnit landUnit in MultiLandUnit)
-            landUnit.Army = null;
+        {
+            landUnit.ClearArmy();
+            landUnit.ExamineBelong();
+        }
+
+        MapController.UpdateColorUV();
     }
 
     private void MultiModeDeleteCity()
     {
         foreach (LandUnit landUnit in MultiLandUnit)
-            landUnit.City = null;
+        {
+            landUnit.ClearCity();
+            landUnit.ExamineBelong();
+        }
+
+        MapController.UpdateColorUV();
     }
 }

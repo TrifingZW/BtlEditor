@@ -7,7 +7,7 @@
 [ext_resource type="TileSet" uid="uid://f3y4463ptra3" path="res://GameScreen/TileSet.tres" id="3_dpsvd"]
 [ext_resource type="Shader" path="res://GameScreen/Shader/LandShader.gdshader" id="4_fbyr2"]
 [ext_resource type="Texture2D" uid="uid://cpahj6uo782rp" path="res://Assets/Textures/pts/map_sea.png" id="5_dsksy"]
-[ext_resource type="Texture2D" uid="uid://bcdattkc7eire" path="res://Assets/Textures/UI/move.svg" id="8_st2wp"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Indicator.cs" id="6_qw7sp"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/MapUI.cs" id="8_vjv26"]
 [ext_resource type="Texture2D" uid="uid://c5uqnry1pxbk3" path="res://Assets/Textures/UI/select.svg" id="9_3ud52"]
 [ext_resource type="Texture2D" uid="uid://vyfm4hd0b5e2" path="res://Assets/Textures/UI/multi.svg" id="10_x3imk"]
@@ -20,7 +20,6 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/EditWindow.cs" id="15_twsgt"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/CountryItemList.cs" id="16_gx6sn"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/ArmyMulti.cs" id="16_p4sxu"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/PitfallSingle.cs" id="16_x4yhr"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/CityMulti.cs" id="17_5lx2v"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/BtlObjWindow.cs" id="20_150s2"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/MasterContainer.cs" id="21_f7htb"]
@@ -39,6 +38,7 @@
 [ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="37_6i305"]
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchArmyWindow.cs" id="39_asn33"]
+[ext_resource type="AudioStream" uid="uid://busvxfrvbgm0w" path="res://Assets/Audio/sfx_select.wav" id="41_outve"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lcxt7"]
 shader = ExtResource("4_fbyr2")
@@ -89,6 +89,11 @@ unique_name_in_owner = true
 [node name="FlagRender" type="Node2D" parent="MapController"]
 unique_name_in_owner = true
 
+[node name="Indicator" type="Node2D" parent="MapController"]
+unique_name_in_owner = true
+visible = false
+script = ExtResource("6_qw7sp")
+
 [node name="GeneralRender" type="Node2D" parent="MapController"]
 unique_name_in_owner = true
 
@@ -128,24 +133,29 @@ layout_mode = 2
 focus_mode = 0
 theme_override_constants/h_separation = 0
 theme_override_font_sizes/font_size = 50
-tab_count = 3
+tab_count = 2
 tab_alignment = 1
 clip_tabs = false
-tab_0/title = "移动"
-tab_0/icon = ExtResource("8_st2wp")
-tab_1/title = "选择"
-tab_1/icon = ExtResource("9_3ud52")
-tab_2/title = "多选"
-tab_2/icon = ExtResource("10_x3imk")
+tab_0/title = "选择"
+tab_0/icon = ExtResource("9_3ud52")
+tab_1/title = "多选"
+tab_1/icon = ExtResource("10_x3imk")
+
+[node name="PanelVisible" type="CheckButton" parent="MapUI/MainPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+button_pressed = true
+text = "显示面板"
 
 [node name="Save" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "保存文件"
 
-[node name="DataContainer" type="PanelContainer" parent="MapUI"]
+[node name="SingleContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(810, 0)
 anchors_preset = 11
 anchor_left = 1.0
@@ -154,10 +164,10 @@ anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MapUI/DataContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MapUI/SingleContainer"]
 layout_mode = 2
 
-[node name="DataTabContainer" type="TabContainer" parent="MapUI/DataContainer/VBoxContainer"]
+[node name="DataTabContainer" type="TabContainer" parent="MapUI/SingleContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -165,7 +175,7 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
 
-[node name="军队" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+[node name="军队" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
@@ -173,7 +183,7 @@ mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("12_ni0yi")
 
-[node name="城市" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+[node name="城市" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -182,7 +192,7 @@ mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("13_t38vd")
 
-[node name="地块" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+[node name="地块" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -191,7 +201,7 @@ mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
 
-[node name="爆兵" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
+[node name="爆兵" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -199,15 +209,6 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
-
-[node name="陷阱" type="ScrollContainer" parent="MapUI/DataContainer/VBoxContainer/DataTabContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
-vertical_scroll_mode = 3
-script = ExtResource("16_x4yhr")
 
 [node name="MultiContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
@@ -788,6 +789,9 @@ title = "提示"
 initial_position = 2
 size = Vector2i(500, 200)
 ok_button_text = "收到,收到,Over!"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("41_outve")
 
 [connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
 [connection signal="tab_selected" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="MapUI" method="MultiModeTabSelect"]

@@ -52,7 +52,7 @@ public partial class LandSingle : BaseSingle
         {
             LandUnit.Province = province;
             LandUnit.UpdateProvinceColor();
-            Game.Instance.MapController.UpdateShader();
+            Game.Instance.MapController.UpdateColorUV();
         };
         provinceBar.Layout.AddChild(updateProvinceButton);
 
@@ -80,7 +80,7 @@ public partial class LandSingle : BaseSingle
         {
             LandUnit.Belong = belong;
             LandUnit.UpdateBelongColor();
-            Game.Instance.MapController.UpdateShader();
+            Game.Instance.MapController.UpdateColorUV();
         };
         belongBar.Layout.AddChild(updateBelongButton);
     }

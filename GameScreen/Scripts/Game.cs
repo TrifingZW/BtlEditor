@@ -16,6 +16,8 @@ public partial class Game : Node2D
     public BtlObjWindow BtlObjWindow { get; private set; }
     public SearchGeneralWindow SearchGeneralWindow { get; private set; }
     public SearchArmyWindow SearchArmyWindow { get; private set; }
+    public AcceptDialog AcceptDialog { get; private set; }
+    public AudioStreamPlayer AudioStreamPlayer { get;private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -60,13 +62,8 @@ public partial class Game : Node2D
         BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
         SearchGeneralWindow = GetNode<SearchGeneralWindow>("SearchGeneralWindow");
         SearchArmyWindow = GetNode<SearchArmyWindow>("SearchArmyWindow");
+        AcceptDialog = GetNode<AcceptDialog>("AcceptDialog");
         Dialog = GetNode<Dialog>("Dialog");
-    }
-
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is not InputEventKey keyEvent) return;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Tab)
-            DataMode = !DataMode;
+        AudioStreamPlayer = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
     }
 }

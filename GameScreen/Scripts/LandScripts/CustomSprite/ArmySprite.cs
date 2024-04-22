@@ -25,6 +25,18 @@ public partial class ArmySprite : AnimatedSprite2D
         }
     }
 
+    private bool _select;
+
+    public bool Select
+    {
+        get => _select;
+        set
+        {
+            _select = value;
+            QueueRedraw();
+        }
+    }
+
     public override void _Ready()
     {
         SpriteFrames = _spriteFrames;
@@ -32,12 +44,20 @@ public partial class ArmySprite : AnimatedSprite2D
 
     public override void _Draw()
     {
-        if (Army.等级 is >= 1 and <= 5)
-            if (_levelFrames.GetFrameTexture("default", Army.等级 - 1) is { } levelTex)
+        if (Army.等级 is >= 2 and <= 6)
+            if (_levelFrames.GetFrameTexture("default", Army.等级 - 2) is { } levelTex)
                 DrawTexture(levelTex, new(22f, 10f));
 
         if (Army.编制 is >= 1 and <= 4)
             if (_stackFrames.GetFrameTexture("default", Army.编制 - 1) is { } stackTex)
                 DrawTexture(stackTex, new(-35f, 15f));
+
+        if (!Select) return;
+        Rect2 rect2 = new()
+        {
+            Position = -new Vector2(100f, 100f) / 2f,
+            Size = new(100f, 100f)
+        };
+        DrawRect(rect2, Colors.Red, false, 5f);
     }
 }

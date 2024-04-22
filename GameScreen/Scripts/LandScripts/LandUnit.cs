@@ -124,6 +124,13 @@ public class LandUnit
         }
     }
 
+    public void ExamineBelong()
+    {
+        if (Army is not null || City is not null) return;
+        Belong = 0xff;
+        UpdateBelongColor();
+    }
+
     #endregion
 
     #region 城市
@@ -136,59 +143,62 @@ public class LandUnit
         get => _city;
         set
         {
-            if (value != null)
-            {
-                _city = value;
-                UpdateCity();
-            }
-            else
-            {
-                _city = null;
-                _cityLabel?.QueueFree();
-                _cityLabel = null;
-                TileMap.EraseCell(MapController.BuildLayer, Coords);
-                if (Army is not null || City is not null) return;
-                Belong = 0xff;
-                UpdateBelongColor();
-                MapController.UpdateShader();
-            }
+            _city = value;
+            UpdateCity();
         }
     }
 
     public void UpdateCity()
     {
-        TileMap.EraseCell(MapController.BuildLayer, Coords);
-        City.坐标 = RegionIndex;
-        foreach (Wc4ResourceElement wc4ResourceElement in BuildingsHd.Images.ImageList)
+        if (City != null)
         {
-            var level = City.等级;
-            if (level is 16 or 17 or 18 or 19 or 20)
-                level = 15;
-            if (wc4ResourceElement.Name == $"building_{level}.png")
+            TileMap.EraseCell(MapController.BuildLayer, Coords);
+            City.坐标 = RegionIndex;
+            foreach (Wc4ResourceElement wc4ResourceElement in BuildingsHd.Images.ImageList)
             {
-                TileMap.SetCell(MapController.BuildLayer, Coords, MapController.BuildTileSetAtlasId,
-                    new Vector2I(wc4ResourceElement.X, wc4ResourceElement.Y));
-                break;
-            }
-        }
-
-        if (Stringtable.CityName[City.名称.ToString("D3")] is { } name)
-        {
-            if (_cityLabel == null)
-            {
-                _cityLabel = new();
-                TileMap.AddChild(_cityLabel);
+                var level = City.等级;
+                if (level is 16 or 17 or 18 or 19 or 20)
+                    level = 15;
+                if (wc4ResourceElement.Name == $"building_{level}.png")
+                {
+                    TileMap.SetCell(MapController.BuildLayer, Coords, MapController.BuildTileSetAtlasId,
+                        new Vector2I(wc4ResourceElement.X, wc4ResourceElement.Y));
+                    break;
+                }
             }
 
-            _cityLabel.Text = name;
-            _cityLabel.ResetSize();
-            _cityLabel.Position = Position - _cityLabel.Size / 2 + new Vector2(0f, 60f);
+            if (Stringtable.CityName[City.名称.ToString("D3")] is { } name)
+            {
+                if (_cityLabel == null)
+                {
+                    _cityLabel = new();
+                    TileMap.AddChild(_cityLabel);
+                }
+
+                _cityLabel.Text = name;
+                _cityLabel.ResetSize();
+                _cityLabel.Position = Position - _cityLabel.Size / 2 + new Vector2(0f, 60f);
+            }
+            else
+            {
+                _cityLabel?.QueueFree();
+                _cityLabel = null;
+            }
         }
         else
         {
-            _cityLabel?.QueueFree();
-            _cityLabel = null;
+            ClearCity();
+            ExamineBelong();
+            MapController.UpdateColorUV();
         }
+    }
+
+    public void ClearCity()
+    {
+        _city = null;
+        _cityLabel?.QueueFree();
+        _cityLabel = null;
+        TileMap.EraseCell(MapController.BuildLayer, Coords);
     }
 
     #endregion
@@ -260,18 +270,21 @@ public class LandUnit
         }
         else
         {
-            _army = null;
-            ArmyJson = null;
-            GeneralJson = null;
-            GeneralSprite?.QueueFree();
-            GeneralSprite = null;
-            ArmySprite?.QueueFree();
-            ArmySprite = null;
-            if (Army is not null || City is not null) return;
-            Belong = 0xff;
-            UpdateBelongColor();
-            MapController.UpdateShader();
+            ClearArmy();
+            ExamineBelong();
+            MapController.UpdateColorUV();
         }
+    }
+
+    public void ClearArmy()
+    {
+        _army = null;
+        ArmyJson = null;
+        GeneralJson = null;
+        GeneralSprite?.QueueFree();
+        GeneralSprite = null;
+        ArmySprite?.QueueFree();
+        ArmySprite = null;
     }
 
     #endregion

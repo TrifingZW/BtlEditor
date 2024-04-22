@@ -74,8 +74,7 @@ public static class Helpers
             case { } type when type == typeof(float):
                 if (field.GetValue(obj) is float f)
                 {
-                    spinBox.MinValue = float.MinValue;
-                    spinBox.MaxValue = float.MaxValue;
+                    spinBox.Step = 0.01;
                     spinBox.Value = f;
                     spinBox.ValueChanged += value => field.SetValue(obj, (float)value);
                 }

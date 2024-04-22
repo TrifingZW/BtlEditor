@@ -57,6 +57,7 @@ public partial class ArmySingle : BaseSingle
             {
                 LandUnit.Army.将领 = (short)general.Id;
                 LandUnit.Army.军衔 = (byte)general.MilitaryRank;
+                LandUnit.Army.爵位 = (byte)general.Hp;
 
                 if (general.Skills.TryGetValue(0, out var skill1))
                     LandUnit.Army.技能等级1 = (byte)(skill1 % 10);

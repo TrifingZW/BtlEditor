@@ -5,19 +5,28 @@ using System.Threading.Tasks;
 using BtlEditor.CoreScripts.Parser;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using FileAccess = Godot.FileAccess;
 
 namespace BtlEditor.MainScreen.Scripts;
 
 public partial class MainUIScript : Control
 {
     private RichTextLabel _richTextLabel;
+    private ModPanelContainer _modPanelContainer;
 
     public override void _Ready()
     {
+        _modPanelContainer = GetNode<ModPanelContainer>("ModPanelContainer");
         _richTextLabel = GetNode<RichTextLabel>("%RichTextLabel");
         _richTextLabel.GetVScrollBar().Scale = Vector2.Zero;
         _richTextLabel.Newline();
-        _richTextLabel.MetaClicked += url => { };
+        _richTextLabel.MetaClicked += url =>
+        {
+            var code = (string)url;
+            if (code.StartsWith("MOD"))
+                _modPanelContainer.Load(code.Split(":")[1]);
+            else OS.ShellOpen((string)url);
+        };
         Task.Run(LoadWc4Resource);
     }
 
@@ -46,6 +55,8 @@ public partial class MainUIScript : Control
             ImageRibbonHd = new("image_ribbon_hd", true, "image/");
             try
             {
+                CallDeferred(nameof(Print), FileAccess.GetFileAsString("res://Assets/main.bbcode"));
+                
                 CallDeferred(nameof(PrintGreen), "正在导入资源中......");
 
                 //TerrainConfig

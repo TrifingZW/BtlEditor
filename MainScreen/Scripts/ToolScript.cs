@@ -10,8 +10,8 @@ public partial class ToolScript : VBoxContainer
         var setting = GetNode<Button>("Setting");
         setting.Pressed += () =>
         {
-            GetNode<SettingWindowScript>("SettingWindow").Load();
-            GetNode<SettingWindowScript>("SettingWindow").Show();
+            GetNode<SettingWindowScript>("%SettingWindow").Load();
+            GetNode<SettingWindowScript>("%SettingWindow").Show();
         };
 
         //退出

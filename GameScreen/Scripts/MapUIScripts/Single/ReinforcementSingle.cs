@@ -18,7 +18,7 @@ public partial class ReinforcementSingle : BaseSingle
         for (var index = 0; index < LandUnit.Reinforcements.Count; index++)
             AddReinforcement(index);
 
-        Button add = new() { Text = "添加爆兵数据" };
+        Button add = new() { Text = "添加爆兵" };
         add.AddThemeFontSizeOverride("font_size", 50);
         add.FocusMode = FocusModeEnum.None;
         add.Pressed += () =>
@@ -27,17 +27,22 @@ public partial class ReinforcementSingle : BaseSingle
             if (Btl.Version1 || Btl.Version2)
             {
                 reinforcement = new Reinforcement1();
-                ((Reinforcement1)reinforcement).所属国家 = LandUnit.Belong;
+                ((Reinforcement1)reinforcement).所属国家 = LandUnit.ProvinceBelong;
+                ((Reinforcement1)reinforcement).爆兵回合 = 1;
             }
 
             if (Btl.Version3)
             {
                 reinforcement = new Reinforcement3();
-                ((Reinforcement3)reinforcement).所属国家 = LandUnit.Belong;
+                ((Reinforcement3)reinforcement).所属国家 = LandUnit.ProvinceBelong;
+                ((Reinforcement3)reinforcement).爆兵回合 = 1;
             }
 
             if (reinforcement != null)
             {
+                reinforcement.兵种 = 1;
+                reinforcement.等级 = 1;
+                reinforcement.编制 = 1;
                 reinforcement.坐标 = LandUnit.RegionIndex;
                 LandUnit.Reinforcements.Add(reinforcement);
             }
@@ -46,7 +51,7 @@ public partial class ReinforcementSingle : BaseSingle
         };
         EndContainer.AddChild(add);
 
-        Button paste = new() { Text = "粘贴爆兵数据" };
+        Button paste = new() { Text = "粘贴爆兵" };
         paste.AddThemeFontSizeOverride("font_size", 50);
         paste.FocusMode = FocusModeEnum.None;
         paste.Pressed += () =>
@@ -96,7 +101,7 @@ public partial class ReinforcementSingle : BaseSingle
             Game.Instance.SearchGeneralWindow.CreateEdit(general =>
             {
                 reinforcement.将领 = (short)general.Id;
-                reinforcement.军衔 = (byte)general.Hp;
+                reinforcement.军衔 = (byte)general.MilitaryRank;
                 reinforcement.爵位 = (byte)general.Hp;
 
 
@@ -120,7 +125,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button set = new()
         {
-            Text = "编辑爆兵数据",
+            Text = "编辑爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         set.FocusMode = FocusModeEnum.None;
@@ -153,7 +158,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button copy = new()
         {
-            Text = "复制爆兵数据",
+            Text = "复制爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         copy.FocusMode = FocusModeEnum.None;
@@ -162,7 +167,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button delete = new()
         {
-            Text = "删除爆兵数据",
+            Text = "删除爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         delete.FocusMode = FocusModeEnum.None;

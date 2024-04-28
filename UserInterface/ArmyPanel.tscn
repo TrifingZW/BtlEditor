@@ -48,6 +48,7 @@ unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("2_wgdrp")
+icon_alignment = 1
 
 [node name="GeneralName" type="Label" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
 unique_name_in_owner = true

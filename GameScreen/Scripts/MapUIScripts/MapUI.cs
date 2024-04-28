@@ -1,39 +1,28 @@
 using System.Collections.Generic;
-using BtlEditor.CoreScripts.Structures;
 using BtlEditor.GameScreen.Scripts.LandScripts;
-using BtlEditor.GameScreen.Scripts.Windows;
+using BtlEditor.GameScreen.Scripts.MapUIScripts.Multi;
+using BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 using Godot;
-using static BtlEditor.CoreScripts.StaticRes;
-using BaseSingle = BtlEditor.GameScreen.Scripts.MapUIScripts.Single.BaseSingle;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts;
 
-public partial class MapUI : CanvasLayer
+public partial class MapUI : CanvasLayer, IInput
 {
-    private LandUnit _singeLandUnit;
+    public List<LandUnit> MultiLandUnit
+    {
+        get => _multiContainer.MultiLandUnit;
+        set => _multiContainer.MultiLandUnit = value;
+    }
 
     public LandUnit SingeLandUnit
     {
-        get => _singeLandUnit;
-        set
-        {
-            _singeLandUnit = value;
-            foreach (Node node in _dataTabContainer.GetChildren())
-                if (node is BaseSingle baseContainer)
-                    if (SingeLandUnit != null)
-                        baseContainer.LandUnit = SingeLandUnit;
-                    else baseContainer.Clear();
-        }
+        get => _singleContainer.SingeLandUnit;
+        set => _singleContainer.SingeLandUnit = value;
     }
 
-    public List<LandUnit> MultiLandUnit { get; } = [];
-
-    private static MapController MapController => Game.Instance.MapController;
-
     //数据面板
-    private PanelContainer _singleContainer;
-    private PanelContainer _multiContainer;
-    private TabContainer _dataTabContainer;
+    private SingleContainer _singleContainer;
+    private MultiContainer _multiContainer;
 
     // private ReinforcementContainer _reinforcementContainer;
     // private AirRaidContainer _airRaidContainer;
@@ -42,22 +31,16 @@ public partial class MapUI : CanvasLayer
     private TabBar _utils;
     private CheckButton _panelVisible;
 
-    //Windows
-    public EditWindow EditWindow { get; private set; }
-
     public override void _Ready()
     {
-        _singleContainer = GetNode<PanelContainer>("%SingleContainer");
-        _dataTabContainer = GetNode<TabContainer>("%DataTabContainer");
-        _multiContainer = GetNode<PanelContainer>("%MultiContainer");
+        _singleContainer = GetNode<SingleContainer>("%SingleContainer");
+        _multiContainer = GetNode<MultiContainer>("%MultiContainer");
 
         _utils = GetNode<TabBar>("%Utils");
         _utils.TabSelected += UtilsSelect;
 
         _panelVisible = GetNode<CheckButton>("%PanelVisible");
         _panelVisible.Pressed += () => { UtilsSelect(_utils.CurrentTab); };
-
-        EditWindow = GetNode<EditWindow>("%EditWindow");
     }
 
     public override void _Input(InputEvent @event)
@@ -73,8 +56,6 @@ public partial class MapUI : CanvasLayer
     {
         _singleContainer.Visible = false;
         _multiContainer.Visible = false;
-        SingeLandUnit = null;
-        MapController.UtilMode = (int)index;
         if (!_panelVisible.ButtonPressed) return;
         switch (index)
         {
@@ -87,87 +68,22 @@ public partial class MapUI : CanvasLayer
         }
     }
 
-    private void MultiModeTabSelect(long index) => MapController.MultiMode = (int)index;
-
-    private void MultiModeClear()
+    public void Input(InputEvent @event)
     {
-        MultiLandUnit.Clear();
-        MapController.TileMap.ClearLayer(MapController.MultiLayer);
-    }
-
-    private void MultiModeCreateArmy()
-    {
-        foreach (LandUnit landUnit in MultiLandUnit)
+        if (Game.Instance.ProvinceMode) return;
+        switch (_utils.CurrentTab)
         {
-            if (landUnit.Army != null) continue;
-            if (Btl.Version1) landUnit.Army = new Army1 { 坐标 = landUnit.RegionIndex };
-            if (Btl.Version2 || Btl.Version3) landUnit.Army = new Army2 { 坐标 = landUnit.RegionIndex };
+            case 0:
+                _singleContainer.Input(@event);
+                break;
+            case 1:
+                _multiContainer.Input(@event);
+                break;
         }
     }
+}
 
-    private void MultiModeCreateCity()
-    {
-        foreach (LandUnit landUnit in MultiLandUnit)
-        {
-            if (landUnit.City != null) continue;
-            landUnit.City = new()
-            {
-                坐标 = landUnit.RegionIndex
-            };
-            landUnit.Province = landUnit.RegionIndex;
-            landUnit.UpdateProvinceColor();
-        }
-
-        MapController.UpdateColorUV();
-    }
-
-    private void MultiModeSetProvince()
-    {
-        EditWindow.CreateEdit("设置省规划", province =>
-        {
-            foreach (LandUnit landUnit in MultiLandUnit)
-            {
-                landUnit.Province = (short)province;
-                landUnit.UpdateProvinceColor();
-            }
-
-            MapController.UpdateColorUV();
-        });
-    }
-
-    private void MultiModeSetBelong()
-    {
-        EditWindow.CreateEdit("设置归属", belong =>
-        {
-            foreach (LandUnit landUnit in MultiLandUnit)
-            {
-                landUnit.Belong = (byte)belong;
-                landUnit.UpdateBelongColor();
-            }
-
-            MapController.UpdateColorUV();
-        });
-    }
-
-    private void MultiModeDeleteArmy()
-    {
-        foreach (LandUnit landUnit in MultiLandUnit)
-        {
-            landUnit.ClearArmy();
-            landUnit.ExamineBelong();
-        }
-
-        MapController.UpdateColorUV();
-    }
-
-    private void MultiModeDeleteCity()
-    {
-        foreach (LandUnit landUnit in MultiLandUnit)
-        {
-            landUnit.ClearCity();
-            landUnit.ExamineBelong();
-        }
-
-        MapController.UpdateColorUV();
-    }
+public interface IInput
+{
+    void Input(InputEvent @event);
 }

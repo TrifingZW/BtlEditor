@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ini-parser" Version="2.5.2" />

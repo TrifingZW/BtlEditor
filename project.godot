@@ -34,8 +34,8 @@ naming/scene_name_casing=1
 
 [gui]
 
-theme/default_theme_scale=2.0
-theme/custom_font="res://msyhbd.ttc"
+theme/default_theme_scale=2.8
+theme/custom_font="res://HarmonyOS_Sans_SC_Bold.ttf"
 
 [input_devices]
 

@@ -37,13 +37,13 @@ public abstract partial class BaseMulti : VBoxContainer
             var fields = reflect.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (FieldInfo field in fields)
             {
-                if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
+                if (field.GetCustomAttribute<EditorItem>() is { Ignore: true }) continue;
 
                 Button button = new() { Text = field.Name };
                 button.FocusMode = FocusModeEnum.None;
                 button.Pressed += () =>
                 {
-                    MapUI.EditWindow.CreateEdit(field.Name, value =>
+                    Game.Instance.EditWindow.CreateEdit(field.Name, value =>
                     {
                         foreach (LandUnit landUnit in MapUI.MultiLandUnit)
                             Update(field, value, landUnit);

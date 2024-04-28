@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using BtlEditor.CoreScripts.Structures;
+using Godot;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
@@ -9,6 +10,14 @@ public partial class CitySingle : BaseSingle
         if (LandUnit.City is { } city)
         {
             ReflexStruct(city, TreeContainer, Save);
+            
+            Button copy = CreateButton("复制城市", () =>
+            {
+                Game.CityCopy = (City)city.Clone();
+                Game.BelongCopy = LandUnit.Belong;
+            });
+            EndContainer.AddChild(copy);
+            
             Button delete = new();
             delete.Pressed += () =>
             {
@@ -21,17 +30,30 @@ public partial class CitySingle : BaseSingle
         }
         else
         {
-            Button add = new();
-            add.Pressed += () =>
+            Button paste = CreateButton("粘贴城市", () =>
             {
-                LandUnit.City = new() { 坐标 = LandUnit.RegionIndex };
+                if (Game.CityCopy is null) return;
+                LandUnit.City = (City)Game.CityCopy?.Clone();
+                LandUnit.Belong = LandUnit.ProvinceBelong;
                 LandUnit.Province = LandUnit.RegionIndex;
                 LandUnit.UpdateProvinceColor();
                 Game.Instance.MapController.UpdateColorUV();
                 Clear();
                 Update();
-            };
-            add.Text = "添加城市";
+            });
+            EndContainer.AddChild(paste);
+
+
+            Button add = CreateButton("添加城市", () =>
+            {
+                LandUnit.City = new() { 坐标 = LandUnit.RegionIndex };
+                LandUnit.Belong = LandUnit.ProvinceBelong;
+                LandUnit.Province = LandUnit.RegionIndex;
+                LandUnit.UpdateProvinceColor();
+                Game.Instance.MapController.UpdateColorUV();
+                Clear();
+                Update();
+            });
             EndContainer.AddChild(add);
         }
     }

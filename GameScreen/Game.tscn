@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://c78ax6yhf632"]
+[gd_scene load_steps=47 format=3 uid="uid://c78ax6yhf632"]
 
 [ext_resource type="Script" path="res://GameScreen/Scripts/Game.cs" id="1_mv65n"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/MapUI.cs" id="8_vjv26"]
 [ext_resource type="Texture2D" uid="uid://c5uqnry1pxbk3" path="res://Assets/Textures/UI/select.svg" id="9_3ud52"]
 [ext_resource type="Texture2D" uid="uid://vyfm4hd0b5e2" path="res://Assets/Textures/UI/multi.svg" id="10_x3imk"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/SingleContainer.cs" id="12_aavxe"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/ArmySingle.cs" id="12_ni0yi"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/CitySingle.cs" id="13_t38vd"]
 [ext_resource type="PackedScene" uid="uid://2un2y08h3sph" path="res://UserInterface/TreeBar.tscn" id="14_1irfd"]
@@ -18,6 +19,7 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/LandSingle.cs" id="14_qxfg2"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Single/ReinforcementSingle.cs" id="15_d2f5v"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/EditWindow.cs" id="15_twsgt"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/MultiContainer.cs" id="16_6rlt5"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/CountryItemList.cs" id="16_gx6sn"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/ArmyMulti.cs" id="16_p4sxu"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapUIScripts/Multi/CityMulti.cs" id="17_5lx2v"]
@@ -28,6 +30,7 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AffairItemList.cs" id="23_7eqaa"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/StrategyItemList.cs" id="24_an2yb"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportItemList.cs" id="25_qafdh"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/EditUI.cs" id="28_r5tlh"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchGeneralWindow.cs" id="30_djdrc"]
 [ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
 [ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="32_rr5n1"]
@@ -39,6 +42,7 @@
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchArmyWindow.cs" id="39_asn33"]
 [ext_resource type="AudioStream" uid="uid://busvxfrvbgm0w" path="res://Assets/Audio/sfx_select.wav" id="41_outve"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchCountryWindow.cs" id="42_85ugd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lcxt7"]
 shader = ExtResource("4_fbyr2")
@@ -78,10 +82,14 @@ format = 2
 layer_0/name = "多选"
 layer_1/name = "单选"
 layer_1/tile_data = PackedInt32Array()
-layer_2/name = "城市"
+layer_2/name = "省规划"
 layer_2/tile_data = PackedInt32Array()
-layer_3/name = "陷阱"
+layer_3/name = "城市"
 layer_3/tile_data = PackedInt32Array()
+layer_4/name = "陷阱"
+layer_4/tile_data = PackedInt32Array()
+layer_5/name = "覆盖"
+layer_5/tile_data = PackedInt32Array()
 
 [node name="ArmyRender" type="Node2D" parent="MapController"]
 unique_name_in_owner = true
@@ -156,57 +164,63 @@ text = "保存文件"
 
 [node name="SingleContainer" type="PanelContainer" parent="MapUI"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(810, 0)
+custom_minimum_size = Vector2(800, 0)
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+script = ExtResource("12_aavxe")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MapUI/SingleContainer"]
 layout_mode = 2
 
-[node name="DataTabContainer" type="TabContainer" parent="MapUI/SingleContainer/VBoxContainer"]
+[node name="SingleTabContainer" type="TabContainer" parent="MapUI/SingleContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 50
+tab_focus_mode = 0
 
-[node name="军队" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
+[node name="军队" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("12_ni0yi")
 
-[node name="城市" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
+[node name="城市" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("13_t38vd")
 
-[node name="地块" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
+[node name="地块" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
 
-[node name="爆兵" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/DataTabContainer"]
+[node name="爆兵" type="ScrollContainer" parent="MapUI/SingleContainer/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
 
@@ -219,6 +233,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+script = ExtResource("16_6rlt5")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MapUI/MultiContainer"]
 layout_mode = 2
@@ -233,6 +248,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="MultiModeTab" type="TabBar" parent="MapUI/MultiContainer/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 50
@@ -323,38 +339,6 @@ text = "删除军队"
 layout_mode = 2
 focus_mode = 0
 text = "删除城市"
-
-[node name="EditWindow" type="Window" parent="MapUI"]
-unique_name_in_owner = true
-initial_position = 1
-size = Vector2i(400, 126)
-visible = false
-wrap_controls = true
-keep_title_visible = true
-script = ExtResource("15_twsgt")
-
-[node name="MarginContainer" type="MarginContainer" parent="MapUI/EditWindow"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MapUI/EditWindow/MarginContainer"]
-layout_mode = 2
-
-[node name="SpinBox" type="SpinBox" parent="MapUI/EditWindow/MarginContainer/VBoxContainer"]
-layout_mode = 2
-update_on_text_changed = true
-
-[node name="Button" type="Button" parent="MapUI/EditWindow/MarginContainer/VBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "确定"
 
 [node name="DataUI" type="CanvasLayer" parent="."]
 visible = false
@@ -503,23 +487,98 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "复制"
 
+[node name="EditUI" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("28_r5tlh")
+
+[node name="Province" type="PanelContainer" parent="EditUI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -304.0
+offset_bottom = 290.0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EditUI/Province"]
+layout_mode = 2
+
+[node name="ProvinceModeTab" type="TabBar" parent="EditUI/Province/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+tab_count = 2
+clip_tabs = false
+tab_0/title = "增加"
+tab_1/title = "清除"
+
+[node name="ProvinceModeClear" type="Button" parent="EditUI/Province/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "清空"
+
+[node name="ProvinceModeSave" type="Button" parent="EditUI/Province/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "保存"
+
+[node name="ProvinceModeCancel" type="Button" parent="EditUI/Province/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "取消"
+
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 title = "警告"
 initial_position = 1
-size = Vector2i(600, 200)
+size = Vector2i(600, 326)
 ok_button_text = "确定"
 dialog_autowrap = true
 cancel_button_text = "取消"
 script = ExtResource("22_52ur2")
 
+[node name="EditWindow" type="Window" parent="."]
+initial_position = 1
+size = Vector2i(400, 182)
+visible = false
+wrap_controls = true
+keep_title_visible = true
+script = ExtResource("15_twsgt")
+
+[node name="MarginContainer" type="MarginContainer" parent="EditWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EditWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="SpinBox" type="SpinBox" parent="EditWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+update_on_text_changed = true
+
+[node name="Button" type="Button" parent="EditWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "确定"
+
 [node name="BtlObjWindow" type="Window" parent="."]
 title = "设置"
 initial_position = 1
-size = Vector2i(800, 800)
+size = Vector2i(800, 1000)
 visible = false
 wrap_controls = true
 transient = true
 exclusive = true
+min_size = Vector2i(800, 1000)
 script = ExtResource("20_150s2")
 
 [node name="MarginContainer" type="MarginContainer" parent="BtlObjWindow"]
@@ -550,11 +609,12 @@ size_flags_vertical = 3
 [node name="SearchGeneralWindow" type="Window" parent="."]
 title = "搜索将领"
 initial_position = 1
-size = Vector2i(900, 839)
+size = Vector2i(1000, 907)
 visible = false
 wrap_controls = true
 transient = true
 exclusive = true
+min_size = Vector2i(1000, 0)
 script = ExtResource("30_djdrc")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchGeneralWindow"]
@@ -745,11 +805,12 @@ text = "确定选择"
 [node name="SearchArmyWindow" type="Window" parent="."]
 title = "搜索军队"
 initial_position = 1
-size = Vector2i(900, 847)
+size = Vector2i(800, 1000)
 visible = false
 wrap_controls = true
 transient = true
 exclusive = true
+min_size = Vector2i(800, 1000)
 script = ExtResource("39_asn33")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchArmyWindow"]
@@ -784,24 +845,63 @@ layout_mode = 2
 focus_mode = 0
 text = "确定选择"
 
+[node name="SearchCountryWindow" type="Window" parent="."]
+title = "搜索国家"
+initial_position = 1
+size = Vector2i(800, 1000)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+min_size = Vector2i(800, 1000)
+script = ExtResource("42_85ugd")
+
+[node name="MarginContainer" type="MarginContainer" parent="SearchCountryWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SearchCountryWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="SearchCountryWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="SearchCountryWindow/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+allow_search = false
+icon_scale = 2.0
+
+[node name="Button" type="Button" parent="SearchCountryWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "确定选择"
+
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 title = "提示"
 initial_position = 2
-size = Vector2i(500, 200)
+size = Vector2i(500, 326)
 ok_button_text = "收到,收到,Over!"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("41_outve")
 
 [connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
-[connection signal="tab_selected" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/MultiModeTab" to="MapUI" method="MultiModeTabSelect"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI" method="MultiModeClear"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="MapUI" method="MultiModeCreateArmy"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateCity" to="MapUI" method="MultiModeCreateCity"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetProvince" to="MapUI" method="MultiModeSetProvince"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetBelong" to="MapUI" method="MultiModeSetBelong"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteArmy" to="MapUI" method="MultiModeDeleteArmy"]
-[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteCity" to="MapUI" method="MultiModeDeleteCity"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI/MultiContainer" method="MultiModeClear"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="MapUI/MultiContainer" method="MultiModeCreateArmy"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateCity" to="MapUI/MultiContainer" method="MultiModeCreateCity"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetProvince" to="MapUI/MultiContainer" method="MultiModeSetProvince"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel/Panel/MarginContainer/Layout/SetBelong" to="MapUI/MultiContainer" method="MultiModeSetBelong"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteArmy" to="MapUI/MultiContainer" method="MultiModeDeleteArmy"]
+[connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/DeletePanel/Panel/MarginContainer/Layout/DeleteCity" to="MapUI/MultiContainer" method="MultiModeDeleteCity"]
 [connection signal="tab_changed" from="DataUI/PanelContainer/VBoxContainer/TabBar" to="DataUI" method="TabSelect"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button1" to="DataUI" method="Add"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button2" to="DataUI" method="Delete"]

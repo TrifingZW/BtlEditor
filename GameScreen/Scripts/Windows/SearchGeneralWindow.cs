@@ -35,14 +35,17 @@ public partial class SearchGeneralWindow : Window
 
         LineEdit.TextChanged += Update;
         ItemList.ItemSelected += ItemSelect;
-        Button.Pressed += () =>
-        {
-            if (!ItemList.GetSelectedItems().TryGetValue(0, out var index)) return;
-            _callback?.Invoke(GeneralSettings.GeneralJsons[SelectedGenerals[index]]);
-            Visible = false;
-        };
+        ItemList.ItemActivated +=_=> Save();
+        Button.Pressed += Save;
 
         Update("");
+    }
+
+    private void Save()
+    {
+        if (!ItemList.GetSelectedItems().TryGetValue(0, out var index)) return;
+        _callback?.Invoke(GeneralSettings.GeneralJsons[SelectedGenerals[index]]);
+        Visible = false;
     }
 
     private void ItemSelect(long index)

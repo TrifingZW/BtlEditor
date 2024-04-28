@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
 using Godot;
+using EditorItem = BtlEditor.CoreScripts.Attributes.EditorItem;
 
 namespace BtlEditor.GameScreen.Scripts.Windows;
 
@@ -19,7 +21,7 @@ public partial class BtlObjWindow : Window
         _editorContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer/ScrollContainer/EditorContainer");
     }
 
-    public void CreateEdit<T>(T obj, Action<T> action, Func<T,Node> head = null) where T : ICloneable
+    public void CreateEdit<T>(T obj, Action<T> action, Func<T, Node> head = null) where T : ICloneable
     {
         var newObj = (T)obj.Clone();
 
@@ -56,8 +58,8 @@ public partial class BtlObjWindow : Window
             var fields = reflect.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (FieldInfo field in fields)
             {
-                if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true }) continue;
-                var editorItem = EditorItem.Instance;
+                if (field.GetCustomAttribute<EditorItem>() is { Ignore: true }) continue;
+                var editorItem = UserInterface.EditorItem.Instance;
                 editorItem.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
 
                 Label label = new()
@@ -66,8 +68,35 @@ public partial class BtlObjWindow : Window
                     SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
                 };
                 editorItem.Head.AddChild(label);
-                SpinBox spinBox = Helpers.ReflectionSpinBox(newObj, field);
-                editorItem.Content.AddChild(spinBox);
+                if (field.GetCustomAttribute<Option>()?.Options is { } options)
+                {
+                    OptionButton optionButton = Helpers.ReflectionOptionButton(newObj, field, options);
+                    editorItem.Content.AddChild(optionButton);
+                }
+                else if (field.GetCustomAttributes<Belong>().Any())
+                {
+                    Button countryButton = new()
+                    {
+                        Text = field.GetValue(newObj)!.ToString(),
+                        SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                        FocusMode = Control.FocusModeEnum.None
+                    };
+                    countryButton.Pressed += () =>
+                    {
+                        Game.Instance.SearchCountryWindow.CreateEdit(country =>
+                        {
+                            countryButton.Text = country.ToString();
+                            field.SetValue(newObj, country);
+                        });
+                    };
+                    editorItem.Content.AddChild(countryButton);
+                }
+                else
+                {
+                    SpinBox spinBox = Helpers.ReflectionSpinBox(newObj, field);
+                    editorItem.Content.AddChild(spinBox);
+                }
+
                 _editorContainer.AddChild(editorItem);
             }
         }

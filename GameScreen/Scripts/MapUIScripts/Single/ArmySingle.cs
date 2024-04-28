@@ -15,16 +15,28 @@ public partial class ArmySingle : BaseSingle
         switch (LandUnit.Army)
         {
             case null:
-                Button addArmy = new();
-                addArmy.Pressed += () =>
+
+                Button paste = CreateButton("粘贴军队", () =>
+                {
+                    if (Game.ArmyCopy is null) return;
+                    LandUnit.Army = (Army)Game.ArmyCopy?.Clone();
+                    LandUnit.Belong = Game.BelongCopy;
+                    Clear();
+                    Update();
+                });
+                EndContainer.AddChild(paste);
+
+
+                Button add = CreateButton("添加军队", () =>
                 {
                     if (Btl.Version1) LandUnit.Army = new Army1 { 坐标 = LandUnit.RegionIndex };
                     if (Btl.Version2 || Btl.Version3) LandUnit.Army = new Army2 { 坐标 = LandUnit.RegionIndex };
+                    LandUnit.Belong = LandUnit.ProvinceBelong;
                     Clear();
                     Update();
-                };
-                addArmy.Text = "添加军队";
-                EndContainer.AddChild(addArmy);
+                });
+                EndContainer.AddChild(add);
+
                 break;
             case Army1 army1:
                 ReflexStruct(army1, TreeContainer, UpdateArmy);
@@ -76,14 +88,19 @@ public partial class ArmySingle : BaseSingle
             });
         };
 
-        Button delete = new();
-        delete.Pressed += () =>
+        Button copy = CreateButton("复制军队", () =>
+        {
+            Game.ArmyCopy = (Army)LandUnit.Army.Clone();
+            Game.BelongCopy = LandUnit.Belong;
+        });
+        EndContainer.AddChild(copy);
+
+        Button delete = CreateButton("删除军队", () =>
         {
             LandUnit.Army = null;
             Clear();
             Update();
-        };
-        delete.Text = "删除军队";
+        });
         EndContainer.AddChild(delete);
     }
 

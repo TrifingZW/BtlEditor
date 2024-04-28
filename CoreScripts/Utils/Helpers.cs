@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +36,63 @@ public static class Helpers
 
     public static Vector2I ToVector2I(this Vector2 vector2) => new(Mathf.CeilToInt(vector2.X), Mathf.CeilToInt(vector2.Y));
 
-    public static SpinBox ReflectionSpinBox<T>(T obj, FieldInfo field)
+    public static OptionButton ReflectionOptionButton<T>(T obj, FieldInfo field, Dictionary<string, byte> options, Action valueChanged = null)
+    {
+        OptionButton optionButton = new();
+        optionButton.AddThemeFontSizeOverride("font_size", 50);
+        foreach (var pair in options)
+            optionButton.AddItem(pair.Key);
+        
+        switch (field.FieldType)
+        {
+            case { } type when type == typeof(byte):
+                for (var i = 0; i < options.Count; i++)
+                    if ((byte)field.GetValue(obj)! == options[optionButton.GetItemText(i)])
+                    {
+                        optionButton.Selected = i;
+                        break;
+                    }
+
+                optionButton.ItemSelected += index =>
+                {
+                    field.SetValue(obj, options[optionButton.GetItemText((byte)index)]);
+                    valueChanged?.Invoke();
+                };
+                break;
+            case { } type when type == typeof(short):
+                for (var i = 0; i < options.Count; i++)
+                    if ((short)field.GetValue(obj)! == options[optionButton.GetItemText(i)])
+                    {
+                        optionButton.Selected = i;
+                        break;
+                    }
+
+                optionButton.ItemSelected += index =>
+                {
+                    field.SetValue(obj, options[optionButton.GetItemText((short)index)]);
+                    valueChanged?.Invoke();
+                };
+                break;
+            case { } type when type == typeof(int):
+                for (var i = 0; i < options.Count; i++)
+                    if ((int)field.GetValue(obj)! == options[optionButton.GetItemText(i)])
+                    {
+                        optionButton.Selected = i;
+                        break;
+                    }
+
+                optionButton.ItemSelected += index =>
+                {
+                    field.SetValue(obj, options[optionButton.GetItemText((int)index)]);
+                    valueChanged?.Invoke();
+                };
+                break;
+        }
+
+        return optionButton;
+    }
+
+    public static SpinBox ReflectionSpinBox<T>(T obj, FieldInfo field, Action valueChanged = null)
     {
         SpinBox spinBox = new();
         spinBox.UpdateOnTextChanged = true;
@@ -81,6 +138,8 @@ public static class Helpers
 
                 break;
         }
+
+        spinBox.ValueChanged += _ => valueChanged?.Invoke();
 
         return spinBox;
     }

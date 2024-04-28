@@ -80,6 +80,14 @@ public class BtlParser
                 foreach (AirSupport airSupport in AirSupports)
                     if (airSupport.军团 == country.序号)
                         airSupport.军团 = index;
+                foreach (Affair affair in Affairs)
+                {
+                    if (affair.触发军团 == country.序号)
+                        affair.触发军团 = index;
+                    if (affair.影响军团 == country.序号)
+                        affair.影响军团 = index;
+                }
+
                 country.序号 = index;
             }
         }

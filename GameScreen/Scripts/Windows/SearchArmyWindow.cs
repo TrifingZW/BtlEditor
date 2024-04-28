@@ -25,14 +25,17 @@ public partial class SearchArmyWindow : Window
         Button = GetNode<Button>("MarginContainer/VBoxContainer/Button");
 
         LineEdit.TextChanged += Update;
-        Button.Pressed += () =>
-        {
-            if (!ItemList.GetSelectedItems().TryGetValue(0, out var index)) return;
-            _callback?.Invoke(ArmySettings.ArmyJsons[SelectedArmies[index]]);
-            Visible = false;
-        };
+        ItemList.ItemActivated += _ => Save();
+        Button.Pressed += Save;
 
         Update("");
+    }
+
+    private void Save()
+    {
+        if (!ItemList.GetSelectedItems().TryGetValue(0, out var index)) return;
+        _callback?.Invoke(ArmySettings.ArmyJsons[SelectedArmies[index]]);
+        Visible = false;
     }
 
     private void Update(string text)

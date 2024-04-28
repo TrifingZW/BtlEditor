@@ -5,6 +5,7 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using EditorItem = BtlEditor.CoreScripts.Attributes.EditorItem;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts;
 
@@ -15,7 +16,7 @@ public partial class MasterContainer : VBoxContainer
         var fields = typeof(Master).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         foreach (FieldInfo field in fields)
         {
-            var editorItem = EditorItem.Instance;
+            var editorItem = UserInterface.EditorItem.Instance;
             editorItem.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             Label label = new()
             {
@@ -24,7 +25,7 @@ public partial class MasterContainer : VBoxContainer
             };
             editorItem.Head.AddChild(label);
             SpinBox spinBox = Helpers.ReflectionSpinBox(Btl.Master, field);
-            if (field.GetCustomAttribute<EditorGroup>() is { Ignore: true })
+            if (field.GetCustomAttribute<EditorItem>() is { Ignore: true })
                 spinBox.Editable = false;
             editorItem.Content.AddChild(spinBox);
             AddChild(editorItem);

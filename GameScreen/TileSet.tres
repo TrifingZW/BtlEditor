@@ -11,10 +11,12 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qtfqh"]
 texture = ExtResource("3_b0uix")
 texture_region_size = Vector2i(148, 129)
-0:0/next_alternative_id = 3
+0:0/next_alternative_id = 4
 0:0/0 = 0
 0:0/1 = 1
 0:0/1/modulate = Color(1, 1, 0, 1)
+0:0/2 = 2
+0:0/2/modulate = Color(0, 0, 1, 1)
 
 [resource]
 tile_shape = 3

@@ -53,10 +53,11 @@ public class LandUnit
     public void UpdateProvinceColor()
     {
         if (Sea) return;
-        if (LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit))
-            LandColor = Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
+        LandColor = LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit)
+            ? Btl.Countries.TryGetValue(landUnit.Belong, out Country country)
                 ? Color.Color8(country.R8, country.G8, country.B8)
-                : Colors.White;
+                : Colors.White
+            : Colors.White;
     }
 
     #endregion
@@ -106,6 +107,8 @@ public class LandUnit
             }
         }
     }
+
+    public byte ProvinceBelong => LandUnits.TryGetValue(GetBtlIndex(Province), out LandUnit landUnit) ? landUnit.Belong : (byte)0xff;
 
     public void UpdateBelongColor()
     {
@@ -177,7 +180,7 @@ public class LandUnit
 
                 _cityLabel.Text = name;
                 _cityLabel.ResetSize();
-                _cityLabel.Position = Position - _cityLabel.Size / 2 + new Vector2(0f, 60f);
+                _cityLabel.Position = Position - _cityLabel.Size / 2 + new Vector2(0f, 65f);
             }
             else
             {

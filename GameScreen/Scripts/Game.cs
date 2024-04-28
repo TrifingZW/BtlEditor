@@ -12,12 +12,15 @@ public partial class Game : Node2D
     public CameraController CameraController { get; private set; }
     public MapUI MapUI { get; private set; }
     public DataUI DataUI { get; private set; }
+    public EditUI EditUI { get; private set; }
     public Dialog Dialog { get; private set; }
+    public EditWindow EditWindow { get; private set; }
     public BtlObjWindow BtlObjWindow { get; private set; }
     public SearchGeneralWindow SearchGeneralWindow { get; private set; }
     public SearchArmyWindow SearchArmyWindow { get; private set; }
+    public SearchCountryWindow SearchCountryWindow { get; private set; }
     public AcceptDialog AcceptDialog { get; private set; }
-    public AudioStreamPlayer AudioStreamPlayer { get;private set; }
+    public AudioStreamPlayer AudioStreamPlayer { get; private set; }
     public static Game Instance { get; private set; }
 
     private bool _dataMode;
@@ -41,6 +44,23 @@ public partial class Game : Node2D
         }
     }
 
+    public bool ProvinceMode { get; set; }
+
+    public void StartProvinceMode(short coords)
+    {
+        ProvinceMode = true;
+        MapUI.Visible = false;
+        EditUI.Visible = true;
+        EditUI.Start(coords);
+    }
+
+    public void StopProvinceMode()
+    {
+        ProvinceMode = false;
+        MapUI.Visible = true;
+        EditUI.Visible = false;
+    }
+
     private void Handoff() => DataMode = !DataMode;
 
     #region 粘贴板
@@ -59,11 +79,25 @@ public partial class Game : Node2D
         CameraController = GetNode<CameraController>("Camera2D");
         MapUI = GetNode<MapUI>("MapUI");
         DataUI = GetNode<DataUI>("DataUI");
+        EditUI = GetNode<EditUI>("EditUI");
         BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
         SearchGeneralWindow = GetNode<SearchGeneralWindow>("SearchGeneralWindow");
         SearchArmyWindow = GetNode<SearchArmyWindow>("SearchArmyWindow");
+        SearchCountryWindow = GetNode<SearchCountryWindow>("SearchCountryWindow");
         AcceptDialog = GetNode<AcceptDialog>("AcceptDialog");
         Dialog = GetNode<Dialog>("Dialog");
+        EditWindow = GetNode<EditWindow>("EditWindow");
         AudioStreamPlayer = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (ProvinceMode) return;
+        if (@event is not InputEventKey keyEvent) return;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Capslock)
+            DataMode = !DataMode;
+        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.S)
+            if (keyEvent.CtrlPressed)
+                MapController.Save();
     }
 }

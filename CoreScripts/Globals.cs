@@ -56,7 +56,7 @@ public partial class Globals : Node
         RenderScale = Config.GetValue("Setting", "RenderScale", Variant.From(2)).AsInt32();
         WindowMode = Config.GetValue("Setting", "WindowMode", Variant.From(0L)).AsInt64();
         VSync = Config.GetValue("Setting", "VSync", Variant.From(2L)).AsInt64();
-
+        
         WorkPath = File.ReadAllText($"{FilePath}/WorkPath.txt");
         BtlPath = File.ReadAllText($"{FilePath}/BtlPath.txt");
 

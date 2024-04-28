@@ -89,15 +89,4 @@ public partial class Game : Node2D
         EditWindow = GetNode<EditWindow>("EditWindow");
         AudioStreamPlayer = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
     }
-
-    public override void _Input(InputEvent @event)
-    {
-        if (ProvinceMode) return;
-        if (@event is not InputEventKey keyEvent) return;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Capslock)
-            DataMode = !DataMode;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.S)
-            if (keyEvent.CtrlPressed)
-                MapController.Save();
-    }
 }

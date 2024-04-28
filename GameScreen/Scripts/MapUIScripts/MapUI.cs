@@ -43,15 +43,6 @@ public partial class MapUI : CanvasLayer, IInput
         _panelVisible.Pressed += () => { UtilsSelect(_utils.CurrentTab); };
     }
 
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is not InputEventKey keyEvent) return;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F1)
-            _utils.CurrentTab = 0;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.F2)
-            _utils.CurrentTab = 1;
-    }
-
     private void UtilsSelect(long index)
     {
         _singleContainer.Visible = false;

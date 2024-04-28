@@ -134,6 +134,7 @@ offset_bottom = 40.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MapUI/MainPanel"]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="Utils" type="TabBar" parent="MapUI/MainPanel/VBoxContainer"]
 unique_name_in_owner = true
@@ -156,6 +157,11 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 50
 button_pressed = true
 text = "显示面板"
+
+[node name="Mode" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
 
 [node name="Save" type="Button" parent="MapUI/MainPanel/VBoxContainer"]
 layout_mode = 2
@@ -487,6 +493,12 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "复制"
 
+[node name="Button5" type="Button" parent="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "切换模式"
+
 [node name="EditUI" type="CanvasLayer" parent="."]
 visible = false
 script = ExtResource("28_r5tlh")
@@ -573,9 +585,9 @@ text = "确定"
 [node name="BtlObjWindow" type="Window" parent="."]
 title = "设置"
 initial_position = 1
-size = Vector2i(800, 1000)
+size = Vector2i(800, 800)
 visible = false
-min_size = Vector2i(800, 1000)
+min_size = Vector2i(800, 800)
 script = ExtResource("20_150s2")
 
 [node name="MarginContainer" type="MarginContainer" parent="BtlObjWindow"]
@@ -801,11 +813,11 @@ text = "确定选择"
 [node name="SearchArmyWindow" type="Window" parent="."]
 title = "搜索军队"
 initial_position = 1
-size = Vector2i(800, 1000)
+size = Vector2i(800, 800)
 visible = false
 transient = true
 exclusive = true
-min_size = Vector2i(800, 1000)
+min_size = Vector2i(800, 800)
 script = ExtResource("39_asn33")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchArmyWindow"]
@@ -843,11 +855,11 @@ text = "确定选择"
 [node name="SearchCountryWindow" type="Window" parent="."]
 title = "搜索国家"
 initial_position = 1
-size = Vector2i(800, 1000)
+size = Vector2i(800, 800)
 visible = false
 transient = true
 exclusive = true
-min_size = Vector2i(800, 1000)
+min_size = Vector2i(800, 800)
 script = ExtResource("42_85ugd")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchCountryWindow"]
@@ -888,6 +900,7 @@ ok_button_text = "收到,收到,Over!"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("41_outve")
 
+[connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Mode" to="." method="Handoff"]
 [connection signal="pressed" from="MapUI/MainPanel/VBoxContainer/Save" to="MapController" method="Save"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/Clear" to="MapUI/MultiContainer" method="MultiModeClear"]
 [connection signal="pressed" from="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel/Panel/MarginContainer/Layout/CreateArmy" to="MapUI/MultiContainer" method="MultiModeCreateArmy"]
@@ -901,6 +914,7 @@ stream = ExtResource("41_outve")
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button2" to="DataUI" method="Delete"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button3" to="DataUI" method="Set"]
 [connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button4" to="DataUI" method="Copy"]
+[connection signal="pressed" from="DataUI/PanelContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Button5" to="." method="Handoff"]
 
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/CreatePanel"]
 [editable path="MapUI/MultiContainer/ScrollContainer/VBoxContainer/SetPanel"]

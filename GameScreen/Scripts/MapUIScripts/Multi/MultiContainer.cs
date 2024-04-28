@@ -115,7 +115,7 @@ public partial class MultiContainer : PanelContainer, IInput
         {
             case InputEventMouseButton inputEventMouseButton:
             {
-                if (inputEventMouseButton.ButtonIndex == MouseButton.Left)
+                if (inputEventMouseButton.ButtonIndex == MouseButton.Right)
                 {
                     _multiPressed = inputEventMouseButton.Pressed;
                     Vector2I vector2I = TileMap.LocalToMap(MousePosition);

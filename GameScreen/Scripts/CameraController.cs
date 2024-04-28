@@ -8,6 +8,8 @@ public partial class CameraController : Camera2D
 {
     private Vector2 _targetPosition = Vector2.Zero;
 
+    private bool _target;
+
     public Vector2 TargetPosition
     {
         get => _targetPosition;
@@ -21,81 +23,17 @@ public partial class CameraController : Camera2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (Globals.Win)
-            WindowsCameraSet();
-        else
-            AndroidCameraSet();
-
+        AndroidCameraSet();
         //目标位置插值
         if (!_target || TargetPosition == Vector2.Zero) return;
         Position = Position.Lerp(TargetPosition, 0.2f);
-        if (Position.DistanceTo(TargetPosition) < 1f)
-        {
-            _target = false;
-            Position = TargetPosition;
-            TargetPosition = Vector2.Zero;
-        }
+        if (!(Position.DistanceTo(TargetPosition) < 1f)) return;
+        _target = false;
+        Position = TargetPosition;
+        TargetPosition = Vector2.Zero;
     }
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (Globals.Win)
-            WindowsController(@event);
-        else
-            AndroidController(@event);
-    }
-
-
-    #region Windows视角控制器
-
-    private bool _rightButtonPressed;
-    private float _wheelValue = 1f;
-    private float _maxZoom = 20f;
-    private float _minZoom = 1f;
-
-    private bool _target;
-
-    private void WindowsCameraSet()
-    {
-        _wheelValue = Mathf.Clamp(_wheelValue, _minZoom, _maxZoom);
-        Zoom = Zoom.Lerp(Vector2.One * _wheelValue / 5f, 0.2f);
-    }
-
-    private Vector2 _mousePosition;
-    private Vector2 _position;
-
-    private void WindowsController(InputEvent inputEvent)
-    {
-        if (_target) return;
-        if (inputEvent is InputEventMouseMotion eventMouseMotion && _rightButtonPressed)
-        {
-            Vector2 mousePosition = eventMouseMotion.Position;
-            Vector2 delta = (_mousePosition - mousePosition) / _wheelValue * 5;
-            Position = _position + delta;
-        }
-
-        if (inputEvent is not InputEventMouseButton mouseButtonEvent) return;
-        if (mouseButtonEvent.ButtonIndex == MouseButton.WheelUp && mouseButtonEvent.Pressed)
-            _wheelValue += mouseButtonEvent.Factor;
-        if (mouseButtonEvent.ButtonIndex == MouseButton.WheelDown && mouseButtonEvent.Pressed)
-            _wheelValue -= mouseButtonEvent.Factor;
-
-        if (mouseButtonEvent.ButtonIndex == MouseButton.Right)
-        {
-            if (mouseButtonEvent.Pressed)
-            {
-                if (_rightButtonPressed == false)
-                {
-                    _rightButtonPressed = true;
-                    _mousePosition = mouseButtonEvent.Position;
-                    _position = Position;
-                }
-            }
-            else if (!mouseButtonEvent.Pressed) _rightButtonPressed = false;
-        }
-    }
-
-    #endregion
+    public override void _UnhandledInput(InputEvent @event) => AndroidController(@event);
 
     #region Android视角控制器
 

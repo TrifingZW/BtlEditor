@@ -52,7 +52,7 @@ public partial class MainInterface : Control
     private void StartBtl()
     {
         if (!_itemList.GetSelectedItems().TryGetValue(0, out var index)) return;
-        MapHelper.BtlPath = _btlList[index];
+        MapHelper.BtlPath = _itemList.GetItemText(index);
         GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>("res://GameScreen/Game.tscn"));
     }
 

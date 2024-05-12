@@ -35,7 +35,7 @@ naming/scene_name_casing=1
 
 [gui]
 
-theme/default_theme_scale=2.0
+theme/default_theme_scale=2.5
 theme/custom="res://theme.tres"
 
 [input_devices]

@@ -126,19 +126,17 @@ public partial class InterceptUI : CanvasLayer
         switch (@event)
         {
             case InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true }:
-                SelectMode = false;
-                _startX.SetValueNoSignal(StartPoint.X);
-                _startY.SetValueNoSignal(StartPoint.Y);
-                _endX.SetValueNoSignal(EndPoint.X);
-                _endY.SetValueNoSignal(EndPoint.Y);
-                break;
-            case InputEventMouseMotion:
                 Vector2I vector2I = TileMap.LocalToMap(MousePosition);
                 if (!MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _)) return;
                 if (_start)
                     StartPoint = vector2I;
                 else
                     EndPoint = vector2I;
+                SelectMode = false;
+                _startX.SetValueNoSignal(StartPoint.X);
+                _startY.SetValueNoSignal(StartPoint.Y);
+                _endX.SetValueNoSignal(EndPoint.X);
+                _endY.SetValueNoSignal(EndPoint.Y);
                 break;
         }
     }

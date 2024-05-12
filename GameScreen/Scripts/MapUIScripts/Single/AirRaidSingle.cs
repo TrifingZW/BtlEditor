@@ -29,6 +29,7 @@ public partial class AirRaidSingle : BaseSingle
     private void AddAirRaid(AirRaid airRaid)
     {
         PanelContainer panelContainer = new() { SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        panelContainer.MouseFilter = MouseFilterEnum.Pass;
         _gridContainer.AddChild(panelContainer);
         VBoxContainer vBoxContainer = new();
         vBoxContainer.Theme = ResourceLoader.Load<Theme>("res://editor_theme.tres");

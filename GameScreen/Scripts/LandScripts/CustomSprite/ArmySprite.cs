@@ -44,7 +44,9 @@ public partial class ArmySprite : AnimatedSprite2D
 
     public override void _Draw()
     {
-        if (Army.等级 is >= 2 and <= 6)
+        if (Army.盾牌标志 == 9)
+            DrawTexture(_levelFrames.GetFrameTexture("default", 5), new(22f, 10f));
+        else if (Army.等级 is >= 2 and <= 6)
             if (_levelFrames.GetFrameTexture("default", Army.等级 - 2) is { } levelTex)
                 DrawTexture(levelTex, new(22f, 10f));
 

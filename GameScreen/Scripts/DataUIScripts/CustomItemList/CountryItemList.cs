@@ -4,6 +4,7 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts.CustomItemList;
 
@@ -42,7 +43,7 @@ public partial class CountryItemList : BaseItemList
 
     private static void ItemSelect(long index)
     {
-        foreach (LandUnit landUnit in MapController.LandUnits)
+        foreach (GameLandUnit landUnit in MapController.LandUnits)
             if (landUnit.Capital != null)
                 if (landUnit.Belong == index)
                 {
@@ -67,7 +68,7 @@ public partial class CountryItemList : BaseItemList
                 SetItem(i, c);
             }
 
-            foreach (LandUnit landUnit in MapController.LandUnits)
+            foreach (GameLandUnit landUnit in MapController.LandUnits)
             {
                 if (landUnit.Belong == 0xff) continue;
 
@@ -109,7 +110,7 @@ public partial class CountryItemList : BaseItemList
         {
             if (country.国家 != c.国家)
             {
-                foreach (LandUnit landUnit in MapController.LandUnits)
+                foreach (GameLandUnit landUnit in MapController.LandUnits)
                     if (landUnit.Belong == index)
                         if (landUnit.FlagSprite is { } flagSprite)
                             flagSprite.Flag = c.国家;

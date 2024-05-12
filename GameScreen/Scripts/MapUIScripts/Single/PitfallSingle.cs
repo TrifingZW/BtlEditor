@@ -4,24 +4,29 @@ namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class PitfallSingle : BaseSingle
 {
-    protected override void Update()
+    protected override void UserInface()
     {
-        if (LandUnit.Pitfall is { } pitfall)
-            ReflexStruct(pitfall, TreeContainer, Save);
+        if (GameLandUnit.Pitfall is { } pitfall)
+        {
+            ReflexStruct(pitfall, Container, Save);
+            Button delete = CreateButton("删除陷阱", () =>
+            {
+                GameLandUnit.Pitfall = null;
+                Update();
+            });
+            Container.AddChild(delete);
+        }
         else
         {
-            Button add = new();
-            add.Pressed += () =>
+            Button add = CreateButton("添加陷阱", () =>
             {
-                LandUnit.Pitfall = new()
+                GameLandUnit.Pitfall = new()
                 {
-                    坐标 = LandUnit.RegionIndex
+                    坐标 = GameLandUnit.RegionIndex
                 };
-                Clear();
                 Update();
-            };
-            add.Text = "添加陷阱";
-            EndContainer.AddChild(add);
+            });
+            Container.AddChild(add);
         }
     }
 

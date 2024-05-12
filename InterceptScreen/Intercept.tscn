@@ -1,0 +1,240 @@
+[gd_scene load_steps=10 format=3 uid="uid://k3iqln4mnt65"]
+
+[ext_resource type="Script" path="res://InterceptScreen/Scripts/Intercept.cs" id="1_brten"]
+[ext_resource type="PackedScene" uid="uid://cfiri0bgelvw4" path="res://UserInterface/TabPanel.tscn" id="2_ba4vh"]
+[ext_resource type="Texture2D" uid="uid://b3iwesxgjb4n4" path="res://Assets/Textures/pts/map_land.png" id="2_u73ti"]
+[ext_resource type="Script" path="res://InterceptScreen/Scripts/InterceptUiLayer.cs" id="3_u34nw"]
+[ext_resource type="TileSet" uid="uid://f3y4463ptra3" path="res://GameScreen/TileSet.tres" id="4_g0reo"]
+[ext_resource type="Script" path="res://CoreScripts/CameraController.cs" id="4_nrte3"]
+[ext_resource type="PackedScene" uid="uid://beisxt0foinfn" path="res://UserInterface/EditorItem.tscn" id="5_pjhna"]
+[ext_resource type="Script" path="res://InterceptScreen/Scripts/MasterContainer.cs" id="6_w2acf"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_f0e4q"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Intercept" type="Node2D"]
+script = ExtResource("1_brten")
+
+[node name="MapPreview" type="CanvasGroup" parent="."]
+metadata/TileWidth = 148
+metadata/TileHeigth = 129
+metadata/SideLength = 76
+
+[node name="LandRender" type="Sprite2D" parent="MapPreview"]
+unique_name_in_owner = true
+texture = SubResource("ViewportTexture_f0e4q")
+centered = false
+
+[node name="TileMap" type="TileMap" parent="MapPreview"]
+unique_name_in_owner = true
+tile_set = ExtResource("4_g0reo")
+format = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("4_nrte3")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+disable_3d = true
+transparent_bg = true
+render_target_update_mode = 1
+
+[node name="Land" type="Sprite2D" parent="SubViewport"]
+unique_name_in_owner = true
+texture_repeat = 2
+texture = ExtResource("2_u73ti")
+centered = false
+region_enabled = true
+
+[node name="Topography" type="Node2D" parent="SubViewport"]
+unique_name_in_owner = true
+
+[node name="InterceptUiLayer" type="CanvasLayer" parent="."]
+script = ExtResource("3_u34nw")
+
+[node name="MarginContainer" type="MarginContainer" parent="InterceptUiLayer"]
+custom_minimum_size = Vector2(650, 0)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TabPanel" parent="InterceptUiLayer/MarginContainer" instance=ExtResource("2_ba4vh")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TabBar" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/HBoxContainer" index="0"]
+tab_count = 2
+tab_0/title = "设置"
+tab_1/title = "数据"
+
+[node name="Setting" type="ScrollContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer" index="1"]
+layout_mode = 2
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer1" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditorItem" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1" instance=ExtResource("5_pjhna")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1/EditorItem/MarginContainer1/Head" index="0"]
+layout_mode = 2
+text = "名称"
+
+[node name="LineEdit" type="LineEdit" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1/EditorItem/MarginContainer2/Content" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "输入名称"
+
+[node name="PanelContainer2" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditorItem" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2" instance=ExtResource("5_pjhna")]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer1/Head" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "起始点"
+
+[node name="Content" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2" index="0"]
+vertical = true
+
+[node name="SpinBox" type="SpinBox" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2/Content" index="0"]
+layout_mode = 2
+prefix = "X"
+
+[node name="SpinBox2" type="SpinBox" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2/Content" index="1"]
+layout_mode = 2
+prefix = "Y"
+
+[node name="PanelContainer3" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditorItem" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3" instance=ExtResource("5_pjhna")]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer1/Head" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "结束点"
+
+[node name="Content" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2" index="0"]
+vertical = true
+
+[node name="SpinBox" type="SpinBox" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2/Content" index="0"]
+layout_mode = 2
+prefix = "X"
+
+[node name="SpinBox2" type="SpinBox" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2/Content" index="1"]
+layout_mode = 2
+prefix = "Y"
+
+[node name="PanelContainer4" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留军团"
+
+[node name="CheckButton2" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留城市"
+
+[node name="CheckButton3" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留军队"
+
+[node name="CheckButton4" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留陷阱"
+
+[node name="CheckButton5" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留方案"
+
+[node name="CheckButton6" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留天气"
+
+[node name="CheckButton7" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留事件"
+
+[node name="CheckButton8" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留援军"
+
+[node name="CheckButton9" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留空袭"
+
+[node name="CheckButton10" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留策略"
+
+[node name="CheckButton11" type="CheckButton" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "保留空中支援"
+
+[node name="PanelContainer5" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer5"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+text = "提示：
+1.名称不需要添加后缀(.btl)
+2.保留军团仅会保留被截取地块上有的军团（根据省规划计算）
+3.保留军队，城市等依赖地块的单位仅会保留被截取地块部分上的单位。
+4.所有拥有依赖国家单位数据的单位（列如空中支援里的军团数据），在保留国家后且还存在这个军团才会保留。"
+autowrap_mode = 1
+
+[node name="Data" type="ScrollContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer" index="2"]
+visible = false
+layout_mode = 2
+vertical_scroll_mode = 3
+
+[node name="MarginContainer" type="PanelContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Data"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MasterContainer" type="VBoxContainer" parent="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Data/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_w2acf")
+
+[editable path="InterceptUiLayer/MarginContainer/TabPanel"]
+[editable path="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1/EditorItem"]
+[editable path="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem"]
+[editable path="InterceptUiLayer/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem"]

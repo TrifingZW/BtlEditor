@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
 using BtlEditor.CoreScripts.Utils;
-using BtlEditor.UserInterface;
 using Godot;
 using EditorItem = BtlEditor.CoreScripts.Attributes.EditorItem;
 
@@ -16,9 +15,9 @@ public partial class BtlObjWindow : Window
 
     public override void _Ready()
     {
-        CloseRequested += () => Visible = false;
+        CloseRequested += Hide;
         _windowContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer");
-        _editorContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer/ScrollContainer/EditorContainer");
+        _editorContainer = GetNode<VBoxContainer>("MarginContainer/WindowContainer/Panel/ScrollContainer/EditorContainer");
     }
 
     public void CreateEdit<T>(T obj, Action<T> action, Func<T, Node> head = null) where T : ICloneable
@@ -79,7 +78,6 @@ public partial class BtlObjWindow : Window
                     {
                         Text = field.GetValue(newObj)!.ToString(),
                         SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-                        FocusMode = Control.FocusModeEnum.None
                     };
                     countryButton.Pressed += () =>
                     {

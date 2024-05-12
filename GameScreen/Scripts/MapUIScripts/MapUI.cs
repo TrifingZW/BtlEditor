@@ -1,76 +1,62 @@
-using System.Collections.Generic;
 using BtlEditor.GameScreen.Scripts.LandScripts;
-using BtlEditor.GameScreen.Scripts.MapUIScripts.Multi;
 using BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 using Godot;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts;
 
-public partial class MapUI : CanvasLayer, IInput
+public partial class MapUI : InterceptScreen.Scripts.InterceptUiLayer, IInput
 {
-    public List<LandUnit> MultiLandUnit
+    /*public List<LandUnit> MultiLandUnit
     {
         get => _multiContainer.MultiLandUnit;
         set => _multiContainer.MultiLandUnit = value;
-    }
+    }*/
 
-    public LandUnit SingeLandUnit
+    public GameLandUnit SingeGameLandUnit
     {
-        get => _singleContainer.SingeLandUnit;
-        set => _singleContainer.SingeLandUnit = value;
+        get => _singleTabContainer.SingeGameLandUnit;
+        set => _singleTabContainer.SingeGameLandUnit = value;
     }
 
     //数据面板
-    private SingleContainer _singleContainer;
-    private MultiContainer _multiContainer;
+    private SingleTabContainer _singleTabContainer;
+    // private MultiContainer _multiContainer;
 
     // private ReinforcementContainer _reinforcementContainer;
     // private AirRaidContainer _airRaidContainer;
     // private CapitalContainer _capitalContainer;
     // private TerrainContainer _terrainContainer;
-    private TabBar _utils;
     private CheckButton _panelVisible;
 
     public override void _Ready()
     {
-        _singleContainer = GetNode<SingleContainer>("%SingleContainer");
-        _multiContainer = GetNode<MultiContainer>("%MultiContainer");
-
-        _utils = GetNode<TabBar>("%Utils");
-        _utils.TabSelected += UtilsSelect;
-
-        _panelVisible = GetNode<CheckButton>("%PanelVisible");
-        _panelVisible.Pressed += () => { UtilsSelect(_utils.CurrentTab); };
+        _singleTabContainer = GetNode<SingleTabContainer>("%SingleTabContainer");
+        // _multiContainer = GetNode<MultiContainer>("%多选");
     }
 
-    private void UtilsSelect(long index)
+    private void TabSelect(long index)
     {
-        _singleContainer.Visible = false;
-        _multiContainer.Visible = false;
-        if (!_panelVisible.ButtonPressed) return;
-        switch (index)
-        {
-            case 0:
-                _singleContainer.Visible = true;
-                break;
-            case 1:
-                _multiContainer.Visible = true;
-                break;
-        }
+        _singleTabContainer.CurrentTab = (int)index;
     }
+
+    private void Close() => Hide();
 
     public void Input(InputEvent @event)
     {
-        if (Game.Instance.ProvinceMode) return;
-        switch (_utils.CurrentTab)
+        if (Game.Instance.EditMode) return;
+
+        _singleTabContainer.Input(@event);
+
+        /*
+        switch (_tabContainer.CurrentTab)
         {
             case 0:
-                _singleContainer.Input(@event);
                 break;
             case 1:
                 _multiContainer.Input(@event);
                 break;
         }
+    */
     }
 }
 

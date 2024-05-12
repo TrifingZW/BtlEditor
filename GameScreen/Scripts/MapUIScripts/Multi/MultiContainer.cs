@@ -5,17 +5,17 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.GameScreen.Scripts.Windows;
 using Godot;
-using static BtlEditor.CoreScripts.StaticRes;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Multi;
 
 public partial class MultiContainer : PanelContainer, IInput
 {
     private static MapController MapController => Game.Instance.MapController;
-    private static LandUnit[] LandUnits => MapController.LandUnits;
+    private static GameLandUnit[] LandUnits => MapController.LandUnits;
     private static TileMap TileMap => MapController.TileMap;
     private static EditWindow EditWindow => Game.Instance.EditWindow;
-    public List<LandUnit> MultiLandUnit { get; set; } = [];
+    public List<GameLandUnit> MultiLandUnit { get; set; } = [];
     private TabBar _multiTabContainer;
 
     public override void _Ready()
@@ -31,7 +31,7 @@ public partial class MultiContainer : PanelContainer, IInput
 
     private void MultiModeCreateArmy()
     {
-        foreach (LandUnit landUnit in MultiLandUnit)
+        foreach (GameLandUnit landUnit in MultiLandUnit)
         {
             if (landUnit.Army != null) continue;
             if (Btl.Version1) landUnit.Army = new Army1 { 坐标 = landUnit.RegionIndex };
@@ -41,7 +41,7 @@ public partial class MultiContainer : PanelContainer, IInput
 
     private void MultiModeCreateCity()
     {
-        foreach (LandUnit landUnit in MultiLandUnit)
+        foreach (GameLandUnit landUnit in MultiLandUnit)
         {
             if (landUnit.City != null) continue;
             landUnit.City = new()
@@ -59,7 +59,7 @@ public partial class MultiContainer : PanelContainer, IInput
     {
         EditWindow.CreateEdit("设置省规划", province =>
         {
-            foreach (LandUnit landUnit in MultiLandUnit)
+            foreach (GameLandUnit landUnit in MultiLandUnit)
             {
                 landUnit.Province = (short)province;
                 landUnit.UpdateProvinceColor();
@@ -73,7 +73,7 @@ public partial class MultiContainer : PanelContainer, IInput
     {
         EditWindow.CreateEdit("设置归属", belong =>
         {
-            foreach (LandUnit landUnit in MultiLandUnit)
+            foreach (GameLandUnit landUnit in MultiLandUnit)
             {
                 landUnit.Belong = (byte)belong;
                 landUnit.UpdateBelongColor();
@@ -85,7 +85,7 @@ public partial class MultiContainer : PanelContainer, IInput
 
     private void MultiModeDeleteArmy()
     {
-        foreach (LandUnit landUnit in MultiLandUnit)
+        foreach (GameLandUnit landUnit in MultiLandUnit)
         {
             landUnit.ClearArmy();
             landUnit.ExamineBelong();
@@ -96,7 +96,7 @@ public partial class MultiContainer : PanelContainer, IInput
 
     private void MultiModeDeleteCity()
     {
-        foreach (LandUnit landUnit in MultiLandUnit)
+        foreach (GameLandUnit landUnit in MultiLandUnit)
         {
             landUnit.ClearCity();
             landUnit.ExamineBelong();
@@ -119,7 +119,7 @@ public partial class MultiContainer : PanelContainer, IInput
                 {
                     _multiPressed = inputEventMouseButton.Pressed;
                     Vector2I vector2I = TileMap.LocalToMap(MousePosition);
-                    if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Btl.Master.地图宽), out LandUnit landUnit))
+                    if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
                         switch (_multiTabContainer.CurrentTab)
                         {
                             case 0:
@@ -148,7 +148,7 @@ public partial class MultiContainer : PanelContainer, IInput
                 if (_multiPressed)
                 {
                     Vector2I vector2I = TileMap.LocalToMap(MousePosition);
-                    if (LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, Btl.Master.地图宽), out LandUnit landUnit))
+                    if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
                         switch (_multiTabContainer.CurrentTab)
                         {
                             case 0:

@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://beisxt0foinfn"]
+[gd_scene load_steps=3 format=3 uid="uid://beisxt0foinfn"]
 
+[ext_resource type="Theme" uid="uid://bqoqtmvslvgu8" path="res://editor_theme.tres" id="1_0f2n8"]
 [ext_resource type="Script" path="res://UserInterface/EditorItem.cs" id="1_s0mmk"]
 
 [node name="EditorItem" type="HBoxContainer"]
@@ -8,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_0f2n8")
 script = ExtResource("1_s0mmk")
 
 [node name="MarginContainer1" type="MarginContainer" parent="."]

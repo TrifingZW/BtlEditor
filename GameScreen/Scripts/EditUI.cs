@@ -1,12 +1,11 @@
-using BtlEditor.CoreScripts;
-using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using Godot;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts;
 
-public partial class EditUI : CanvasLayer
+public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
 {
     private TabBar _tabBar;
     private Button _clear;
@@ -27,7 +26,7 @@ public partial class EditUI : CanvasLayer
         _save.Pressed += () =>
         {
             var vector2Is = TileMap.GetUsedCells(MapController.ProvinceLayer);
-            foreach (LandUnit landUnit in MapController.LandUnits)
+            foreach (GameLandUnit landUnit in MapController.LandUnits)
             {
                 if (landUnit.Province == _coords)
                 {
@@ -45,20 +44,20 @@ public partial class EditUI : CanvasLayer
             MapController.UpdateColorUV();
 
             TileMap.ClearLayer(MapController.ProvinceLayer);
-            Game.Instance.StopProvinceMode();
+            Game.Instance.ProvinceMode = false;
         };
         _cancel.Pressed += () =>
         {
             TileMap.ClearLayer(MapController.ProvinceLayer);
-            Game.Instance.StopProvinceMode();
+            Game.Instance.ProvinceMode = false;
         };
     }
 
-    public void Start(short coords)
+    public void Start()
     {
-        _coords = coords;
-        foreach (LandUnit landUnit in MapController.LandUnits)
-            if (landUnit.Province == coords)
+        _coords = Game.Instance.MapUI.SingeGameLandUnit.RegionIndex;
+        foreach (GameLandUnit landUnit in MapController.LandUnits)
+            if (landUnit.Province == _coords)
                 TileMap.SetCell(MapController.ProvinceLayer, landUnit.Coords, MapController.SingleTileSetAtlasId, new());
     }
 
@@ -76,7 +75,7 @@ public partial class EditUI : CanvasLayer
                 {
                     _multiPressed = inputEventMouseButton.Pressed;
                     Vector2I vector2I = TileMap.LocalToMap(MousePosition);
-                    if (MapController.LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, StaticRes.Btl.Master.地图宽), out LandUnit _))
+                    if (MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _))
                         switch (_tabBar.CurrentTab)
                         {
                             case 0:
@@ -95,7 +94,7 @@ public partial class EditUI : CanvasLayer
                 if (_multiPressed)
                 {
                     Vector2I vector2I = TileMap.LocalToMap(MousePosition);
-                    if (MapController.LandUnits.TryGetValue(ParserHelper.GetIndex(vector2I, StaticRes.Btl.Master.地图宽), out LandUnit _))
+                    if (MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _))
                         switch (_tabBar.CurrentTab)
                         {
                             case 0:

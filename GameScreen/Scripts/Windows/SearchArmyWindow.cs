@@ -19,7 +19,7 @@ public partial class SearchArmyWindow : Window
 
     public override void _Ready()
     {
-        CloseRequested += () => Visible = false;
+        CloseRequested += Hide;
         LineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/LineEdit");
         ItemList = GetNode<ItemList>("MarginContainer/VBoxContainer/PanelContainer/ItemList");
         Button = GetNode<Button>("MarginContainer/VBoxContainer/Button");

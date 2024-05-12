@@ -3,12 +3,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Godot;
-using static BtlEditor.CoreScripts.StaticRes;
 
 namespace BtlEditor.CoreScripts.Parser;
 
 public static class ParserHelper
 {
+    
     public static T[] ReadToStructArray<T>(BinaryReader reader, int count, int byteLength) where T : struct
     {
         var array = new T[count];
@@ -125,26 +125,5 @@ public static class ParserHelper
         }
     }
 
-    public static int GetIndex(int x, int y, int width)
-    {
-        if (x >= 0 && x < width && y >= 0)
-            return x + y * width;
-        return -1;
-    }
-
-    public static int GetIndex(Vector2I vector2I, int width) => GetIndex(vector2I.X, vector2I.Y, width);
-
-    public static int GetBtlIndex(int index)
-    {
-        if (Btl.IndependentTerrain) return index;
-        var i = 0;
-        for (var y = 0; y < Bin.Height; y++)
-        for (var x = 0; x < Bin.Width; x++)
-        {
-            if (i == index) return GetIndex(new(x - Btl.Master.地图截取x, y - Btl.Master.地图截取y), Btl.Master.地图宽);
-            i++;
-        }
-
-        return -1;
-    }
+  
 }

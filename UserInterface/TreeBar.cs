@@ -7,7 +7,7 @@ public partial class TreeBar : VBoxContainer
     public static TreeBar Instance => ResourceLoader.Load<PackedScene>("res://UserInterface/TreeBar.tscn").Instantiate<TreeBar>();
     public Button Bar => GetNode<Button>("Button");
     public PanelContainer Context => GetNode<PanelContainer>("Panel");
-    public VBoxContainer Layout => GetNode<VBoxContainer>("Panel/MarginContainer/Layout");
+    public VBoxContainer Layout => GetNode<VBoxContainer>("Panel/Layout");
 
     public bool Expanded
     {

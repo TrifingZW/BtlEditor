@@ -12,12 +12,12 @@ public partial class CityMulti : BaseMulti
         ReflexStruct<City>();
     }
     
-    protected override void Update(FieldInfo field, int value, LandUnit landUnit)
+    protected override void Update(FieldInfo field, int value, GameLandUnit gameLandUnit)
     {
-        if (landUnit.City is { } city)
+        if (gameLandUnit.City is { } city)
         {
             field.SetValue(city, Convert.ChangeType(value, field.FieldType));
-            landUnit.UpdateCity();
+            gameLandUnit.UpdateCity();
         }
     }
 }

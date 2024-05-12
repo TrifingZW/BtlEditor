@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 using FileAccess = Godot.FileAccess;
 
@@ -37,7 +38,7 @@ public class TerrainConfigParser
 [XmlRoot(ElementName = "terrains")]
 public class Terrains
 {
-    [XmlElement(ElementName = "terrain")] public List<Terrain> ImageList { get; set; }
+    [XmlElement(ElementName = "terrain")] public List<Terrain> TerrainList { get; set; }
 }
 
 [XmlRoot(ElementName = "terrain")]

@@ -1,12 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://2un2y08h3sph"]
+[gd_scene load_steps=3 format=3 uid="uid://2un2y08h3sph"]
 
 [ext_resource type="Script" path="res://UserInterface/TreeBar.cs" id="1_mo02i"]
+[ext_resource type="Theme" uid="uid://bqoqtmvslvgu8" path="res://editor_theme.tres" id="2_a0pp4"]
 
 [node name="TreeBar" type="VBoxContainer"]
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 54.0
-grow_horizontal = 2
+offset_right = 18.0
+offset_bottom = 27.0
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 script = ExtResource("1_mo02i")
@@ -14,23 +13,15 @@ metadata/Expanded = true
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
-focus_mode = 0
 mouse_filter = 1
-theme_override_font_sizes/font_size = 70
+theme_override_font_sizes/font_size = 50
 alignment = 0
 expand_icon = true
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 2
 mouse_filter = 1
+theme = ExtResource("2_a0pp4")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="Layout" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="Layout" type="VBoxContainer" parent="Panel"]
 layout_mode = 2

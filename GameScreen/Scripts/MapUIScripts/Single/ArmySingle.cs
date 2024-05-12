@@ -3,6 +3,7 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
@@ -10,117 +11,119 @@ public partial class ArmySingle : BaseSingle
 {
     private ArmyPanel _armyPanel;
 
-    protected override void Update()
+    protected override void UserInface()
     {
-        switch (LandUnit.Army)
+        //军队面板
+        if (GameLandUnit.Army is not null)
+        {
+            var armyBar = TreeBar.Instance;
+            armyBar.Title = "军队面板";
+            _armyPanel = ArmyPanel.Instance;
+            armyBar.Layout.AddChild(_armyPanel);
+            Container.AddChild(armyBar);
+            UpdateArmyPanel();
+            //选择军队
+            _armyPanel.ArmyButton.Pressed += () =>
+            {
+                Game.Instance.SearchArmyWindow.CreateEdit(armyJson =>
+                {
+                    GameLandUnit.Army.兵种 = (byte)armyJson.Army;
+                    GameLandUnit.UpdateArmy();
+                    Update();
+                });
+            };
+            //选择将领
+            _armyPanel.GeneralButton.Pressed += () =>
+            {
+                Game.Instance.SearchGeneralWindow.CreateEdit(general =>
+                {
+                    GameLandUnit.Army.将领 = (short)general.Id;
+                    GameLandUnit.Army.军衔 = (byte)general.MilitaryRank;
+                    GameLandUnit.Army.爵位 = (byte)general.Hp;
+
+                    if (general.Skills.TryGetValue(0, out var skill1))
+                        GameLandUnit.Army.技能等级1 = (byte)(skill1 % 10);
+                    if (general.Skills.TryGetValue(1, out var skill2))
+                        GameLandUnit.Army.技能等级2 = (byte)(skill2 % 10);
+                    if (general.Skills.TryGetValue(2, out var skill3))
+                        GameLandUnit.Army.技能等级3 = (byte)(skill3 % 10);
+                    if (general.Skills.TryGetValue(3, out var skill4))
+                        GameLandUnit.Army.技能等级4 = (byte)(skill4 % 10);
+                    if (general.Skills.TryGetValue(4, out var skill5))
+                        GameLandUnit.Army.技能等级5 = (byte)(skill5 % 10);
+
+                    GameLandUnit.UpdateArmy();
+                    Update();
+                });
+            };
+        }
+
+        //编辑面板
+        switch (GameLandUnit.Army)
         {
             case null:
 
                 Button paste = CreateButton("粘贴军队", () =>
                 {
                     if (Game.ArmyCopy is null) return;
-                    LandUnit.Army = (Army)Game.ArmyCopy?.Clone();
-                    LandUnit.Belong = Game.BelongCopy;
-                    Clear();
+                    GameLandUnit.Army = (Army)Game.ArmyCopy?.Clone();
+                    if (GameLandUnit.Belong == 0xff)
+                        GameLandUnit.Belong = Game.BelongCopy;
                     Update();
                 });
-                EndContainer.AddChild(paste);
+                Container.AddChild(paste);
 
 
                 Button add = CreateButton("添加军队", () =>
                 {
-                    if (Btl.Version1) LandUnit.Army = new Army1 { 坐标 = LandUnit.RegionIndex };
-                    if (Btl.Version2 || Btl.Version3) LandUnit.Army = new Army2 { 坐标 = LandUnit.RegionIndex };
-                    LandUnit.Belong = LandUnit.ProvinceBelong;
-                    Clear();
+                    if (Btl.Version1) GameLandUnit.Army = new Army1 { 坐标 = GameLandUnit.RegionIndex };
+                    if (Btl.Version2 || Btl.Version3) GameLandUnit.Army = new Army2 { 坐标 = GameLandUnit.RegionIndex };
+                    GameLandUnit.Belong = GameLandUnit.ProvinceBelong;
                     Update();
                 });
-                EndContainer.AddChild(add);
+                Container.AddChild(add);
+                return;
 
-                break;
             case Army1 army1:
-                ReflexStruct(army1, TreeContainer, UpdateArmy);
+                ReflexStruct(army1, Container, UpdateArmy);
                 break;
             case Army2 army3:
-                ReflexStruct(army3, TreeContainer, UpdateArmy);
+                ReflexStruct(army3, Container, UpdateArmy);
                 break;
         }
 
-        if (LandUnit.Army is null) return;
-
-        _armyPanel = ArmyPanel.Instance;
-        HeadContainer.AddChild(_armyPanel);
-        UpdateArmyPanel();
-        //选择军队
-        _armyPanel.ArmyButton.Pressed += () =>
-        {
-            Game.Instance.SearchArmyWindow.CreateEdit(armyJson =>
-            {
-                LandUnit.Army.兵种 = (byte)armyJson.Army;
-                LandUnit.UpdateArmy();
-                Clear();
-                Update();
-            });
-        };
-        //选择将领
-        _armyPanel.GeneralButton.Pressed += () =>
-        {
-            Game.Instance.SearchGeneralWindow.CreateEdit(general =>
-            {
-                LandUnit.Army.将领 = (short)general.Id;
-                LandUnit.Army.军衔 = (byte)general.MilitaryRank;
-                LandUnit.Army.爵位 = (byte)general.Hp;
-
-                if (general.Skills.TryGetValue(0, out var skill1))
-                    LandUnit.Army.技能等级1 = (byte)(skill1 % 10);
-                if (general.Skills.TryGetValue(1, out var skill2))
-                    LandUnit.Army.技能等级2 = (byte)(skill2 % 10);
-                if (general.Skills.TryGetValue(2, out var skill3))
-                    LandUnit.Army.技能等级3 = (byte)(skill3 % 10);
-                if (general.Skills.TryGetValue(3, out var skill4))
-                    LandUnit.Army.技能等级4 = (byte)(skill4 % 10);
-                if (general.Skills.TryGetValue(4, out var skill5))
-                    LandUnit.Army.技能等级5 = (byte)(skill5 % 10);
-
-                LandUnit.UpdateArmy();
-                Clear();
-                Update();
-            });
-        };
-
         Button copy = CreateButton("复制军队", () =>
         {
-            Game.ArmyCopy = (Army)LandUnit.Army.Clone();
-            Game.BelongCopy = LandUnit.Belong;
+            Game.ArmyCopy = (Army)GameLandUnit.Army.Clone();
+            Game.BelongCopy = GameLandUnit.Belong;
         });
-        EndContainer.AddChild(copy);
+        Container.AddChild(copy);
 
         Button delete = CreateButton("删除军队", () =>
         {
-            LandUnit.Army = null;
-            Clear();
+            GameLandUnit.Army = null;
             Update();
         });
-        EndContainer.AddChild(delete);
+        Container.AddChild(delete);
     }
 
     private void UpdateArmy()
     {
-        LandUnit.UpdateArmy();
+        GameLandUnit.UpdateArmy();
         UpdateArmyPanel();
     }
 
     private void UpdateArmyPanel()
     {
         //设置军队名称
-        if (LandUnit.ArmyJson is { } armyJson)
+        if (GameLandUnit.ArmyJson is { } armyJson)
             _armyPanel.ArmyButton.Text = armyJson.Name;
         else _armyPanel.ArmyButton.Text = "未知兵种";
 
         //设置将领相关
-        if (LandUnit.GeneralJson is not { } generalJson) return;
+        if (GameLandUnit.GeneralJson is not { } generalJson) return;
 
-        Army army = LandUnit.Army;
+        Army army = GameLandUnit.Army;
 
         //设置勋带
         if (army is Army2 army3)

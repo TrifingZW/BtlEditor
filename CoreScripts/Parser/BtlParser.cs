@@ -2,7 +2,6 @@
 using System.IO;
 using BtlEditor.CoreScripts.Structures;
 using static BtlEditor.CoreScripts.Parser.ParserHelper;
-using static BtlEditor.CoreScripts.StaticRes;
 
 namespace BtlEditor.CoreScripts.Parser;
 
@@ -37,16 +36,13 @@ public class BtlParser
 
     #endregion
 
-    private static string BtlPath => Globals.BtlPath;
-
-
-    public BtlParser Parser()
+    public BtlParser Parser(string btlPath)
     {
-        if (!File.Exists(BtlPath)) throw new("BTL文件不存在！");
+        if (!File.Exists(btlPath)) throw new("BTL文件不存在！");
 
         try
         {
-            using BinaryReader reader = new(File.OpenRead(BtlPath));
+            using BinaryReader reader = new(File.OpenRead(btlPath));
 
             Master = Deserialize<Master>(reader);
 
@@ -68,9 +64,9 @@ public class BtlParser
             Capitals = ReadToClassArray<Capital>(reader, Master.国家首都);
             Strategies = ReadToClassArray<Strategy>(reader, Master.战略总数);
             AirSupports = ReadToClassArray<AirSupport>(reader, Master.空中支援);
-            for (short index = 0; index < Btl.Countries.Length; index++)
+            for (short index = 0; index < Countries.Length; index++)
             {
-                Country country = Btl.Countries[index];
+                Country country = Countries[index];
                 foreach (Pitfall pitfall in Pitfalls)
                     if (pitfall.所属军团 == country.序号)
                         pitfall.所属军团 = index;

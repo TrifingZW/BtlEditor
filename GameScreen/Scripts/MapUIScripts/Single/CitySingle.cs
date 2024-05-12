@@ -5,61 +5,56 @@ namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class CitySingle : BaseSingle
 {
-    protected override void Update()
+    protected override void UserInface()
     {
-        if (LandUnit.City is { } city)
+        if (GameLandUnit.City is { } city)
         {
-            ReflexStruct(city, TreeContainer, Save);
-            
+            ReflexStruct(city, Container, Save);
+
             Button copy = CreateButton("复制城市", () =>
             {
                 Game.CityCopy = (City)city.Clone();
-                Game.BelongCopy = LandUnit.Belong;
+                Game.BelongCopy = GameLandUnit.Belong;
             });
-            EndContainer.AddChild(copy);
-            
-            Button delete = new();
-            delete.Pressed += () =>
+            Container.AddChild(copy);
+
+            Button delete = CreateButton("删除城市", () =>
             {
-                LandUnit.City = null;
-                Clear();
+                GameLandUnit.City = null;
                 Update();
-            };
-            delete.Text = "删除城市";
-            EndContainer.AddChild(delete);
+            });
+            Container.AddChild(delete);
         }
         else
         {
             Button paste = CreateButton("粘贴城市", () =>
             {
                 if (Game.CityCopy is null) return;
-                LandUnit.City = (City)Game.CityCopy?.Clone();
-                LandUnit.Belong = LandUnit.ProvinceBelong;
-                LandUnit.Province = LandUnit.RegionIndex;
-                LandUnit.UpdateProvinceColor();
+                GameLandUnit.City = (City)Game.CityCopy?.Clone();
+                GameLandUnit.Belong = GameLandUnit.ProvinceBelong;
+                GameLandUnit.Province = GameLandUnit.RegionIndex;
+                GameLandUnit.UpdateProvinceColor();
                 Game.Instance.MapController.UpdateColorUV();
-                Clear();
                 Update();
             });
-            EndContainer.AddChild(paste);
+            Container.AddChild(paste);
 
 
             Button add = CreateButton("添加城市", () =>
             {
-                LandUnit.City = new() { 坐标 = LandUnit.RegionIndex };
-                LandUnit.Belong = LandUnit.ProvinceBelong;
-                LandUnit.Province = LandUnit.RegionIndex;
-                LandUnit.UpdateProvinceColor();
+                GameLandUnit.City = new() { 坐标 = GameLandUnit.RegionIndex };
+                GameLandUnit.Belong = GameLandUnit.ProvinceBelong;
+                GameLandUnit.Province = GameLandUnit.RegionIndex;
+                GameLandUnit.UpdateProvinceColor();
                 Game.Instance.MapController.UpdateColorUV();
-                Clear();
                 Update();
             });
-            EndContainer.AddChild(add);
+            Container.AddChild(add);
         }
     }
 
     private void Save()
     {
-        LandUnit.UpdateCity();
+        GameLandUnit.UpdateCity();
     }
 }

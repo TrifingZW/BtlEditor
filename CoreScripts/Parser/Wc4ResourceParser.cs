@@ -10,7 +10,7 @@ using FileAccess = Godot.FileAccess;
 
 namespace BtlEditor.CoreScripts.Parser;
 
-public class Wc4ResourceParser(string fileName, bool external = false, string path = null)
+public class Wc4ResourceParser(string fileName, bool external = false, string path = null) : IDisposable
 {
     public Images Images { get; private set; }
     public Texture2D Texture2D { get; private set; } = new();
@@ -93,6 +93,12 @@ public class Wc4ResourceParser(string fileName, bool external = false, string pa
             return input[..^suffix.Length];
         return input;
     }
+
+    public void Dispose()
+    {
+        Images.ImageList.Clear();
+        Texture2D.Dispose();
+    }
 }
 
 //Images
@@ -118,4 +124,7 @@ public class Wc4ResourceElement
     [XmlAttribute("refx")] public int RefX { get; set; }
 
     [XmlAttribute("refy")] public int RefY { get; set; }
+    
+    public Rect2 GetRect2() => new(X, Y, Width, Height);
 }
+

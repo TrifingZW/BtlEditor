@@ -5,10 +5,10 @@ namespace BtlEditor.CoreScripts;
 
 public static class StaticRes
 {
+    public static bool Ready { get; set; }
+    
     #region Resource
 
-    public static BtlParser Btl { get; set; }
-    public static BinParser Bin { get; set; }
     public static Wc4ResourceParser TerrainHd { get; set; }
     public static Wc4ResourceParser PlantHd { get; set; }
     public static Wc4ResourceParser BuildingsHd { get; set; }
@@ -20,7 +20,6 @@ public static class StaticRes
     public static TerrainConfigParser TerrainConfig { get; set; }
     public static MapConfigParser MapConfig { get; set; }
     public static StringtableParser Stringtable { get; set; }
-    public static Image ColorUvImage { get; set; }
 
     #endregion
 
@@ -39,4 +38,5 @@ public static class StaticRes
     public static string ImageHeadPath => $"{ImagePath}/heads";
 
     #endregion
+    
 }

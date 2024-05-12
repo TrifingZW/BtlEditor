@@ -19,7 +19,7 @@ public abstract partial class BaseMulti : VBoxContainer
     {
     }
 
-    protected virtual void Update(FieldInfo field, int value, LandUnit landUnit)
+    protected virtual void Update(FieldInfo field, int value, GameLandUnit gameLandUnit)
     {
     }
 
@@ -45,8 +45,8 @@ public abstract partial class BaseMulti : VBoxContainer
                 {
                     Game.Instance.EditWindow.CreateEdit(field.Name, value =>
                     {
-                        foreach (LandUnit landUnit in MapUI.MultiLandUnit)
-                            Update(field, value, landUnit);
+                        /*foreach (LandUnit landUnit in MapUI.MultiLandUnit)
+                            UserInface(field, value, landUnit);*/
                     });
                 };
                 AddChild(button);

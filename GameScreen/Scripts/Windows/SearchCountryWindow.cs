@@ -16,7 +16,7 @@ public partial class SearchCountryWindow : Window
 
     public override void _Ready()
     {
-        CloseRequested += () => Visible = false;
+        CloseRequested += Hide;
         ItemList = GetNode<ItemList>("MarginContainer/VBoxContainer/PanelContainer/ItemList");
         Button = GetNode<Button>("MarginContainer/VBoxContainer/Button");
 

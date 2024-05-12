@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BtlEditor.CoreScripts.Attributes;
-using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using BtlEditor.UserInterface;
 using Godot;
 using EditorItem = BtlEditor.CoreScripts.Attributes.EditorItem;
+
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
@@ -16,23 +16,20 @@ public abstract partial class BaseSingle : ScrollContainer
 {
     private static MapController MapController => Game.Instance.MapController;
 
-    private LandUnit _landUnit;
+    private GameLandUnit _gameLandUnit;
 
-    public LandUnit LandUnit
+    public GameLandUnit GameLandUnit
     {
-        get => _landUnit;
+        get => _gameLandUnit;
         set
         {
-            _landUnit = value;
+            _gameLandUnit = value;
             Clear();
-            Update();
+            UserInface();
         }
     }
 
     protected VBoxContainer Container { get; }
-    protected VBoxContainer HeadContainer { get; }
-    protected VBoxContainer TreeContainer { get; }
-    protected VBoxContainer EndContainer { get; }
 
     protected TreeBar MainTreeBar { get; set; }
     protected readonly Dictionary<string, TreeBar> TreeDirectory = [];
@@ -43,32 +40,28 @@ public abstract partial class BaseSingle : ScrollContainer
         Container.SizeFlagsVertical = SizeFlags.ExpandFill;
         Container.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         AddChild(Container);
-        HeadContainer = new();
-        HeadContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Container.AddChild(HeadContainer);
-        TreeContainer = new();
-        TreeContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Container.AddChild(TreeContainer);
-        EndContainer = new();
-        EndContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Container.AddChild(EndContainer);
     }
 
-    protected abstract void Update();
+    protected abstract void UserInface();
 
-    public void Clear()
+    protected void Update()
     {
-        foreach (Node child in HeadContainer.GetChildren())
-            child.QueueFree();
-        foreach (Node child in TreeContainer.GetChildren())
-            child.QueueFree();
-        foreach (Node child in EndContainer.GetChildren())
+        Clear();
+        UserInface();
+    }
+
+    private void Clear()
+    {
+        foreach (Node child in Container.GetChildren())
             child.QueueFree();
 
         TreeDirectory.Clear();
     }
 
-    protected void ReflexStruct<T>(T obj, Node node, Action save)
+    protected void ReflexStruct<T>(T obj, Node node, bool ignore, params string[] fieldStrings) =>
+        ReflexStruct(obj, node, null, ignore, fieldStrings);
+
+    protected void ReflexStruct<T>(T obj, Node node, Action save = null, bool ignore = true, params string[] fieldStrings)
     {
         MainTreeBar = TreeBar.Instance;
         MainTreeBar.Title = "主数据";
@@ -86,6 +79,8 @@ public abstract partial class BaseSingle : ScrollContainer
             var fields = reflect.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (FieldInfo field in fields)
             {
+                if (ignore == fieldStrings.Contains(field.Name)) continue;
+
                 var editorItem = UserInterface.EditorItem.Instance;
                 if (field.GetCustomAttribute<EditorItem>() is { } editorGroup)
                 {
@@ -109,14 +104,13 @@ public abstract partial class BaseSingle : ScrollContainer
                 if (field.GetCustomAttributes<Target>().Any())
                 {
                     Button label = new()
-                    {   
+                    {
                         Text = Tr(field.Name),
                         SizeFlagsHorizontal = SizeFlags.ExpandFill,
-                        FocusMode = FocusModeEnum.None
                     };
                     label.Pressed += () =>
                     {
-                        if (!MapController.LandUnits.TryGetValue(ParserHelper.GetBtlIndex((short)field.GetValue(obj)!), out LandUnit landUnit))
+                        if (!MapController.LandUnits.TryGetValue(MapHelper.GetBtlIndex((short)field.GetValue(obj)!), out GameLandUnit landUnit))
                             return;
                         Game.Instance.CameraController.TargetPosition = landUnit.Position;
                         MapController.TileMap.ClearLayer(MapController.CoverLayout);
@@ -145,7 +139,6 @@ public abstract partial class BaseSingle : ScrollContainer
                     {
                         Text = field.GetValue(obj)!.ToString(),
                         SizeFlagsHorizontal = SizeFlags.ExpandFill,
-                        FocusMode = FocusModeEnum.None
                     };
                     countryButton.Pressed += () =>
                     {
@@ -153,7 +146,7 @@ public abstract partial class BaseSingle : ScrollContainer
                         {
                             countryButton.Text = country.ToString();
                             field.SetValue(obj, country);
-                            save();
+                            save?.Invoke();
                         });
                     };
                     editorItem.Content.AddChild(countryButton);
@@ -169,11 +162,7 @@ public abstract partial class BaseSingle : ScrollContainer
 
     protected static Button CreateButton(string text, Action action)
     {
-        Button button = new()
-        {
-            Text = text,
-            FocusMode = FocusModeEnum.None
-        };
+        Button button = new() { Text = text };
         button.AddThemeFontSizeOverride("font_size", 50);
         button.Pressed += action;
         return button;

@@ -52,6 +52,7 @@ public class Option(Type options) : Attribute
 
     public enum Morale : byte
     {
+        无 = 0,
         士气上升 = 1,
         士气下降 = 255,
         士气双降 = 254,
@@ -60,7 +61,8 @@ public class Option(Type options) : Attribute
 
     public enum Shield : byte
     {
-        无 = 1,
+        无 = 0,
+        启动固守 = 1,
         显示盾 = 9,
     }
 

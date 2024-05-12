@@ -5,11 +5,11 @@ namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class LandSingle : BaseSingle
 {
-    protected override void Update()
+    protected override void UserInface()
     {
         var mainTreeBar = TreeBar.Instance;
         mainTreeBar.Title = "地块数据";
-        TreeContainer.AddChild(mainTreeBar);
+        Container.AddChild(mainTreeBar);
         var coordsItem = EditorItem.Instance;
         mainTreeBar.Layout.AddChild(coordsItem);
         Label coordsLabel = new()
@@ -20,14 +20,14 @@ public partial class LandSingle : BaseSingle
         coordsItem.Head.AddChild(coordsLabel);
         Label coords = new()
         {
-            Text = LandUnit.RegionIndex.ToString(),
+            Text = GameLandUnit.RegionIndex.ToString(),
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         coordsItem.Content.AddChild(coords);
 
         var provinceBar = TreeBar.Instance;
         provinceBar.Title = "省规划";
-        TreeContainer.AddChild(provinceBar);
+        Container.AddChild(provinceBar);
         var provinceItem = EditorItem.Instance;
         provinceBar.Layout.AddChild(provinceItem);
         Label provinceLabel = new()
@@ -40,18 +40,18 @@ public partial class LandSingle : BaseSingle
         provinceSpinBox.UpdateOnTextChanged = true;
         provinceSpinBox.MinValue = short.MinValue;
         provinceSpinBox.MaxValue = short.MaxValue;
-        provinceSpinBox.Value = LandUnit.Province;
+        provinceSpinBox.Value = GameLandUnit.Province;
         provinceSpinBox.ValueChanged += value =>
         {
-            LandUnit.Province = (short)value;
-            LandUnit.UpdateProvinceColor();
+            GameLandUnit.Province = (short)value;
+            GameLandUnit.UpdateProvinceColor();
             Game.Instance.MapController.UpdateColorUV();
         };
         provinceItem.Content.AddChild(provinceSpinBox);
 
         var belongBar = TreeBar.Instance;
         belongBar.Title = "地块归属";
-        TreeContainer.AddChild(belongBar);
+        Container.AddChild(belongBar);
         var belongItem = EditorItem.Instance;
         belongBar.Layout.AddChild(belongItem);
         Label belongLabel = new()
@@ -62,8 +62,7 @@ public partial class LandSingle : BaseSingle
         belongItem.Head.AddChild(belongLabel);
         Button button = new()
         {
-            Text = LandUnit.Belong.ToString(),
-            FocusMode = FocusModeEnum.None,
+            Text = GameLandUnit.Belong.ToString(),
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         button.Pressed += () =>
@@ -71,14 +70,14 @@ public partial class LandSingle : BaseSingle
             Game.Instance.SearchCountryWindow.CreateEdit(country =>
             {
                 button.Text = country.ToString();
-                LandUnit.Belong = country;
-                LandUnit.UpdateBelongColor();
+                GameLandUnit.Belong = country;
+                GameLandUnit.UpdateBelongColor();
                 Game.Instance.MapController.UpdateColorUV();
             });
         };
         belongItem.Content.AddChild(button);
 
-        Button provinceModeButton = CreateButton("省规划模式", () => { Game.Instance.StartProvinceMode(LandUnit.RegionIndex); });
-        EndContainer.AddChild(provinceModeButton);
+        Button provinceModeButton = CreateButton("省规划模式", () => { Game.Instance.ProvinceMode = true; });
+        Container.AddChild(provinceModeButton);
     }
 }

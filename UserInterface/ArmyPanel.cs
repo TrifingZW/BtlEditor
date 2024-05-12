@@ -2,7 +2,7 @@ using Godot;
 
 namespace BtlEditor.UserInterface;
 
-public partial class ArmyPanel : PanelContainer
+public partial class ArmyPanel : VBoxContainer
 {
     public static ArmyPanel Instance => ResourceLoader.Load<PackedScene>("res://UserInterface/ArmyPanel.tscn").Instantiate<ArmyPanel>();
     public Button GeneralButton => GetNode<Button>("%GeneralButton");

@@ -7,7 +7,7 @@ using BtlEditor.CoreScripts.Attributes;
 
 namespace BtlEditor.CoreScripts.Structures;
 
-public class Master
+public class Master : ICloneable
 {
     [EditorItem(ignore: true)] public int Btl版本;
     [EditorItem(ignore: true)] public int 地图序号;
@@ -41,6 +41,8 @@ public class Master
     public int empty6;
     public int empty7;
     [EditorItem(ignore: true)] public int 空中支援;
+
+    public object Clone() => MemberwiseClone();
 }
 
 public class Country : ICloneable
@@ -351,21 +353,23 @@ public class Army2 : Army
     }
 }
 
-public class Pitfall
+public class Pitfall : ICloneable
 {
     [EditorItem(ignore: true)] public short 坐标;
     [Belong] public short 所属军团;
     public short 陷阱编制;
     public int 陷阱血量;
     public short empty;
+    public object Clone() => MemberwiseClone();
 }
 
-public class Scheme
+public class Scheme : ICloneable
 {
     public int 方案编号;
     public int 终结事件;
     public int 触发回合;
     public int 目标地块;
+    public object Clone() => MemberwiseClone();
 }
 
 public class Weather : ICloneable
@@ -524,10 +528,11 @@ public class ArmyPlacement : ICloneable
     public object Clone() => MemberwiseClone();
 }
 
-public class Capital
+public class Capital : ICloneable
 {
-    public short 坐标;
+    [EditorItem(ignore: true)] public short 坐标;
     public short empty;
+    public object Clone() => MemberwiseClone();
 }
 
 public class Strategy : ICloneable

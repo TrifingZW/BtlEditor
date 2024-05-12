@@ -20,7 +20,7 @@ public partial class EditWindow : Window
         _spinBox.MaxValue = int.MaxValue;
         _button.Pressed += () =>
         {
-            Visible = false;
+            Hide();
             _callback(_value);
         };
     }

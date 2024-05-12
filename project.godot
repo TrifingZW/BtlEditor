@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="BtlEditor"
-run/main_scene="res://MainScreen/MainUI.tscn"
+run/main_scene="res://MainScreen/MainInterface.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+boot_splash/bg_color=Color(0.113725, 0.133333, 0.160784, 1)
 config/icon="res://icon.svg"
 
 [autoload]
@@ -34,8 +35,8 @@ naming/scene_name_casing=1
 
 [gui]
 
-theme/default_theme_scale=2.8
-theme/custom_font="res://HarmonyOS_Sans_SC_Bold.ttf"
+theme/default_theme_scale=2.0
+theme/custom="res://theme.tres"
 
 [input_devices]
 
@@ -48,3 +49,4 @@ locale/fallback="cn"
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.113725, 0.133333, 0.160784, 1)

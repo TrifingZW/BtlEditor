@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ncav1qig5xix"]
+[gd_scene load_steps=15 format=3 uid="uid://ncav1qig5xix"]
 
 [ext_resource type="Script" path="res://UserInterface/ArmyPanel.cs" id="1_xft3s"]
 [ext_resource type="Script" path="res://UserInterface/RibbonRect.cs" id="2_0xenl"]
@@ -12,208 +12,229 @@
 [ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="9_yjeim"]
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="10_elesg"]
 
-[node name="ArmyPanel" type="PanelContainer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tkh6l"]
+content_margin_left = 9.0
+content_margin_top = 6.0
+content_margin_right = 9.0
+content_margin_bottom = 6.0
+bg_color = Color(0.113725, 0.133333, 0.160784, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_24ilp"]
+content_margin_left = 9.0
+content_margin_top = 6.0
+content_margin_right = 9.0
+content_margin_bottom = 6.0
+bg_color = Color(0.113725, 0.133333, 0.160784, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_lwjkc"]
+Panel/styles/panel = SubResource("StyleBoxFlat_tkh6l")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_24ilp")
+
+[node name="ArmyPanel" type="VBoxContainer"]
+offset_right = 232.0
+offset_bottom = 574.0
 size_flags_horizontal = 3
 script = ExtResource("1_xft3s")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-
-[node name="ArmyButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ArmyButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "未知军队"
 
-[node name="GeneralContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="GeneralContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="VBoxContainer1" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]
+[node name="VBoxContainer1" type="VBoxContainer" parent="GeneralContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="GeneralButton" type="Button" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
+[node name="GeneralButton" type="Button" parent="GeneralContainer/HBoxContainer/VBoxContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
-focus_mode = 0
 icon = ExtResource("2_wgdrp")
 icon_alignment = 1
 
-[node name="GeneralName" type="Label" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer1"]
+[node name="GeneralName" type="Label" parent="GeneralContainer/HBoxContainer/VBoxContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "无将领"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GeneralContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="RibbonRect1" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer2"]
+[node name="RibbonRect1" type="TextureRect" parent="GeneralContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_0xenl")
 
-[node name="RibbonRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer2"]
+[node name="RibbonRect2" type="TextureRect" parent="GeneralContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_0xenl")
 
-[node name="RibbonRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/VBoxContainer2"]
+[node name="RibbonRect3" type="TextureRect" parent="GeneralContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_0xenl")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="MedalRect1" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/HBoxContainer"]
+[node name="MedalRect1" type="TextureRect" parent="GeneralContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_g0iy6")
 
-[node name="MedalRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/HBoxContainer"]
+[node name="MedalRect2" type="TextureRect" parent="GeneralContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_g0iy6")
 
-[node name="MedalRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/HBoxContainer/HBoxContainer"]
+[node name="MedalRect3" type="TextureRect" parent="GeneralContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("2_g0iy6")
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/GeneralContainer"]
+[node name="GridContainer" type="GridContainer" parent="GeneralContainer"]
 layout_mode = 2
+theme = SubResource("Theme_lwjkc")
 columns = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("4_5uv6t")
 
-[node name="Star1" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
+[node name="Star1" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("5_yqbh2")
 
-[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer2"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("6_edw1e")
 
-[node name="Star2" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
+[node name="Star2" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer2/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("5_yqbh2")
 
-[node name="PanelContainer3" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer3" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer3"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("7_efxp2")
 
-[node name="Star3" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
+[node name="Star3" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer3/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("5_yqbh2")
 
-[node name="PanelContainer4" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer4" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer4"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("8_hb7tr")
 
-[node name="Star4" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
+[node name="Star4" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer4/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("5_yqbh2")
 
-[node name="PanelContainer5" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer5" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer5"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("9_yjeim")
 
-[node name="Star5" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
+[node name="Star5" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer5/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2
 stretch_mode = 3
 script = ExtResource("5_yqbh2")
 
-[node name="PanelContainer6" type="PanelContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer"]
+[node name="PanelContainer6" type="PanelContainer" parent="GeneralContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GeneralContainer/GridContainer/PanelContainer6"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("10_elesg")
 
-[node name="Star6" type="TextureRect" parent="MarginContainer/VBoxContainer/GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
+[node name="Star6" type="TextureRect" parent="GeneralContainer/GridContainer/PanelContainer6/HBoxContainer"]
 unique_name_in_owner = true
 texture_repeat = 2
 layout_mode = 2

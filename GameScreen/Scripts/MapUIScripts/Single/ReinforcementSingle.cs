@@ -6,35 +6,32 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.UserInterface;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
 public partial class ReinforcementSingle : BaseSingle
 {
-    private List<Reinforcement> Reinforcements => LandUnit.Reinforcements;
+    private List<Reinforcement> Reinforcements => GameLandUnit.Reinforcements;
 
-    protected override void Update()
+    protected override void UserInface()
     {
-        for (var index = 0; index < LandUnit.Reinforcements.Count; index++)
-            AddReinforcement(index);
-
         Button add = new() { Text = "添加爆兵" };
         add.AddThemeFontSizeOverride("font_size", 50);
-        add.FocusMode = FocusModeEnum.None;
         add.Pressed += () =>
         {
             Reinforcement reinforcement = null;
             if (Btl.Version1 || Btl.Version2)
             {
                 reinforcement = new Reinforcement1();
-                ((Reinforcement1)reinforcement).所属国家 = LandUnit.ProvinceBelong;
+                ((Reinforcement1)reinforcement).所属国家 = GameLandUnit.ProvinceBelong;
                 ((Reinforcement1)reinforcement).爆兵回合 = 1;
             }
 
             if (Btl.Version3)
             {
                 reinforcement = new Reinforcement3();
-                ((Reinforcement3)reinforcement).所属国家 = LandUnit.ProvinceBelong;
+                ((Reinforcement3)reinforcement).所属国家 = GameLandUnit.ProvinceBelong;
                 ((Reinforcement3)reinforcement).爆兵回合 = 1;
             }
 
@@ -43,46 +40,50 @@ public partial class ReinforcementSingle : BaseSingle
                 reinforcement.兵种 = 1;
                 reinforcement.等级 = 1;
                 reinforcement.编制 = 1;
-                reinforcement.坐标 = LandUnit.RegionIndex;
-                LandUnit.Reinforcements.Add(reinforcement);
+                reinforcement.坐标 = GameLandUnit.RegionIndex;
+                Reinforcements.Add(reinforcement);
             }
 
-            AddReinforcement(Reinforcements.Count - 1);
+            AddReinforcement(reinforcement);
         };
-        EndContainer.AddChild(add);
+        Container.AddChild(add);
 
         Button paste = new() { Text = "粘贴爆兵" };
         paste.AddThemeFontSizeOverride("font_size", 50);
-        paste.FocusMode = FocusModeEnum.None;
         paste.Pressed += () =>
         {
             switch (Game.ReinforcementCopy?.Clone())
             {
                 case Reinforcement1 reinforcement1:
-                    reinforcement1.坐标 = LandUnit.RegionIndex;
-                    reinforcement1.所属国家 = LandUnit.Belong;
-                    LandUnit.Reinforcements.Add(reinforcement1);
-                    AddReinforcement(Reinforcements.Count - 1);
+                    reinforcement1.坐标 = GameLandUnit.RegionIndex;
+                    reinforcement1.所属国家 = GameLandUnit.Belong;
+                    GameLandUnit.Reinforcements.Add(reinforcement1);
+                    AddReinforcement(reinforcement1);
                     break;
                 case Reinforcement3 reinforcement3:
-                    reinforcement3.坐标 = LandUnit.RegionIndex;
-                    reinforcement3.所属国家 = LandUnit.Belong;
-                    LandUnit.Reinforcements.Add(reinforcement3);
-                    AddReinforcement(Reinforcements.Count - 1);
+                    reinforcement3.坐标 = GameLandUnit.RegionIndex;
+                    reinforcement3.所属国家 = GameLandUnit.Belong;
+                    GameLandUnit.Reinforcements.Add(reinforcement3);
+                    AddReinforcement(reinforcement3);
                     break;
             }
         };
-        EndContainer.AddChild(paste);
+        Container.AddChild(paste);
+        
+        _vBoxContainer = new();
+        Container.AddChild(_vBoxContainer);
+        foreach (Reinforcement reinforcement in GameLandUnit.Reinforcements)
+            AddReinforcement(reinforcement);
     }
 
-    private void AddReinforcement(int index)
-    {
-        Reinforcement reinforcement = LandUnit.Reinforcements[index];
+    private VBoxContainer _vBoxContainer;
 
+    private void AddReinforcement(Reinforcement reinforcement)
+    {
         var treeBar = TreeBar.Instance;
         UpdateTreeBar(reinforcement, treeBar);
 
-        HeadContainer.AddChild(treeBar);
+        _vBoxContainer.AddChild(treeBar);
         var armyPanel = ArmyPanel.Instance;
         treeBar.Layout.AddChild(armyPanel);
         UpdateArmyPanel(reinforcement, armyPanel);
@@ -128,7 +129,6 @@ public partial class ReinforcementSingle : BaseSingle
             Text = "编辑爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
-        set.FocusMode = FocusModeEnum.None;
         set.Pressed += () =>
         {
             switch (reinforcement)
@@ -136,20 +136,20 @@ public partial class ReinforcementSingle : BaseSingle
                 case Reinforcement3 reinforcement3:
                     Game.Instance.BtlObjWindow.CreateEdit(reinforcement3, r3 =>
                     {
-                        Reinforcements[index] = r3;
+                        Reinforcements[treeBar.GetIndex()] = r3;
                         reinforcement = r3;
-                        UpdateTreeBar(reinforcement, treeBar);
-                        UpdateArmyPanel(reinforcement, armyPanel);
+                        UpdateTreeBar(r3, treeBar);
+                        UpdateArmyPanel(r3, armyPanel);
                     });
                     break;
 
                 case Reinforcement1 reinforcement1:
                     Game.Instance.BtlObjWindow.CreateEdit(reinforcement1, r1 =>
                     {
-                        Reinforcements[index] = r1;
+                        Reinforcements[treeBar.GetIndex()] = r1;
                         reinforcement = r1;
-                        UpdateTreeBar(reinforcement, treeBar);
-                        UpdateArmyPanel(reinforcement, armyPanel);
+                        UpdateTreeBar(r1, treeBar);
+                        UpdateArmyPanel(r1, armyPanel);
                     });
                     break;
             }
@@ -161,7 +161,6 @@ public partial class ReinforcementSingle : BaseSingle
             Text = "复制爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
-        copy.FocusMode = FocusModeEnum.None;
         copy.Pressed += () => { Game.ReinforcementCopy = reinforcement; };
         buttonContainer.AddChild(copy);
 
@@ -170,11 +169,10 @@ public partial class ReinforcementSingle : BaseSingle
             Text = "删除爆兵",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
-        delete.FocusMode = FocusModeEnum.None;
         delete.Pressed += () =>
         {
-            LandUnit.Reinforcements.Remove(reinforcement);
-            treeBar.QueueFree();
+            if (GameLandUnit.Reinforcements.Remove(reinforcement))
+                treeBar.QueueFree();
         };
         buttonContainer.AddChild(delete);
     }

@@ -28,14 +28,14 @@ public partial class SearchGeneralWindow : Window
 
     public override void _Ready()
     {
-        CloseRequested += () => Visible = false;
+        CloseRequested += Hide;
         LineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/LineEdit");
         ItemList = GetNode<ItemList>("MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/ItemList");
         Button = GetNode<Button>("MarginContainer/VBoxContainer/Button");
 
         LineEdit.TextChanged += Update;
         ItemList.ItemSelected += ItemSelect;
-        ItemList.ItemActivated +=_=> Save();
+        ItemList.ItemActivated += _ => Save();
         Button.Pressed += Save;
 
         Update("");

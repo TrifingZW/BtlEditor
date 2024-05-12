@@ -1,11 +1,9 @@
 using System.Reflection;
-using BtlEditor.CoreScripts.Attributes;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
-using BtlEditor.UserInterface;
 using Godot;
-using static BtlEditor.CoreScripts.StaticRes;
 using EditorItem = BtlEditor.CoreScripts.Attributes.EditorItem;
+using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts;
 

@@ -39,7 +39,6 @@ public static class Helpers
     public static OptionButton ReflectionOptionButton<T>(T obj, FieldInfo field, Dictionary<string, byte> options, Action valueChanged = null)
     {
         OptionButton optionButton = new();
-        optionButton.AddThemeFontSizeOverride("font_size", 50);
         foreach (var pair in options)
             optionButton.AddItem(pair.Key);
         

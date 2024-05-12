@@ -3,7 +3,7 @@ using Godot;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts;
 
-public partial class DataUI : CanvasLayer
+public partial class DataUI : InterceptScreen.Scripts.InterceptUiLayer
 {
     private TabContainer _tabContainer;
     private static MapController MapController => Game.Instance.MapController;
@@ -24,6 +24,8 @@ public partial class DataUI : CanvasLayer
         if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Delete)
             Delete();
     }
+
+    private void Close() => Hide();
 
     private void Add()
     {

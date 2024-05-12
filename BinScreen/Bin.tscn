@@ -1,0 +1,107 @@
+[gd_scene load_steps=8 format=3 uid="uid://cgkabnr4dge6b"]
+
+[ext_resource type="Texture2D" uid="uid://l1cv35htjpaa" path="res://Assets/Textures/UI/setting.svg" id="1_3tagx"]
+[ext_resource type="Script" path="res://BinScreen/BtlScript.cs" id="1_6bs12"]
+[ext_resource type="Texture2D" uid="uid://bqevma8pw5ltm" path="res://Assets/Textures/UI/cancel.svg" id="2_66qs3"]
+[ext_resource type="ButtonGroup" uid="uid://b5pydlrebd183" path="res://BinScreen/ToolGroup.tres" id="3_lsbqm"]
+[ext_resource type="Texture2D" uid="uid://dij01x85c3haa" path="res://Assets/Textures/UI/画笔.svg" id="4_vk6lt"]
+[ext_resource type="Texture2D" uid="uid://dd767a42j1yvm" path="res://Assets/Textures/UI/取色器.svg" id="5_33rm3"]
+[ext_resource type="Script" path="res://BinScreen/TopographyContainer.cs" id="7_53gnl"]
+
+[node name="Bin" type="Node2D"]
+script = ExtResource("1_6bs12")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(600, 0)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_count = 1
+tab_0/title = "地形"
+
+[node name="Button" type="Button" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("1_3tagx")
+expand_icon = true
+
+[node name="Button2" type="Button" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("2_66qs3")
+expand_icon = true
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+tabs_visible = false
+
+[node name="EditTopography" type="VBoxContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer"]
+layout_mode = 2
+
+[node name="ToolPanel" type="PanelContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography/ToolPanel"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography/ToolPanel/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = ExtResource("3_lsbqm")
+icon = ExtResource("4_vk6lt")
+
+[node name="Button2" type="Button" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography/ToolPanel/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = ExtResource("3_lsbqm")
+icon = ExtResource("5_33rm3")
+
+[node name="TopographyPanel" type="PanelContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography/TopographyPanel"]
+layout_mode = 2
+
+[node name="TopographyContainer" type="FlowContainer" parent="CanvasLayer/MarginContainer/Panel/VBoxContainer/TabContainer/EditTopography/TopographyPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("7_53gnl")

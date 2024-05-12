@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfiri0bgelvw4"]
+
+[ext_resource type="Script" path="res://UserInterface/TabPanel.cs" id="1_3pco5"]
+[ext_resource type="Texture2D" uid="uid://bqevma8pw5ltm" path="res://Assets/Textures/UI/cancel.svg" id="1_yo04m"]
+
+[node name="TabPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3pco5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+
+[node name="Close" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("1_yo04m")
+expand_icon = true
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+tabs_visible = false
+tab_focus_mode = 0
+
+[connection signal="tab_changed" from="VBoxContainer/HBoxContainer/TabBar" to="." method="TabSelect"]

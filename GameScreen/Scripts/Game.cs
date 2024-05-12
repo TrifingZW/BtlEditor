@@ -9,9 +9,11 @@ namespace BtlEditor.GameScreen.Scripts;
 public partial class Game : Node2D
 {
     public MapController MapController { get; private set; }
-    public CameraController CameraController { get; private set; }
+    public CoreScripts.CameraController CameraController { get; private set; }
+    public MainUI MainUI { get; private set; }
     public MapUI MapUI { get; private set; }
     public DataUI DataUI { get; private set; }
+    public InterceptUI InterceptUI { get; private set; }
     public EditUI EditUI { get; private set; }
     public Dialog Dialog { get; private set; }
     public EditWindow EditWindow { get; private set; }
@@ -23,42 +25,65 @@ public partial class Game : Node2D
     public AudioStreamPlayer AudioStreamPlayer { get; private set; }
     public static Game Instance { get; private set; }
 
-    private bool _dataMode;
+    private bool _editMode;
 
-    private bool DataMode
+    public bool EditMode
     {
-        get => _dataMode;
+        get => _editMode;
         set
         {
-            _dataMode = value;
-            if (value)
+            _editMode = value;
+            if (EditMode)
             {
-                DataUI.Visible = true;
-                MapUI.Visible = false;
+                MainUI.Hide();
+                MapUI.Hide();
+            }
+            else
+                MainUI.Show();
+        }
+    }
+
+    private bool _provinceMode;
+
+    public bool ProvinceMode
+    {
+        get => _provinceMode;
+        set
+        {
+            _provinceMode = value;
+            if (ProvinceMode)
+            {
+                EditMode = true;
+                EditUI.Start();
+                EditUI.Show();
             }
             else
             {
-                DataUI.Visible = false;
-                MapUI.Visible = true;
+                EditMode = false;
+                EditUI.Hide();
             }
         }
     }
 
-    public bool ProvinceMode { get; set; }
+    private bool _interceptMode;
 
-    public void StartProvinceMode(short coords)
+    public bool InterceptMode
     {
-        ProvinceMode = true;
-        MapUI.Visible = false;
-        EditUI.Visible = true;
-        EditUI.Start(coords);
-    }
-
-    public void StopProvinceMode()
-    {
-        ProvinceMode = false;
-        MapUI.Visible = true;
-        EditUI.Visible = false;
+        get => _interceptMode;
+        set
+        {
+            _interceptMode = value;
+            if (InterceptMode)
+            {
+                EditMode = true;
+                InterceptUI.Show();
+            }
+            else
+            {
+                EditMode = false;
+                InterceptUI.Hide();
+            }
+        }
     }
 
     #region 粘贴板
@@ -74,9 +99,11 @@ public partial class Game : Node2D
     {
         Instance = this;
         MapController = GetNode<MapController>("MapController");
-        CameraController = GetNode<CameraController>("Camera2D");
+        CameraController = GetNode<CoreScripts.CameraController>("Camera2D");
+        MainUI = GetNode<MainUI>("MainUI");
         MapUI = GetNode<MapUI>("MapUI");
         DataUI = GetNode<DataUI>("DataUI");
+        InterceptUI = GetNode<InterceptUI>("InterceptUI");
         EditUI = GetNode<EditUI>("EditUI");
         BtlObjWindow = GetNode<BtlObjWindow>("BtlObjWindow");
         SearchGeneralWindow = GetNode<SearchGeneralWindow>("SearchGeneralWindow");
@@ -88,14 +115,9 @@ public partial class Game : Node2D
         AudioStreamPlayer = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
     }
 
-    public override void _Input(InputEvent @event)
+    public void Exit()
     {
-        if (ProvinceMode) return;
-        if (@event is not InputEventKey keyEvent) return;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.Capslock)
-            DataMode = !DataMode;
-        if (keyEvent.Pressed && keyEvent.KeyLabel == Key.S)
-            if (keyEvent.CtrlPressed)
-                MapController.Save();
+        MapController.FreeResources();
+        GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>("res://MainScreen/MainInterface.tscn"));
     }
 }

@@ -45,9 +45,11 @@ public partial class SearchArmyWindow : Window
         for (var index = 0; index < ArmySettings.ArmyJsons.Length; index++)
         {
             ArmyJson armyJson = ArmySettings.ArmyJsons[index];
-            if (!armyJson.Name.Contains(text)) continue;
+            if (armyJson.Name is not { } jName) continue;
+            if (Stringtable.ArmyName[armyJson.Id] is not { } name) name = jName;
+            if (!name.Contains(text)) continue;
             if (SelectedArmies.Any(i => ArmySettings.ArmyJsons[i].Army == armyJson.Army)) continue;
-            ItemList.AddItem($"{armyJson.Name} {armyJson.Army}");
+            ItemList.AddItem($"{name} {armyJson.Army}");
             SelectedArmies.Add(index);
         }
     }

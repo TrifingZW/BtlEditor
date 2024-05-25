@@ -4,6 +4,7 @@ using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using Translation = BtlEditor.CoreScripts.Translation;
 
 namespace BtlEditor.MainScreen.Scripts;
 
@@ -14,6 +15,7 @@ public partial class MainInterface : Control
     private InterceptWindow _interceptWindow;
     private ItemList _itemList;
     private string[] _btlList;
+    private OptionButton _translationOption;
 
     public override void _EnterTree()
     {
@@ -22,6 +24,13 @@ public partial class MainInterface : Control
 
     public override void _Ready()
     {
+        _translationOption = GetNode<OptionButton>("%TranslationOption");
+        _translationOption.Selected = (int)Globals.Translation;
+        _translationOption.ItemSelected += index =>
+        {
+            Globals.Translation = (Translation)index;
+            Globals.Save();
+        };
         _loadWindow = GetNode<LoadWindow>("LoadWindow");
         _settingWindow = GetNode<SettingWindow>("SettingWindow");
         _interceptWindow = GetNode<InterceptWindow>("InterceptWindow");

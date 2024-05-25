@@ -1,7 +1,6 @@
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using Godot;
-using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts;
 
@@ -14,7 +13,7 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
     private short _coords;
 
     private static MapController MapController => Game.Instance.MapController;
-    private static TileMap TileMap => MapController.TileMap;
+    private static TileMapLayer TileMapLayer => MapController.TileMapLayer;
 
     public override void _Ready()
     {
@@ -22,10 +21,10 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
         _clear = GetNode<Button>("%ProvinceModeClear");
         _save = GetNode<Button>("%ProvinceModeSave");
         _cancel = GetNode<Button>("%ProvinceModeCancel");
-        _clear.Pressed += () => TileMap.ClearLayer(MapController.ProvinceLayer);
+        _clear.Pressed += () => TileMapLayer.Clear();
         _save.Pressed += () =>
         {
-            var vector2Is = TileMap.GetUsedCells(MapController.ProvinceLayer);
+            var vector2Is = TileMapLayer.GetUsedCells();
             foreach (GameLandUnit landUnit in MapController.LandUnits)
             {
                 if (landUnit.Province == _coords)
@@ -43,12 +42,12 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
 
             MapController.UpdateColorUV();
 
-            TileMap.ClearLayer(MapController.ProvinceLayer);
+            TileMapLayer.Clear();
             Game.Instance.ProvinceMode = false;
         };
         _cancel.Pressed += () =>
         {
-            TileMap.ClearLayer(MapController.ProvinceLayer);
+            TileMapLayer.Clear();
             Game.Instance.ProvinceMode = false;
         };
     }
@@ -58,7 +57,7 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
         _coords = Game.Instance.MapUI.SingeGameLandUnit.RegionIndex;
         foreach (GameLandUnit landUnit in MapController.LandUnits)
             if (landUnit.Province == _coords)
-                TileMap.SetCell(MapController.ProvinceLayer, landUnit.Coords, MapController.SingleTileSetAtlasId, new());
+                TileMapLayer.SetCell(landUnit.Coords, MapController.SingleTileSetAtlasId, new());
     }
 
     private bool _multiPressed;
@@ -74,15 +73,15 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
                 if (inputEventMouseButton.ButtonIndex == MouseButton.Left)
                 {
                     _multiPressed = inputEventMouseButton.Pressed;
-                    Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+                    Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
                     if (MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _))
                         switch (_tabBar.CurrentTab)
                         {
                             case 0:
-                                TileMap.SetCell(MapController.ProvinceLayer, vector2I, MapController.SingleTileSetAtlasId, new());
+                                TileMapLayer.SetCell(vector2I, MapController.SingleTileSetAtlasId, new());
                                 break;
                             case 1:
-                                TileMap.EraseCell(MapController.ProvinceLayer, vector2I);
+                                TileMapLayer.EraseCell(vector2I);
                                 break;
                         }
                 }
@@ -93,15 +92,15 @@ public partial class EditUI : InterceptScreen.Scripts.InterceptUiLayer
             {
                 if (_multiPressed)
                 {
-                    Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+                    Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
                     if (MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _))
                         switch (_tabBar.CurrentTab)
                         {
                             case 0:
-                                TileMap.SetCell(MapController.ProvinceLayer, vector2I, MapController.SingleTileSetAtlasId, new());
+                                TileMapLayer.SetCell(vector2I, MapController.SingleTileSetAtlasId, new());
                                 break;
                             case 1:
-                                TileMap.EraseCell(MapController.ProvinceLayer, vector2I);
+                                TileMapLayer.EraseCell(vector2I);
                                 break;
                         }
                 }

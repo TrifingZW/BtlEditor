@@ -16,7 +16,7 @@ public partial class InterceptUI : CanvasLayer
 {
     private TabPanel _tabPanel;
     private MapController MapController => Game.Instance.MapController;
-    private TileMap TileMap => MapController.TileMap;
+    private TileMapLayer TileMapLayer => MapController.TileMapLayer;
 
     private Vector2I _startPoint = Vector2I.Zero;
 
@@ -79,7 +79,7 @@ public partial class InterceptUI : CanvasLayer
     private void Close()
     {
         Game.Instance.InterceptMode = false;
-        TileMap.ClearLayer(MapController.CoverLayout);
+        TileMapLayer.Clear();
         StartPoint = Vector2I.Zero;
         EndPoint = Vector2I.Zero;
         _startX.SetValueNoSignal(0);
@@ -108,13 +108,13 @@ public partial class InterceptUI : CanvasLayer
 
     private void UpdateTileMap()
     {
-        TileMap.ClearLayer(MapController.CoverLayout);
+        TileMapLayer.Clear();
         for (var x = StartPoint.X; x <= EndPoint.X; x++)
         for (var y = StartPoint.Y; y <= EndPoint.Y; y++)
-            TileMap.SetCell(MapController.CoverLayout, new(x, y), MapController.SingleTileSetAtlasId, new(), 2);
+            TileMapLayer.SetCell(new(x, y), MapController.SingleTileSetAtlasId, new(), 2);
 
-        TileMap.SetCell(MapController.CoverLayout, StartPoint, MapController.SingleTileSetAtlasId, new());
-        TileMap.SetCell(MapController.CoverLayout, EndPoint, MapController.SingleTileSetAtlasId, new(), 1);
+        TileMapLayer.SetCell(StartPoint, MapController.SingleTileSetAtlasId, new());
+        TileMapLayer.SetCell(EndPoint, MapController.SingleTileSetAtlasId, new(), 1);
     }
 
 
@@ -126,7 +126,7 @@ public partial class InterceptUI : CanvasLayer
         switch (@event)
         {
             case InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true }:
-                Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+                Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
                 if (!MapController.LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit _)) return;
                 if (_start)
                     StartPoint = vector2I;

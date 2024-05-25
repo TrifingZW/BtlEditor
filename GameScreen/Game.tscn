@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://c78ax6yhf632"]
+[gd_scene load_steps=53 format=3 uid="uid://c78ax6yhf632"]
 
 [ext_resource type="Script" path="res://GameScreen/Scripts/Game.cs" id="1_mv65n"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
@@ -34,7 +34,6 @@
 [ext_resource type="PackedScene" uid="uid://cfiri0bgelvw4" path="res://UserInterface/TabPanel.tscn" id="26_3minh"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/InterceptUI.cs" id="26_4l3ub"]
 [ext_resource type="PackedScene" uid="uid://beisxt0foinfn" path="res://UserInterface/EditorItem.tscn" id="27_nb3k3"]
-[ext_resource type="Texture2D" uid="uid://dhuuu8xweva6m" path="res://Assets/Textures/UI/save.svg" id="28_lp73u"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/EditUI.cs" id="28_r5tlh"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchGeneralWindow.cs" id="30_djdrc"]
 [ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
@@ -45,7 +44,6 @@
 [ext_resource type="Texture2D" uid="uid://gelx3i1nrqqw" path="res://Assets/Textures/general_ability_4.png" id="36_pvj65"]
 [ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="37_6i305"]
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
-[ext_resource type="Theme" uid="uid://cs1sl7quau2b7" path="res://itemlist_theme.tres" id="38_wu0w0"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchArmyWindow.cs" id="39_asn33"]
 [ext_resource type="AudioStream" uid="uid://busvxfrvbgm0w" path="res://Assets/Audio/sfx_select.wav" id="41_outve"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchCountryWindow.cs" id="42_85ugd"]
@@ -97,21 +95,12 @@ material = SubResource("ShaderMaterial_lcxt7")
 texture = SubResource("ViewportTexture_o3a18")
 centered = false
 
-[node name="TileMap" type="TileMap" parent="MapController"]
+[node name="TileMapLayer" type="TileMapLayer" parent="MapController"]
 unique_name_in_owner = true
 tile_set = ExtResource("3_dpsvd")
-format = 2
-layer_0/name = "多选"
-layer_1/name = "单选"
-layer_1/tile_data = PackedInt32Array()
-layer_2/name = "省规划"
-layer_2/tile_data = PackedInt32Array()
-layer_3/name = "城市"
-layer_3/tile_data = PackedInt32Array()
-layer_4/name = "陷阱"
-layer_4/tile_data = PackedInt32Array()
-layer_5/name = "覆盖"
-layer_5/tile_data = PackedInt32Array()
+
+[node name="CityRender" type="Node2D" parent="MapController"]
+unique_name_in_owner = true
 
 [node name="ArmyRender" type="Node2D" parent="MapController"]
 unique_name_in_owner = true
@@ -169,7 +158,6 @@ layout_mode = 2
 text = "项目"
 item_count = 3
 popup/item_0/text = "错误检查"
-popup/item_0/id = 0
 popup/item_1/text = "保存文件"
 popup/item_1/id = 1
 popup/item_2/text = "退出"
@@ -181,7 +169,6 @@ layout_mode = 2
 text = "编辑器"
 item_count = 3
 popup/item_0/text = "编辑面板"
-popup/item_0/id = 0
 popup/item_1/text = "数据面板"
 popup/item_1/id = 1
 popup/item_2/text = "截取地图"
@@ -230,11 +217,20 @@ theme_override_constants/separation = 0
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="TabBar" type="TabBar" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+horizontal_scroll_mode = 3
+
+[node name="TabBar" type="TabBar" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-mouse_force_pass_scroll_events = false
+current_tab = 0
+clip_tabs = false
+scrolling_enabled = false
 tab_count = 8
 tab_0/title = "军队"
 tab_1/title = "城市"
@@ -246,7 +242,7 @@ tab_6/title = "空袭"
 tab_7/title = "国旗"
 
 [node name="Button" type="Button" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("17_tq14q")
@@ -259,6 +255,7 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+current_tab = 0
 tabs_visible = false
 tab_focus_mode = 0
 script = ExtResource("10_rw5vh")
@@ -271,6 +268,7 @@ mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("12_ni0yi")
+metadata/_tab_index = 0
 
 [node name="城市" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -281,6 +279,7 @@ mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("13_t38vd")
+metadata/_tab_index = 1
 
 [node name="城市血率" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -291,6 +290,7 @@ mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("16_ptwu4")
+metadata/_tab_index = 2
 
 [node name="地块" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -301,6 +301,7 @@ mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
+metadata/_tab_index = 3
 
 [node name="爆兵" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -311,14 +312,14 @@ mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
+metadata/_tab_index = 4
 
 [node name="陷阱" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-mouse_filter = 0
-mouse_force_pass_scroll_events = false
 script = ExtResource("18_mrjdc")
+metadata/_tab_index = 5
 
 [node name="空袭" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -328,6 +329,7 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("19_qf3fs")
+metadata/_tab_index = 6
 
 [node name="国旗" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
@@ -337,6 +339,7 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
 script = ExtResource("20_w6ers")
+metadata/_tab_index = 7
 
 [node name="DataUI" type="CanvasLayer" parent="."]
 visible = false
@@ -390,7 +393,7 @@ tab_4/title = "策略列表"
 tab_5/title = "空中支援"
 
 [node name="Button" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("17_tq14q")
@@ -425,6 +428,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 60
 theme_override_styles/panel = SubResource("StyleBoxFlat_tpis0")
+current_tab = 0
 tabs_visible = false
 tab_focus_mode = 0
 
@@ -434,6 +438,7 @@ mouse_filter = 0
 mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 3
+metadata/_tab_index = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer/ScrollContainer"]
 layout_mode = 2
@@ -453,11 +458,11 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("38_wu0w0")
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("16_gx6sn")
+metadata/_tab_index = 1
 
 [node name="WeatherItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
 visible = false
@@ -465,11 +470,11 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("38_wu0w0")
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("22_i713q")
+metadata/_tab_index = 2
 
 [node name="AffairItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
 visible = false
@@ -477,11 +482,11 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("38_wu0w0")
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("23_7eqaa")
+metadata/_tab_index = 3
 
 [node name="StrategyItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
 visible = false
@@ -489,11 +494,11 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("38_wu0w0")
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("24_an2yb")
+metadata/_tab_index = 4
 
 [node name="AirSupportItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
 visible = false
@@ -501,11 +506,11 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("38_wu0w0")
 theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("25_qafdh")
+metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -560,14 +565,18 @@ tab_0/title = "设置"
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 focus_mode = 0
-icon = ExtResource("28_lp73u")
+text = "保存文件"
 expand_icon = true
+
+[node name="TabContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer" index="1"]
+current_tab = 0
 
 [node name="Setting" type="ScrollContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer" index="1"]
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 3
+metadata/_tab_index = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting"]
 layout_mode = 2
@@ -576,26 +585,22 @@ size_flags_vertical = 3
 
 [node name="PanelContainer1" type="PanelContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 
 [node name="EditorItem" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1" instance=ExtResource("27_nb3k3")]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1/EditorItem/MarginContainer1/Head" index="0"]
 layout_mode = 2
-mouse_filter = 1
 text = "名称"
 
 [node name="Name" type="LineEdit" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer1/EditorItem/MarginContainer2/Content" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 1
 placeholder_text = "输入名称"
 
 [node name="PanelContainer2" type="PanelContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 
 [node name="EditorItem" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2" instance=ExtResource("27_nb3k3")]
 layout_mode = 2
@@ -603,7 +608,6 @@ layout_mode = 2
 [node name="Button" type="Button" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer1/Head" index="0"]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 1
 text = "起始点"
 
 [node name="Content" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2" index="0"]
@@ -612,20 +616,17 @@ vertical = true
 [node name="StartX" type="SpinBox" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2/Content" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 1
 max_value = 32767.0
 prefix = "X"
 
 [node name="StartY" type="SpinBox" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer2/EditorItem/MarginContainer2/Content" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 1
 max_value = 32767.0
 prefix = "Y"
 
 [node name="PanelContainer3" type="PanelContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 
 [node name="EditorItem" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3" instance=ExtResource("27_nb3k3")]
 layout_mode = 2
@@ -633,7 +634,6 @@ layout_mode = 2
 [node name="Button" type="Button" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer1/Head" index="0"]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 1
 text = "结束点"
 
 [node name="Content" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2" index="0"]
@@ -642,104 +642,89 @@ vertical = true
 [node name="EndX" type="SpinBox" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2/Content" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 1
 max_value = 32767.0
 prefix = "X"
 
 [node name="EndY" type="SpinBox" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer3/EditorItem/MarginContainer2/Content" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 1
 max_value = 32767.0
 prefix = "Y"
 
 [node name="PanelContainer4" type="PanelContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4"]
 layout_mode = 2
 
 [node name="CheckButton" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留军团"
 
 [node name="CheckButton2" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留城市"
 
 [node name="CheckButton3" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留军队"
 
 [node name="CheckButton4" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留陷阱"
 
 [node name="CheckButton5" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留方案"
 
 [node name="CheckButton6" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留天气"
 
 [node name="CheckButton7" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留事件"
 
 [node name="CheckButton8" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留援军"
 
 [node name="CheckButton9" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留空袭"
 
 [node name="CheckButton10" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留策略"
 
 [node name="CheckButton11" type="CheckButton" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer4/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 disabled = true
 button_pressed = true
 text = "保留空中支援"
 
 [node name="PanelContainer5" type="PanelContainer" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 1
 
 [node name="Label" type="Label" parent="InterceptUI/MarginContainer/TabPanel/VBoxContainer/TabContainer/Setting/VBoxContainer/PanelContainer5"]
 custom_minimum_size = Vector2(50, 50)
@@ -755,40 +740,49 @@ autowrap_mode = 1
 visible = false
 script = ExtResource("28_r5tlh")
 
-[node name="Province" type="PanelContainer" parent="EditUI"]
+[node name="MarginContainer" type="MarginContainer" parent="EditUI"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -304.0
-offset_bottom = 290.0
+offset_left = -284.0
+offset_bottom = 294.0
 grow_horizontal = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="EditUI/Province"]
+[node name="Province" type="PanelContainer" parent="EditUI/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("10_3nxs2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EditUI/MarginContainer/Province"]
 layout_mode = 2
 
-[node name="ProvinceModeTab" type="TabBar" parent="EditUI/Province/VBoxContainer"]
+[node name="ProvinceModeTab" type="TabBar" parent="EditUI/MarginContainer/Province/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 50
-tab_count = 2
+current_tab = 0
 clip_tabs = false
+tab_count = 2
 tab_0/title = "增加"
 tab_1/title = "清除"
 
-[node name="ProvinceModeClear" type="Button" parent="EditUI/Province/VBoxContainer"]
+[node name="ProvinceModeClear" type="Button" parent="EditUI/MarginContainer/Province/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "清空"
 
-[node name="ProvinceModeSave" type="Button" parent="EditUI/Province/VBoxContainer"]
+[node name="ProvinceModeSave" type="Button" parent="EditUI/MarginContainer/Province/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "保存"
 
-[node name="ProvinceModeCancel" type="Button" parent="EditUI/Province/VBoxContainer"]
+[node name="ProvinceModeCancel" type="Button" parent="EditUI/MarginContainer/Province/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -797,7 +791,7 @@ text = "取消"
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 title = "警告"
 initial_position = 1
-size = Vector2i(600, 332)
+size = Vector2i(600, 326)
 ok_button_text = "确定"
 dialog_autowrap = true
 cancel_button_text = "取消"
@@ -911,7 +905,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("38_wu0w0")
 allow_search = false
 
 [node name="PanelContainer2" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer"]
@@ -1103,7 +1096,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchArmyWindow/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("38_wu0w0")
 allow_search = false
 
 [node name="Button" type="Button" parent="SearchArmyWindow/MarginContainer/VBoxContainer"]
@@ -1141,7 +1133,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchCountryWindow/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("38_wu0w0")
 allow_search = false
 
 [node name="Button" type="Button" parent="SearchCountryWindow/MarginContainer/VBoxContainer"]
@@ -1151,13 +1142,13 @@ text = "确定选择"
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 title = "提示"
 initial_position = 2
-size = Vector2i(500, 332)
+size = Vector2i(500, 326)
 ok_button_text = "收到,收到,Over!"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("41_outve")
 
-[connection signal="tab_changed" from="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/TabBar" to="MapUI" method="TabSelect"]
+[connection signal="tab_changed" from="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/ScrollContainer/TabBar" to="MapUI" method="TabSelect"]
 [connection signal="pressed" from="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/Button" to="MapUI" method="Close"]
 [connection signal="tab_changed" from="DataUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/TabBar" to="DataUI" method="TabSelect"]
 [connection signal="pressed" from="DataUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/Button" to="DataUI" method="Close"]

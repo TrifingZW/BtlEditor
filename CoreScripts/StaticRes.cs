@@ -6,7 +6,7 @@ namespace BtlEditor.CoreScripts;
 public static class StaticRes
 {
     public static bool Ready { get; set; }
-    
+
     #region Resource
 
     public static Wc4ResourceParser TerrainHd { get; set; }
@@ -19,7 +19,10 @@ public static class StaticRes
     public static ArmySettingsParser ArmySettings { get; set; }
     public static TerrainConfigParser TerrainConfig { get; set; }
     public static MapConfigParser MapConfig { get; set; }
-    public static StringtableParser Stringtable { get; set; }
+    public static StringtableParser Stringtable => Globals.Translation == Translation.cn ? CnStringtable : EnStringtable;
+
+    public static StringtableParser CnStringtable { get; set; }
+    public static StringtableParser EnStringtable { get; set; }
 
     #endregion
 
@@ -38,5 +41,4 @@ public static class StaticRes
     public static string ImageHeadPath => $"{ImagePath}/heads";
 
     #endregion
-    
 }

@@ -1,6 +1,7 @@
 shader_type canvas_item;
 
 uniform sampler2D color_texture;
+
 const float hex_width = 148.0;
 const float hex_height = 129.0;
 const vec2 hex_size = vec2(hex_width, hex_height);

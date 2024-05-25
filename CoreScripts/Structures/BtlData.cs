@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BtlEditor.CoreScripts.Attributes;
 
 // ReSharper disable InconsistentNaming

@@ -1,4 +1,9 @@
+using BtlEditor.CoreScripts.Parser;
+using BtlEditor.CoreScripts.Structures;
+using BtlEditor.CoreScripts.Utils;
+using BtlEditor.GameScreen.Scripts.LandScripts;
 using Godot;
+using static BtlEditor.CoreScripts.StaticRes;
 
 namespace BtlEditor.UserInterface;
 

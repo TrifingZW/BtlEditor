@@ -126,7 +126,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button set = new()
         {
-            Text = "编辑爆兵",
+            Text = "编辑",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         set.Pressed += () =>
@@ -158,7 +158,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button copy = new()
         {
-            Text = "复制爆兵",
+            Text = "复制",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         copy.Pressed += () => { Game.ReinforcementCopy = reinforcement; };
@@ -166,7 +166,7 @@ public partial class ReinforcementSingle : BaseSingle
 
         Button delete = new()
         {
-            Text = "删除爆兵",
+            Text = "删除",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         delete.Pressed += () =>
@@ -193,7 +193,8 @@ public partial class ReinforcementSingle : BaseSingle
         foreach (ArmyJson armyJson in ArmySettings.ArmyJsons)
             if (armyJson.Army == reinforcement.兵种)
             {
-                armyPanel.ArmyButton.Text = armyJson.Name;
+                if (Stringtable.ArmyName[armyJson.Id] is { } armyName)
+                    armyPanel.ArmyButton.Text = armyName;
                 break;
             }
 

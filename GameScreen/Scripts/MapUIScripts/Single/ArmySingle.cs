@@ -116,8 +116,8 @@ public partial class ArmySingle : BaseSingle
     private void UpdateArmyPanel()
     {
         //设置军队名称
-        if (GameLandUnit.ArmyJson is { } armyJson)
-            _armyPanel.ArmyButton.Text = armyJson.Name;
+        if (Stringtable.ArmyName[GameLandUnit.ArmyJson.Id] is { } armyName)
+            _armyPanel.ArmyButton.Text = armyName;
         else _armyPanel.ArmyButton.Text = "未知兵种";
 
         //设置将领相关

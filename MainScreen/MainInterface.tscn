@@ -51,16 +51,17 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+current_tab = 0
 tab_count = 1
 tab_0/title = "BTL文件"
 
-[node name="OptionButton" type="OptionButton" parent="MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+[node name="TranslationOption" type="OptionButton" parent="MarginContainer/Panel/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-item_count = 2
 selected = 0
 fit_to_longest_item = false
+item_count = 2
 popup/item_0/text = "中文"
-popup/item_0/id = 0
 popup/item_1/text = "English"
 popup/item_1/id = 1
 
@@ -73,10 +74,12 @@ expand_icon = true
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 0
 tabs_visible = false
 
 [node name="BTL" type="VBoxContainer" parent="MarginContainer/Panel/VBoxContainer/TabContainer"]
 layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Panel/VBoxContainer/TabContainer/BTL"]
 layout_mode = 2
@@ -145,13 +148,38 @@ unresizable = true
 min_size = Vector2i(800, 800)
 script = ExtResource("4_jq43r")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="LoadWindow"]
+[node name="MarginContainer" type="MarginContainer" parent="LoadWindow"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Panel" type="Panel" parent="LoadWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoadWindow/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LoadWindow/MarginContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
 scroll_following = true
+
+[node name="Button" type="Button" parent="LoadWindow/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "确定"
 
 [node name="SettingWindow" type="Window" parent="."]
 title = "设置"
@@ -177,9 +205,11 @@ theme_override_constants/margin_bottom = 16
 [node name="TabContainer" type="TabContainer" parent="SettingWindow/MarginContainer"]
 layout_mode = 2
 theme = ExtResource("5_kplx2")
+current_tab = 0
 
 [node name="常规" type="VBoxContainer" parent="SettingWindow/MarginContainer/TabContainer"]
 layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="SettingWindow/MarginContainer/TabContainer/常规"]
 layout_mode = 2
@@ -200,7 +230,6 @@ unique_name_in_owner = true
 layout_mode = 2
 item_count = 3
 popup/item_0/text = "极低"
-popup/item_0/id = 0
 popup/item_1/text = "正常"
 popup/item_1/id = 1
 popup/item_2/text = "极限"
@@ -218,7 +247,6 @@ unique_name_in_owner = true
 layout_mode = 2
 item_count = 2
 popup/item_0/text = "窗口模式"
-popup/item_0/id = 0
 popup/item_1/text = "全屏模式"
 popup/item_1/id = 1
 
@@ -313,6 +341,7 @@ text = "确认截取"
 [connection signal="pressed" from="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2/VBoxContainer/Button" to="." method="StartBtl"]
 [connection signal="pressed" from="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2/VBoxContainer/Button2" to="." method="StartBin"]
 [connection signal="pressed" from="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2/VBoxContainer/Button3" to="." method="Intercept"]
+[connection signal="pressed" from="LoadWindow/MarginContainer/Panel/VBoxContainer/Button" to="LoadWindow" method="Close"]
 
 [editable path="SettingWindow/MarginContainer/TabContainer/常规/PanelContainer/VBoxContainer/EditorItem"]
 [editable path="SettingWindow/MarginContainer/TabContainer/常规/PanelContainer/VBoxContainer/EditorItem2"]

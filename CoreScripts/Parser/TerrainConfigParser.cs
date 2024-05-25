@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 using FileAccess = Godot.FileAccess;
 
@@ -10,13 +9,13 @@ namespace BtlEditor.CoreScripts.Parser;
 
 public class TerrainConfigParser
 {
-    public Terrains Terrains { get; private set; }
+    public Terrains Terrains { get; private set; } = new();
 
     public TerrainConfigParser Parser()
     {
         const string fileName = "def_mapterrain";
         var xmlPath = $"{ConfigPath}/{fileName}.xml";
-        if (!File.Exists(xmlPath)) throw new($"没有导入{fileName}.xml！");
+        if (!File.Exists(xmlPath)) throw new($"没有导入{fileName}.xml，会导致无法显示地形。");
 
         //反序列化XML
         try
@@ -27,7 +26,7 @@ public class TerrainConfigParser
         }
         catch (Exception e)
         {
-            throw new($"反序列化{fileName}.xml失败！{e.Message}");
+            throw new($"解析{fileName}.xml失败，会导致无法显示地形。报错信息：({e.Message})");
         }
 
         return this;
@@ -38,7 +37,7 @@ public class TerrainConfigParser
 [XmlRoot(ElementName = "terrains")]
 public class Terrains
 {
-    [XmlElement(ElementName = "terrain")] public List<Terrain> TerrainList { get; set; }
+    [XmlElement(ElementName = "terrain")] public List<Terrain> TerrainList { get; set; } = [];
 }
 
 [XmlRoot(ElementName = "terrain")]

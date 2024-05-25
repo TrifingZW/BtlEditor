@@ -7,12 +7,12 @@ namespace BtlEditor.CoreScripts.Parser;
 
 public class GeneralSettingsParser
 {
-    public GeneralJson[] GeneralJsons { get; private set; }
+    public GeneralJson[] GeneralJsons { get; private set; } = [];
 
     public GeneralSettingsParser Parser()
     {
         var path = $"{JsonPath}/GeneralSettings.json";
-        if (!File.Exists(path)) throw new("没有导入GeneralSettings.json！");
+        if (!File.Exists(path)) throw new("没有读取到GeneralSettings.json文件，会导致部分将领内容无法显示。");
 
         try
         {
@@ -22,7 +22,7 @@ public class GeneralSettingsParser
         }
         catch (Exception e)
         {
-            throw new($"解析GeneralSettings.json错误:{e.Message}");
+            throw new($"解析GeneralSettings.json错误，会导致部分将领内容无法显示。报错信息：({e.Message})");
         }
 
         return this;

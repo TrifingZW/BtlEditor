@@ -31,27 +31,19 @@ public partial class MapController : CanvasGroup
     private Sprite2D _landRender;
     private TileSet _tileSet;
     private static MapUI MapUI => Game.MapUI;
+    public Node2D CityRender { get; private set; }
     public Node2D ArmyRender { get; private set; }
     public Node2D FlagRender { get; private set; }
     public Node2D GeneralRender { get; private set; }
-    public TileMap TileMap { get; private set; }
+    public TileMapLayer TileMapLayer { get; private set; }
     public Indicator Indicator { get; private set; }
-
+    
     //单位
     public GameLandUnit[] LandUnits { get; private set; }
 
     //图块集ID
-    public static int BuildTileSetAtlasId { get; private set; } = -1;
     public const int MultiTileSetAtlasId = 1;
     public const int SingleTileSetAtlasId = 2;
-
-    //tileLayer
-    public const int MultiLayer = 0;
-    public const int SingleLayer = 1;
-    public const int ProvinceLayer = 2;
-    public const int BuildLayer = 3;
-    public const int PitfallLayer = 4;
-    public const int CoverLayout = 5;
 
     public BtlParser Btl { get; private set; }
     public BinParser Bin { get; private set; }
@@ -72,8 +64,8 @@ public partial class MapController : CanvasGroup
     public const int SideLength = 76;
     public static Vector2 OffsetSize => new(TileWidth / 2f, TileHeight / 2f);
 
-    public Vector2I CanvasSize => new Vector2(TileMap.MapToLocal(new(Master.地图宽 - 1, 1)).X,
-        TileMap.MapToLocal(new(1, Master.地图高 - 1)).Y).ToVector2I() + OffsetSize.ToVector2I();
+    public Vector2I CanvasSize => new Vector2(TileMapLayer.MapToLocal(new(Master.地图宽 - 1, 1)).X,
+        TileMapLayer.MapToLocal(new(1, Master.地图高 - 1)).Y).ToVector2I() + OffsetSize.ToVector2I();
 
     public void FreeResources()
     {
@@ -91,19 +83,16 @@ public partial class MapController : CanvasGroup
         //CanvasGroup
         _seaRender = GetNode<Sprite2D>("%SeaRender");
         _landRender = GetNode<Sprite2D>("%LandRender");
-        TileMap = GetNode<TileMap>("%TileMap");
+        TileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
         Indicator = GetNode<Indicator>("%Indicator");
+        CityRender = GetNode<Node2D>("%CityRender");
         ArmyRender = GetNode<Node2D>("%ArmyRender");
         FlagRender = GetNode<Node2D>("%FlagRender");
         GeneralRender = GetNode<Node2D>("%GeneralRender");
-        _tileSet = TileMap.TileSet;
+        _tileSet = TileMapLayer.TileSet;
 
         //解析Btl
         Btl = new BtlParser().Parser(BtlPath);
-
-        //读取图块集
-        if (BuildTileSetAtlasId == -1)
-            BuildTileSetAtlasId = LoadTileSetAtlasSource(BuildingsHd);
 
         //创建ColorUv射影图
         CreateColorUv();
@@ -167,7 +156,7 @@ public partial class MapController : CanvasGroup
                     RegionIndex = (short)(Btl.IndependentTerrain ? landIndex : GlobalHelper.GetIndex(x + Master.地图截取x, y + Master.地图截取y, Bin.Width)),
                     X = x,
                     Y = y,
-                    Position = TileMap.MapToLocal(new(x, y)),
+                    Position = TileMapLayer.MapToLocal(new(x, y)),
                     Topography = Topographies[landIndex],
                     Province = Btl.Provinces[landIndex],
                 };
@@ -255,7 +244,7 @@ public partial class MapController : CanvasGroup
         countdown.Wait();
     }
 
-    //读取图块集
+    /*//读取图块集
     private int LoadTileSetAtlasSource(Wc4ResourceParser wc4ResourceParser)
     {
         TileSetAtlasSource buildTileSetAtlasSource = new();
@@ -279,7 +268,7 @@ public partial class MapController : CanvasGroup
         }
 
         return _tileSet.AddSource(buildTileSetAtlasSource);
-    }
+    }*/
 
     private Image _colorUvImage;
 
@@ -308,7 +297,7 @@ public partial class MapController : CanvasGroup
 
     public void SetUvColor(int w, int h, Color color)
     {
-        Vector2 position = (TileMap.MapToLocal(new(w, h)) - OffsetSize) / 5f;
+        Vector2 position = (TileMapLayer.MapToLocal(new(w, h)) - OffsetSize) / 5f;
         foreach (Vector2I vector2I in _points)
         {
             Vector2I vec2 = vector2I + position.ToVector2I();

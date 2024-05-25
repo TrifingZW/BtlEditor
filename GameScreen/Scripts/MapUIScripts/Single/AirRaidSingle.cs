@@ -39,7 +39,7 @@ public partial class AirRaidSingle : BaseSingle
         vBoxContainer.AddChild(hBoxContainer);
         Button edit = new()
         {
-            Text = "编辑空袭",
+            Text = "编辑",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         edit.Pressed += () =>
@@ -55,7 +55,7 @@ public partial class AirRaidSingle : BaseSingle
         hBoxContainer.AddChild(edit);
         Button delete = new()
         {
-            Text = "删除空袭",
+            Text = "删除",
             SizeFlagsHorizontal = SizeFlags.ExpandFill
         };
         delete.Pressed += () =>

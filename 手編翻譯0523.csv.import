@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://btd8drkfno2j3"
+
+[deps]
+
+files=["res://手編翻譯0523.en.translation"]
+
+source_file="res://手編翻譯0523.csv"
+dest_files=["res://手編翻譯0523.en.translation"]
+
+[params]
+
+compress=true
+delimiter=0

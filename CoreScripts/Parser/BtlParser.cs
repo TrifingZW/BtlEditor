@@ -83,7 +83,15 @@ public class BtlParser
                     if (affair.影响军团 == country.序号)
                         affair.影响军团 = index;
                 }
+                if (Version1 || Version2)
+                    foreach (Reinforcement1 reinforcement1 in Reinforcements1)
+                        if(reinforcement1.所属国家 == country.序号)
+                            reinforcement1.所属国家 = index;
 
+                if (Version3) foreach (Reinforcement3 reinforcement3 in Reinforcements3)
+                    if(reinforcement3.所属国家 == country.序号)
+                        reinforcement3.所属国家 = index;
+                
                 country.序号 = index;
             }
         }

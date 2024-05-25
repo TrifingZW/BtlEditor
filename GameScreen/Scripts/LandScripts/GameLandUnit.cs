@@ -12,7 +12,7 @@ public class GameLandUnit : LandUnit
 {
     private static MapController MapController => Game.Instance.MapController;
     private static GameLandUnit[] LandUnits => MapController.LandUnits;
-    private static TileMap TileMap => MapController.TileMap;
+    private static TileMapLayer TileMapLayer => MapController.TileMapLayer;
 
     #region 颜色
 
@@ -122,6 +122,7 @@ public class GameLandUnit : LandUnit
 
     #region 城市
 
+    private CitySprite _citySprite;
     private Label _cityLabel;
 
     public new City City
@@ -138,42 +139,13 @@ public class GameLandUnit : LandUnit
     {
         if (City != null)
         {
-            TileMap.EraseCell(MapController.BuildLayer, Coords);
             City.坐标 = RegionIndex;
-            foreach (Wc4ResourceElement wc4ResourceElement in BuildingsHd.Images.ImageList)
+            if(_citySprite == null)
             {
-                if (City.奇观 != 0)
-                {
-                    if (wc4ResourceElement.Name == $"capital_{City.奇观:D2}.png")
-                    {
-                        TileMap.SetCell(MapController.BuildLayer, Coords, MapController.BuildTileSetAtlasId,
-                            new Vector2I(wc4ResourceElement.X, wc4ResourceElement.Y));
-                        break;
-                    }
-
-                    continue;
-                }
-
-                var level = City.等级;
-
-                if (level is 31 or 32 or 33 or 34)
-                {
-                    if (wc4ResourceElement.Name == $"building_31_{City.外观}.png")
-                    {
-                        TileMap.SetCell(MapController.BuildLayer, Coords, MapController.BuildTileSetAtlasId,
-                            new Vector2I(wc4ResourceElement.X, wc4ResourceElement.Y));
-                        break;
-                    }
-
-                    continue;
-                }
-
-                if (level is 16 or 17 or 18 or 19 or 20)
-                    level = 15;
-                if (wc4ResourceElement.Name != $"building_{level}.png") continue;
-                TileMap.SetCell(MapController.BuildLayer, Coords, MapController.BuildTileSetAtlasId,
-                    new Vector2I(wc4ResourceElement.X, wc4ResourceElement.Y));
-                break;
+                _citySprite = new();
+                MapController.CityRender.AddChild(_citySprite);
+                _citySprite.Position = Position;
+                _citySprite.City = City;
             }
 
             if (Stringtable.CityName[City.名称.ToString("D3")] is { } name)
@@ -181,7 +153,7 @@ public class GameLandUnit : LandUnit
                 if (_cityLabel == null)
                 {
                     _cityLabel = new();
-                    TileMap.AddChild(_cityLabel);
+                    MapController.CityRender.AddChild(_cityLabel);
                 }
 
                 _cityLabel.Text = name;
@@ -205,9 +177,11 @@ public class GameLandUnit : LandUnit
     public void ClearCity()
     {
         base.City = null;
+        _citySprite?.QueueFree();
+        _cityLabel = null;
         _cityLabel?.QueueFree();
         _cityLabel = null;
-        TileMap.EraseCell(MapController.BuildLayer, Coords);
+        TileMapLayer.EraseCell(Coords);
     }
 
     #endregion

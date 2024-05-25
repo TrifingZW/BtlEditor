@@ -9,15 +9,18 @@ namespace BtlEditor.MainScreen.Scripts;
 public partial class LoadWindow : Window
 {
     private RichTextLabel _richTextLabel;
+    private bool _ready;
 
     public override void _Ready()
     {
-        CloseRequested += () =>
-        {
-         
-        };
-        _richTextLabel = GetNode<RichTextLabel>("RichTextLabel");
+        CloseRequested += Close;
+        _richTextLabel = GetNode<RichTextLabel>("%RichTextLabel");
         _richTextLabel.GetVScrollBar().Scale = Vector2.Zero;
+    }
+
+    private void Close()
+    {
+        if (_ready) Hide();
     }
 
     public void Load(Action<bool> action)
@@ -25,7 +28,9 @@ public partial class LoadWindow : Window
         Show();
         Task.Run(LoadWc4Resource).ContinueWith(task =>
         {
-            if (!task.IsFaulted)
+            if (task.IsFaulted)
+                CallDeferred(nameof(PrintRed), task.Exception.Message);
+            else
                 action(true);
         });
     }
@@ -38,7 +43,8 @@ public partial class LoadWindow : Window
         await Task.Run(() =>
         {
             GeneralSettings = new();
-            Stringtable = new();
+            CnStringtable = new();
+            EnStringtable = new();
             TerrainConfig = new();
             MapConfig = new();
             Tacticalmap = new("tacticalmap", true);
@@ -51,56 +57,70 @@ public partial class LoadWindow : Window
             CallDeferred(nameof(PrintGreen), "正在导入资源中......");
 
             //TerrainConfig
-            TerrainConfig.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入def_mapterrain");
+            if (RunSafely(() => TerrainConfig.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入def_mapterrain");
 
             //MapConfig
-            MapConfig.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入def_map");
+            if (RunSafely(() => MapConfig.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入def_map");
 
             //GeneralSettings
-            GeneralSettings.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入GeneralSettings.json");
+            if (RunSafely(() => GeneralSettings.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入GeneralSettings.json");
 
             //ArmySettings
-            ArmySettings.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入ArmySettings.json");
+            if (RunSafely(() => ArmySettings.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入ArmySettings.json");
 
             //Stringtable
-            Stringtable.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入ini文件");
+            if (RunSafely(() => CnStringtable.Parser("stringtable_cn.ini")))
+                CallDeferred(nameof(PrintGreen), "已导入stringtable_cn.ini文件");
+            if (RunSafely(() => EnStringtable.Parser("stringtable_en.ini")))
+                CallDeferred(nameof(PrintGreen), "已导入stringtable_en.ini文件");
 
             //Tacticalmap
-            Tacticalmap.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入tacticalmap资源");
+            if (RunSafely(() => Tacticalmap.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入tacticalmap资源");
 
             //TerrainHd
-            TerrainHd.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入terrain_hd资源");
+            if (RunSafely(() => TerrainHd.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入terrain_hd资源");
 
             //PlantHd
-            PlantHd.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入plant_hd资源");
+            if (RunSafely(() => PlantHd.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入plant_hd资源");
 
             //BuildingsHd
-            BuildingsHd.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入buildings_hd资源");
+            if (RunSafely(() => BuildingsHd.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入buildings_hd资源");
 
             //ImageGeneralMedalHd
-            ImageGeneralMedalHd.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入image_general_medal_hd资源");
+            if (RunSafely(() => ImageGeneralMedalHd.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入image_general_medal_hd资源");
 
             //ImageRibbonHd
-            ImageRibbonHd.Parser();
-            CallDeferred(nameof(PrintGreen), "已导入image_ribbon_hd资源");
+            if (RunSafely(() => ImageRibbonHd.Parser()))
+                CallDeferred(nameof(PrintGreen), "已导入image_ribbon_hd资源");
 
-            CallDeferred(nameof(PrintGreen), "导入完毕");
+            CallDeferred(nameof(PrintGreen), "\n导入完毕，可以关闭窗口，请仔细阅读打印信息。");
+            _ready = true;
             
-            CallDeferred(nameof(Diss));
         });
     }
 
-    private void Diss() => Hide();
+    private bool RunSafely(Action action)
+    {
+        try
+        {
+            action();
+            return true;
+        }
+        catch (Exception e)
+        {
+            CallDeferred(nameof(PrintRed), e.Message);
+            return false;
+        }
+    }
 
     #region 输出函数
 

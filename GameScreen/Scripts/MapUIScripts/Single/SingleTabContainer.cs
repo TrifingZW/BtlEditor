@@ -1,7 +1,6 @@
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
 using Godot;
-using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.MapUIScripts.Single;
 
@@ -9,7 +8,7 @@ public partial class SingleTabContainer : TabContainer, IInput
 {
     private static MapController MapController => Game.Instance.MapController;
     private static GameLandUnit[] LandUnits => MapController.LandUnits;
-    private static TileMap TileMap => MapController.TileMap;
+    private static TileMapLayer TileMapLayer => MapController.TileMapLayer;
     private static Indicator Indicator => MapController.Indicator;
     private GameLandUnit _singeGameLandUnit;
 
@@ -60,7 +59,7 @@ public partial class SingleTabContainer : TabContainer, IInput
 
     private void Pressed()
     {
-        Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+        Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
         if (!LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit)) return;
 
         if (landUnit == _oldSelectGameLand)
@@ -87,7 +86,7 @@ public partial class SingleTabContainer : TabContainer, IInput
         if (!_selectMotion) return;
 
         //军队交换
-        Vector2I vector2I = TileMap.LocalToMap(_oldSelectGameLand.Position + _delta);
+        Vector2I vector2I = TileMapLayer.LocalToMap(_oldSelectGameLand.Position + _delta);
         if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
         {
             _oldSelectGameLand.ArmySprite.Select = false;
@@ -103,7 +102,7 @@ public partial class SingleTabContainer : TabContainer, IInput
         _delta = default;
         _selectMotion = false;
         Game.Instance.MapUI.Visible = true;
-        TileMap.ClearLayer(MapController.SingleLayer);
+        TileMapLayer.Clear();
     }
 
     private void Motion()
@@ -111,9 +110,9 @@ public partial class SingleTabContainer : TabContainer, IInput
         if (!_selectMotion) return;
         //计算位置
         _delta = MousePosition - _oldMousePosition;
-        Vector2I vector2I = TileMap.LocalToMap(_oldSelectGameLand.Position + _delta);
-        TileMap.ClearLayer(MapController.SingleLayer);
-        TileMap.SetCell(MapController.SingleLayer, vector2I, MapController.SingleTileSetAtlasId, new(), 1);
+        Vector2I vector2I = TileMapLayer.LocalToMap(_oldSelectGameLand.Position + _delta);
+        TileMapLayer.Clear();
+        TileMapLayer.SetCell(vector2I, MapController.SingleTileSetAtlasId, new(), 1);
 
         if (_oldSelectGameLand.ArmySprite is { } armySprite)
             armySprite.Position = _oldSelectGameLand.Position + _delta;

@@ -1,3 +1,4 @@
+using BtlEditor.CoreScripts;
 using Godot;
 using static BtlEditor.CoreScripts.Globals;
 
@@ -18,7 +19,7 @@ public partial class SettingWindow : Window
             RenderScale = (int)index;
             Save();
         };
-        
+
         _windowMode = GetNode<OptionButton>("%WindowMode");
         _windowMode.Selected = (int)WindowMode;
         _windowMode.ItemSelected += index =>

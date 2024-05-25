@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using static BtlEditor.CoreScripts.StaticRes;
@@ -7,17 +8,24 @@ namespace BtlEditor.CoreScripts.Parser;
 
 public class ArmySettingsParser
 {
-    public ArmyJson[] ArmyJsons { get; private set; }
+    public ArmyJson[] ArmyJsons { get; private set; } = [];
 
     public ArmySettingsParser Parser()
     {
         var path = $"{JsonPath}/ArmySettings.json";
-        if (!File.Exists(path)) throw new("没有导入ArmySettings.json！");
+        if (!File.Exists(path)) throw new("没有读取到ArmySettings.json文件，会导致部分军队内容无法显示。");
 
-        StreamReader streamReader = new(path);
-        var jsonString = streamReader.ReadToEnd();
-        ArmyJsons = JsonConvert.DeserializeObject<ArmyJson[]>(jsonString);
-        streamReader.Close();
+        try
+        {
+            StreamReader streamReader = new(path);
+            var jsonString = streamReader.ReadToEnd();
+            ArmyJsons = JsonConvert.DeserializeObject<ArmyJson[]>(jsonString);
+            streamReader.Close();
+        }
+        catch (Exception e)
+        {
+            throw new($"解析ArmySettings.json错误，会导致部分军队内容无法显示。报错信息：({e.Message})");
+        }
         return this;
     }
 }

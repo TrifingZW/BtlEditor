@@ -12,7 +12,7 @@ namespace BtlEditor.CoreScripts.Parser;
 
 public class Wc4ResourceParser(string fileName, bool external = false, string path = null) : IDisposable
 {
-    public Images Images { get; private set; }
+    public Images Images { get; private set; } = new();
     public Texture2D Texture2D { get; private set; } = new();
 
     public Wc4ResourceParser Parser()
@@ -24,7 +24,7 @@ public class Wc4ResourceParser(string fileName, bool external = false, string pa
 
             //判断文件是否存在
             if (!File.Exists(xmlPath) || !File.Exists(texPath))
-                throw new($"没有导入{fileName}资源");
+                throw new($"没有读取到{fileName}资源，可能导致显示问题。");
 
             var xml = File.ReadAllText(xmlPath).Replace($"<Texture name=\"{fileName}.png\" />", string.Empty);
             //反序列化XML
@@ -36,7 +36,7 @@ public class Wc4ResourceParser(string fileName, bool external = false, string pa
             }
             catch (Exception e)
             {
-                throw new($"反序列化{fileName}.xml失败！{e.Message}");
+                throw new($"解析{fileName}.xml失败，可能导致显示问题。报错信息：({e.Message})");
             }
 
             /*//删除.png后缀
@@ -105,7 +105,7 @@ public class Wc4ResourceParser(string fileName, bool external = false, string pa
 [XmlRoot(ElementName = "Images")]
 public class Images
 {
-    [XmlElement(ElementName = "Image")] public List<Wc4ResourceElement> ImageList { get; set; }
+    [XmlElement(ElementName = "Image")] public List<Wc4ResourceElement> ImageList { get; set; } = [];
 }
 
 [XmlRoot(ElementName = "Image")]
@@ -124,7 +124,6 @@ public class Wc4ResourceElement
     [XmlAttribute("refx")] public int RefX { get; set; }
 
     [XmlAttribute("refy")] public int RefY { get; set; }
-    
+
     public Rect2 GetRect2() => new(X, Y, Width, Height);
 }
-

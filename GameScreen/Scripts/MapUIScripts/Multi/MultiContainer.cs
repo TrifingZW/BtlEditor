@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using BtlEditor.CoreScripts.Parser;
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts.LandScripts;
@@ -13,7 +12,7 @@ public partial class MultiContainer : PanelContainer, IInput
 {
     private static MapController MapController => Game.Instance.MapController;
     private static GameLandUnit[] LandUnits => MapController.LandUnits;
-    private static TileMap TileMap => MapController.TileMap;
+    private static TileMapLayer TileMapLayer => MapController.TileMapLayer;
     private static EditWindow EditWindow => Game.Instance.EditWindow;
     public List<GameLandUnit> MultiLandUnit { get; set; } = [];
     private TabBar _multiTabContainer;
@@ -26,7 +25,7 @@ public partial class MultiContainer : PanelContainer, IInput
     private void MultiModeClear()
     {
         MultiLandUnit.Clear();
-        MapController.TileMap.ClearLayer(MapController.MultiLayer);
+        MapController.TileMapLayer.Clear();
     }
 
     private void MultiModeCreateArmy()
@@ -118,14 +117,14 @@ public partial class MultiContainer : PanelContainer, IInput
                 if (inputEventMouseButton.ButtonIndex == MouseButton.Left)
                 {
                     _multiPressed = inputEventMouseButton.Pressed;
-                    Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+                    Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
                     if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
                         switch (_multiTabContainer.CurrentTab)
                         {
                             case 0:
                                 if (!MultiLandUnit.Contains(landUnit))
                                 {
-                                    TileMap.SetCell(MapController.MultiLayer, vector2I, MapController.MultiTileSetAtlasId, new());
+                                    TileMapLayer.SetCell(vector2I, MapController.MultiTileSetAtlasId, new());
                                     MultiLandUnit.Add(landUnit);
                                 }
 
@@ -133,7 +132,7 @@ public partial class MultiContainer : PanelContainer, IInput
                             case 1:
                                 if (MultiLandUnit.Contains(landUnit))
                                 {
-                                    TileMap.EraseCell(MapController.MultiLayer, vector2I);
+                                    TileMapLayer.EraseCell(vector2I);
                                     MultiLandUnit.Remove(landUnit);
                                 }
 
@@ -147,14 +146,14 @@ public partial class MultiContainer : PanelContainer, IInput
             {
                 if (_multiPressed)
                 {
-                    Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+                    Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
                     if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
                         switch (_multiTabContainer.CurrentTab)
                         {
                             case 0:
                                 if (!MultiLandUnit.Contains(landUnit))
                                 {
-                                    TileMap.SetCell(MapController.MultiLayer, vector2I, MapController.MultiTileSetAtlasId, new());
+                                    TileMapLayer.SetCell(vector2I, MapController.MultiTileSetAtlasId, new());
                                     MultiLandUnit.Add(landUnit);
                                 }
 
@@ -162,7 +161,7 @@ public partial class MultiContainer : PanelContainer, IInput
                             case 1:
                                 if (MultiLandUnit.Contains(landUnit))
                                 {
-                                    TileMap.EraseCell(MapController.MultiLayer, vector2I);
+                                    TileMapLayer.EraseCell(vector2I);
                                     MultiLandUnit.Remove(landUnit);
                                 }
 

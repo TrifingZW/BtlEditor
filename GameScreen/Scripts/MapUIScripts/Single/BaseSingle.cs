@@ -113,8 +113,8 @@ public abstract partial class BaseSingle : ScrollContainer
                         if (!MapController.LandUnits.TryGetValue(MapHelper.GetBtlIndex((short)field.GetValue(obj)!), out GameLandUnit landUnit))
                             return;
                         Game.Instance.CameraController.TargetPosition = landUnit.Position;
-                        MapController.TileMap.ClearLayer(MapController.CoverLayout);
-                        MapController.TileMap.SetCell(MapController.CoverLayout, landUnit.Coords, MapController.SingleTileSetAtlasId, new(), 2);
+                        MapController.TileMapLayer.Clear();
+                        MapController.TileMapLayer.SetCell(landUnit.Coords, MapController.SingleTileSetAtlasId, new(), 2);
                     };
                     editorItem.Head.AddChild(label);
                 }

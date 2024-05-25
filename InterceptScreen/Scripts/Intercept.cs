@@ -37,7 +37,7 @@ public partial class Intercept : Node2D
     {
         Instance = this;
 
-        TileMap = GetNode<TileMap>("%TileMap");
+        TileMap = GetNode<TileMap>("%TileMapLayer");
 
         //SubViewport
         _subViewport = GetNode<SubViewport>("%SubViewport");

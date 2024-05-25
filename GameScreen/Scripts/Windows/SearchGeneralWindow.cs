@@ -90,5 +90,6 @@ public partial class SearchGeneralWindow : Window
     {
         _callback = callback;
         Show();
+        Position += new Vector2I(0, 34);
     }
 }

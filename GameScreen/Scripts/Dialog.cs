@@ -9,6 +9,7 @@ public partial class Dialog : ConfirmationDialog
 
     public override void _Ready()
     {
+        Position += new Vector2I(0, 34);
         GetOkButton().Pressed += () => { _action?.Invoke(); };
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
 
@@ -64,7 +65,7 @@ public partial class Globals : Node
         RenderScale = Config.GetValue("Setting", "Shader", 2).AsInt32();
         WindowMode = Config.GetValue("Setting", "WindowMode", 0L).AsInt64();
         Translation = (Translation)Config.GetValue("Setting", "Translation", 0).AsInt32();
-        WorkPath = Config.GetValue("Work", "WorkPath", $"{FilePath}/WorkPath").AsString();
+        WorkPath = File.ReadAllText($"{FilePath}/WorkPath.txt");
         Save();
     }
 

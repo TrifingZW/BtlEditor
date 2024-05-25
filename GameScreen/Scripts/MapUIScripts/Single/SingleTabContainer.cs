@@ -8,7 +8,7 @@ public partial class SingleTabContainer : TabContainer, IInput
 {
     private static MapController MapController => Game.Instance.MapController;
     private static GameLandUnit[] LandUnits => MapController.LandUnits;
-    private static TileMap TileMap => MapController.TileMap;
+    private static TileMapLayer TileMapLayer => MapController.TileMapLayer;
     private static Indicator Indicator => MapController.Indicator;
     private GameLandUnit _singeGameLandUnit;
 
@@ -63,7 +63,7 @@ public partial class SingleTabContainer : TabContainer, IInput
         _selectReleased = true;
         _pressedMousePosition = MousePosition;
 
-        Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+        Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
         if (!LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit)) return;
 
         if (landUnit != _oldSelectLand) return;
@@ -80,7 +80,7 @@ public partial class SingleTabContainer : TabContainer, IInput
         if (!_selectMotion)
         {
             if (!_selectReleased) return;
-            Vector2I vector2I = TileMap.LocalToMap(MousePosition);
+            Vector2I vector2I = TileMapLayer.LocalToMap(MousePosition);
             if (!LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit)) return;
 
             if (landUnit == _oldSelectLand)
@@ -98,7 +98,7 @@ public partial class SingleTabContainer : TabContainer, IInput
         else
         {
             //军队交换
-            Vector2I vector2I = TileMap.LocalToMap(_oldSelectLand.Position + _selectDelta);
+            Vector2I vector2I = TileMapLayer.LocalToMap(_oldSelectLand.Position + _selectDelta);
             if (LandUnits.TryGetValue(MapHelper.GetIndex(vector2I), out GameLandUnit landUnit))
             {
                 _oldSelectLand.ArmySprite.Select = false;
@@ -115,7 +115,7 @@ public partial class SingleTabContainer : TabContainer, IInput
             _selectMotion = false;
             Game.Instance.MapUI.Visible = true;
             Game.Instance.CameraController.AndroidCameraController = true;
-            TileMap.ClearLayer(MapController.SingleLayer);
+            TileMapLayer.Clear();
         }
     }
 
@@ -129,9 +129,9 @@ public partial class SingleTabContainer : TabContainer, IInput
 
         //计算位置
         _selectDelta = MousePosition - _oldMousePosition;
-        Vector2I vector2I = TileMap.LocalToMap(_oldSelectLand.Position + _selectDelta);
-        TileMap.ClearLayer(MapController.SingleLayer);
-        TileMap.SetCell(MapController.SingleLayer, vector2I, MapController.SingleTileSetAtlasId, new(), 1);
+        Vector2I vector2I = TileMapLayer.LocalToMap(_oldSelectLand.Position + _selectDelta);
+        TileMapLayer.Clear();
+        TileMapLayer.SetCell(vector2I, MapController.SingleTileSetAtlasId, new(), 1);
 
         if (_oldSelectLand.ArmySprite is { } armySprite)
             armySprite.Position = _oldSelectLand.Position + _selectDelta;

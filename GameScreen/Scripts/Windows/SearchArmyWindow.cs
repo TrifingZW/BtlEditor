@@ -58,5 +58,6 @@ public partial class SearchArmyWindow : Window
     {
         _callback = callback;
         Show();
+        Position += new Vector2I(0, 34);
     }
 }

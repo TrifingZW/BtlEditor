@@ -66,7 +66,7 @@ popup/item_1/text = "English"
 popup/item_1/id = 1
 
 [node name="Button" type="Button" parent="MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 icon = ExtResource("1_a558i")
 expand_icon = true
@@ -253,7 +253,7 @@ popup/item_1/id = 1
 [node name="InterceptWindow" type="Window" parent="."]
 title = "截取地图"
 initial_position = 1
-size = Vector2i(800, 496)
+size = Vector2i(800, 557)
 visible = false
 wrap_controls = true
 transient = true

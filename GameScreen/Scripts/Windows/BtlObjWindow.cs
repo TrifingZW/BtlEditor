@@ -49,6 +49,7 @@ public partial class BtlObjWindow : Window
         };
         _windowContainer.AddChild(button);
         Show();
+        Position += new Vector2I(0, 34);
 
         return;
 

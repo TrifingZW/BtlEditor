@@ -1,9 +1,11 @@
 using System.IO;
+using System.Linq;
 using BtlEditor.CoreScripts;
 using BtlEditor.CoreScripts.Utils;
 using BtlEditor.GameScreen.Scripts;
 using Godot;
 using static BtlEditor.CoreScripts.StaticRes;
+using FileAccess = System.IO.FileAccess;
 using Translation = BtlEditor.CoreScripts.Translation;
 
 namespace BtlEditor.MainScreen.Scripts;
@@ -19,7 +21,7 @@ public partial class MainInterface : Control
 
     public override void _EnterTree()
     {
-        _btlList = Directory.GetFiles(StagePath);
+        _btlList = Directory.GetFiles(StagePath).Select(Path.GetFileName).ToArray();
     }
 
     public override void _Ready()
@@ -61,7 +63,7 @@ public partial class MainInterface : Control
     private void StartBtl()
     {
         if (!_itemList.GetSelectedItems().TryGetValue(0, out var index)) return;
-        MapHelper.BtlPath = _itemList.GetItemText(index);
+        MapHelper.BtlPath = $"{StagePath}/{_itemList.GetItemText(index)}";
         GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>("res://GameScreen/Game.tscn"));
     }
 

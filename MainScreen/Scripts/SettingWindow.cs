@@ -1,4 +1,3 @@
-using BtlEditor.CoreScripts;
 using Godot;
 using static BtlEditor.CoreScripts.Globals;
 
@@ -32,5 +31,6 @@ public partial class SettingWindow : Window
     public void StartSetting()
     {
         Show();
+        Position += new Vector2I(0, 34);
     }
 }

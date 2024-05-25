@@ -20,12 +20,13 @@ public partial class LoadWindow : Window
 
     private void Close()
     {
-        if (_ready) Hide();
+        Hide();
     }
 
     public void Load(Action<bool> action)
     {
         Show();
+        Position += new Vector2I(0, 34);
         Task.Run(LoadWc4Resource).ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -104,7 +105,6 @@ public partial class LoadWindow : Window
 
             CallDeferred(nameof(PrintGreen), "\n导入完毕，可以关闭窗口，请仔细阅读打印信息。");
             _ready = true;
-            
         });
     }
 

@@ -28,6 +28,8 @@ public partial class EditWindow : Window
     public void CreateEdit(string title, Action<int> callback)
     {
         Show();
+        Position += new Vector2I(0, 34);
+        
         Title = title;
         _callback = callback;
 

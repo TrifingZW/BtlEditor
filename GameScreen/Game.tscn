@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://c78ax6yhf632"]
+[gd_scene load_steps=53 format=3 uid="uid://c78ax6yhf632"]
 
 [ext_resource type="Script" path="res://GameScreen/Scripts/Game.cs" id="1_mv65n"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/MapController.cs" id="1_tib5m"]
@@ -30,11 +30,11 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/WeatherItemList.cs" id="22_i713q"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AffairItemList.cs" id="23_7eqaa"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/StrategyItemList.cs" id="24_an2yb"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportItemList.cs" id="25_qafdh"]
 [ext_resource type="PackedScene" uid="uid://cfiri0bgelvw4" path="res://UserInterface/TabPanel.tscn" id="26_3minh"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/InterceptUI.cs" id="26_4l3ub"]
 [ext_resource type="PackedScene" uid="uid://beisxt0foinfn" path="res://UserInterface/EditorItem.tscn" id="27_nb3k3"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/EditUI.cs" id="28_r5tlh"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportTree.cs" id="28_rk06o"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchGeneralWindow.cs" id="30_djdrc"]
 [ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
 [ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="32_rr5n1"]
@@ -43,7 +43,6 @@
 [ext_resource type="Texture2D" uid="uid://b835hsaec4s7q" path="res://Assets/Textures/general_ability_2.png" id="35_ijv8h"]
 [ext_resource type="Texture2D" uid="uid://gelx3i1nrqqw" path="res://Assets/Textures/general_ability_4.png" id="36_pvj65"]
 [ext_resource type="Texture2D" uid="uid://6scrn3uprq7r" path="res://Assets/Textures/general_ability_5.png" id="37_6i305"]
-[ext_resource type="Theme" uid="uid://cs1sl7quau2b7" path="res://itemlist_theme.tres" id="37_jfnrs"]
 [ext_resource type="Texture2D" uid="uid://mfe6p00xxenk" path="res://Assets/Textures/general_ability_0.png" id="38_vr06f"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchArmyWindow.cs" id="39_asn33"]
 [ext_resource type="AudioStream" uid="uid://busvxfrvbgm0w" path="res://Assets/Audio/sfx_select.wav" id="41_outve"]
@@ -185,6 +184,7 @@ text = "设置"
 
 [node name="MapUI" type="CanvasLayer" parent="."]
 layer = 0
+visible = false
 script = ExtResource("8_vjv26")
 
 [node name="MarginContainer" type="MarginContainer" parent="MapUI"]
@@ -220,14 +220,14 @@ theme_override_constants/separation = 0
 [node name="ScrollContainer" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 3
-vertical_scroll_mode = 0
 
 [node name="TabBar" type="TabBar" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-mouse_filter = 1
 current_tab = 0
 clip_tabs = false
 scrolling_enabled = false
@@ -242,7 +242,7 @@ tab_6/title = "空袭"
 tab_7/title = "国旗"
 
 [node name="Button" type="Button" parent="MapUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("17_tq14q")
@@ -263,6 +263,9 @@ script = ExtResource("10_rw5vh")
 [node name="军队" type="ScrollContainer" parent="MapUI/MarginContainer/Panel/VBoxContainer/SingleTabContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("12_ni0yi")
@@ -272,6 +275,9 @@ metadata/_tab_index = 0
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("13_t38vd")
@@ -281,6 +287,9 @@ metadata/_tab_index = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("16_ptwu4")
@@ -290,6 +299,9 @@ metadata/_tab_index = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
@@ -299,6 +311,9 @@ metadata/_tab_index = 3
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
@@ -308,6 +323,7 @@ metadata/_tab_index = 4
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+follow_focus = true
 script = ExtResource("18_mrjdc")
 metadata/_tab_index = 5
 
@@ -315,6 +331,9 @@ metadata/_tab_index = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 vertical_scroll_mode = 3
 script = ExtResource("19_qf3fs")
 metadata/_tab_index = 6
@@ -323,6 +342,9 @@ metadata/_tab_index = 6
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+follow_focus = true
 vertical_scroll_mode = 3
 script = ExtResource("20_w6ers")
 metadata/_tab_index = 7
@@ -380,7 +402,7 @@ tab_4/title = "策略列表"
 tab_5/title = "空中支援"
 
 [node name="Button" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("17_tq14q")
@@ -421,6 +443,8 @@ tab_focus_mode = 0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
 layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 3
 metadata/_tab_index = 0
@@ -429,7 +453,6 @@ metadata/_tab_index = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-mouse_filter = 1
 
 [node name="MasterContainer" type="VBoxContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer/ScrollContainer/PanelContainer"]
 layout_mode = 2
@@ -444,10 +467,7 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("37_jfnrs")
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
-icon_scale = 2.0
 script = ExtResource("16_gx6sn")
 metadata/_tab_index = 1
 
@@ -457,8 +477,6 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("37_jfnrs")
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("22_i713q")
@@ -470,8 +488,6 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("37_jfnrs")
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("23_7eqaa")
@@ -483,24 +499,20 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("37_jfnrs")
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("24_an2yb")
 metadata/_tab_index = 4
 
-[node name="AirSupportItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
+[node name="AirSupportTree" type="Tree" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme = ExtResource("37_jfnrs")
-theme_override_font_sizes/font_size = 50
-allow_reselect = true
-icon_scale = 2.0
-script = ExtResource("25_qafdh")
+hide_root = true
+script = ExtResource("28_rk06o")
 metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer"]
@@ -508,22 +520,18 @@ layout_mode = 2
 
 [node name="Button1" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "新建单位"
 
 [node name="Button2" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "删除单位"
 
 [node name="Button3" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "设置单位"
 
 [node name="Button4" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "复制单位"
 
 [node name="InterceptUI" type="CanvasLayer" parent="."]
@@ -822,8 +830,9 @@ text = "确定"
 [node name="BtlObjWindow" type="Window" parent="."]
 title = "设置"
 initial_position = 1
-size = Vector2i(800, 950)
+size = Vector2i(800, 1000)
 visible = false
+min_size = Vector2i(800, 1000)
 script = ExtResource("20_150s2")
 
 [node name="MarginContainer" type="MarginContainer" parent="BtlObjWindow"]
@@ -859,10 +868,11 @@ size_flags_vertical = 3
 [node name="SearchGeneralWindow" type="Window" parent="."]
 title = "搜索将领"
 initial_position = 1
-size = Vector2i(1000, 951)
+size = Vector2i(1000, 907)
 visible = false
 transient = true
 exclusive = true
+min_size = Vector2i(1000, 0)
 script = ExtResource("30_djdrc")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchGeneralWindow"]
@@ -885,6 +895,7 @@ placeholder_text = "搜索"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -893,7 +904,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("37_jfnrs")
 allow_search = false
 
 [node name="PanelContainer2" type="PanelContainer" parent="SearchGeneralWindow/MarginContainer/VBoxContainer/HBoxContainer"]
@@ -1053,10 +1063,11 @@ text = "确定选择"
 [node name="SearchArmyWindow" type="Window" parent="."]
 title = "搜索军队"
 initial_position = 1
-size = Vector2i(800, 950)
+size = Vector2i(800, 1000)
 visible = false
 transient = true
 exclusive = true
+min_size = Vector2i(800, 1000)
 script = ExtResource("39_asn33")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchArmyWindow"]
@@ -1084,7 +1095,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchArmyWindow/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("37_jfnrs")
 allow_search = false
 
 [node name="Button" type="Button" parent="SearchArmyWindow/MarginContainer/VBoxContainer"]
@@ -1094,17 +1104,17 @@ text = "确定选择"
 [node name="SearchCountryWindow" type="Window" parent="."]
 title = "搜索国家"
 initial_position = 1
-size = Vector2i(800, 950)
+size = Vector2i(800, 1000)
 visible = false
 transient = true
 exclusive = true
+min_size = Vector2i(800, 1000)
 script = ExtResource("42_85ugd")
 
 [node name="MarginContainer" type="MarginContainer" parent="SearchCountryWindow"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 16
@@ -1122,7 +1132,6 @@ size_flags_vertical = 3
 
 [node name="ItemList" type="ItemList" parent="SearchCountryWindow/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-theme = ExtResource("37_jfnrs")
 allow_search = false
 
 [node name="Button" type="Button" parent="SearchCountryWindow/MarginContainer/VBoxContainer"]

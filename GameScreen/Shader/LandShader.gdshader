@@ -15,6 +15,6 @@ const vec2 hex_dx = vec2(hex_width * 0.75, 0.0);
 const vec2 hex_dy = vec2(hex_width * 0.25, hex_height * 0.5);
 
 void fragment() {
-	
+
 	COLOR = texture(TEXTURE, UV) * texture(color_texture, UV);
 }

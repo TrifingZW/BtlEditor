@@ -8,8 +8,10 @@ using static BtlEditor.GameScreen.Scripts.MapHelper;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts.CustomItemList;
 
-public partial class CountryItemList : BaseItemList
+public partial class CountryItemList : ItemList, IDataOperation
 {
+    private static MapController MapController => Game.Instance.MapController;
+
     public override void _Ready()
     {
         base._Ready();
@@ -52,7 +54,7 @@ public partial class CountryItemList : BaseItemList
                 }
     }
 
-    public override void Delete()
+    public void Delete()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;
@@ -86,7 +88,7 @@ public partial class CountryItemList : BaseItemList
         });
     }
 
-    public override void Add()
+    public void Add()
     {
         Game.Instance.Dialog.Builder("确定要新建国家？", () =>
         {
@@ -101,7 +103,7 @@ public partial class CountryItemList : BaseItemList
         });
     }
 
-    public override void Set()
+    public void Set()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;
@@ -137,7 +139,7 @@ public partial class CountryItemList : BaseItemList
         });
     }
 
-    public override void Copy()
+    public void Copy()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Countries.TryGetValue(index, out Country country)) return;

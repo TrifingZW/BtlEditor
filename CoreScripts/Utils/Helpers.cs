@@ -39,9 +39,10 @@ public static class Helpers
     public static OptionButton ReflectionOptionButton<T>(T obj, FieldInfo field, Dictionary<string, byte> options, Action valueChanged = null)
     {
         OptionButton optionButton = new();
+        optionButton.FitToLongestItem = false;
         foreach (var pair in options)
             optionButton.AddItem(pair.Key);
-        
+
         switch (field.FieldType)
         {
             case { } type when type == typeof(byte):
@@ -95,6 +96,7 @@ public static class Helpers
     {
         SpinBox spinBox = new();
         spinBox.UpdateOnTextChanged = true;
+        spinBox.SelectAllOnFocus = true;
         switch (field.FieldType)
         {
             case { } type when type == typeof(byte):

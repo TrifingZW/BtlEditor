@@ -33,7 +33,7 @@ public partial class CitySprite : Sprite2D
                     return e.Name == $"building_{level}.png";
                 }) is { } image)
                 RegionRect = image.GetRect2();
-            else QueueFree();
+            else RegionRect= new(0, 0, 0, 0);
         }
     }
 

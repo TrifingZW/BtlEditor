@@ -73,6 +73,9 @@ public class BtlParser
                 foreach (Strategy strategy in Strategies)
                     if (strategy.军团序号 == country.序号)
                         strategy.军团序号 = index;
+                foreach (AirRaid airRaid in AirRaids)
+                    if (airRaid.军团 == country.序号)
+                        airRaid.军团 = index;
                 foreach (AirSupport airSupport in AirSupports)
                     if (airSupport.军团 == country.序号)
                         airSupport.军团 = index;

@@ -14,7 +14,8 @@ public partial class MainInterface : Control
     private LoadWindow _loadWindow;
     private SettingWindow _settingWindow;
     private InterceptWindow _interceptWindow;
-    private ItemList _itemList;
+    private Tree _tree;
+    private TreeItem _treeRoot;
     private string[] _btlList;
     private OptionButton _translationOption;
 
@@ -43,32 +44,73 @@ public partial class MainInterface : Control
             });
         }
 
-        _itemList = GetNode<ItemList>("%ItemList");
+        _tree = GetNode<Tree>("%Tree");
+        _treeRoot = _tree.CreateItem();
+        TreeItem conquest = CreateFloder("Conquest 征服");
+        TreeItem stage = CreateFloder("Stage 战役");
+        TreeItem generalStage = CreateFloder("GeneralStage 将领战役");
+        TreeItem frontier = CreateFloder("Frontier 前线");
+        TreeItem invadecorps = CreateFloder("Invadecorps 入侵");
+        TreeItem warzone = CreateFloder("warzone 不知道");
+        TreeItem qevent = CreateFloder("event 事件");
+        stage.SetSelectable(0, false);
         foreach (var btl in _btlList)
-            _itemList.AddItem(btl);
+        {
+            if (btl.Contains("conquest"))
+                CreateFile(conquest, btl);
+
+            if (btl.Contains("stage")&&!btl.Contains("general"))
+                CreateFile(stage, btl);
+            
+            if (btl.Contains("generalstage"))
+                CreateFile(generalStage, btl);
+            
+            if (btl.Contains("frontier"))
+                CreateFile(frontier, btl);
+            
+            if (btl.Contains("invadecorps"))
+                CreateFile(invadecorps, btl);
+            
+            if (btl.Contains("warzone"))
+                CreateFile(warzone, btl);
+            
+            if (btl.Contains("event"))
+                CreateFile(qevent, btl);
+        }
     }
 
-    private void EditChanged(string value)
+    private TreeItem CreateFloder(string name)
     {
-        _itemList.Clear();
-        foreach (var btl in _btlList)
-            if (btl.Contains(value))
-                _itemList.AddItem(btl);
+        TreeItem floder = _treeRoot.CreateChild();
+        floder.Collapsed = true;
+        floder.SetText(0, name);
+        floder.SetIcon(0, ResourceLoader.Load<Texture2D>("res://Assets/Textures/UI/folder.svg"));
+        floder.SetSelectable(0, false);
+        return floder;
     }
+
+    private void CreateFile(TreeItem root, string name)
+    {
+        TreeItem file = root.CreateChild();
+        file.SetText(0, name);
+        file.SetIcon(0, ResourceLoader.Load<Texture2D>("res://Assets/Textures/UI/file.svg"));
+    }
+
+    private void EditChanged(string value) => _treeRoot.Screen(value);
+
 
     private void Setting() => _settingWindow.StartSetting();
     private void Intercept() => GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>("res://InterceptScreen/Intercept.tscn"));
 
     private void StartBtl()
     {
-        if (!_itemList.GetSelectedItems().TryGetValue(0, out var index)) return;
-        MapHelper.BtlPath = $"{StagePath}/{_itemList.GetItemText(index)}";
+        if (_tree.GetSelected().GetText(0) is not { } path) return;
+        MapHelper.BtlPath = $"{StagePath}/{path}";
         GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>("res://GameScreen/Game.tscn"));
     }
 
     private void StartBin()
     {
-        if (!_itemList.GetSelectedItems().TryGetValue(0, out var index)) return;
     }
 
     private void StartBinScene() => GetTree().ChangeSceneToFile("res://BinScreen/Bin.tscn");

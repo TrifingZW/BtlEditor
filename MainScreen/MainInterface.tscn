@@ -101,7 +101,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ItemList" type="ItemList" parent="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2/Panel"]
+[node name="Tree" type="Tree" parent="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2/Panel"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -109,6 +109,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+hide_root = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer2"]
 layout_mode = 2
@@ -333,6 +334,31 @@ prefix = "Y"
 [node name="Button" type="Button" parent="InterceptWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "确认截取"
+
+[node name="Window" type="Window" parent="."]
+initial_position = 1
+size = Vector2i(1000, 1000)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PanelContainer" type="PanelContainer" parent="Window/MarginContainer"]
+layout_mode = 2
+
+[node name="GraphEdit" type="GraphEdit" parent="Window/MarginContainer/PanelContainer"]
+layout_mode = 2
 
 [connection signal="pressed" from="MarginContainer/Panel/VBoxContainer/HBoxContainer/Button" to="." method="Setting"]
 [connection signal="text_changed" from="MarginContainer/Panel/VBoxContainer/TabContainer/BTL/HBoxContainer/LineEdit" to="." method="EditChanged"]

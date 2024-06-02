@@ -56,13 +56,11 @@ public partial class ReinforcementSingle : BaseSingle
             {
                 case Reinforcement1 reinforcement1:
                     reinforcement1.坐标 = GameLandUnit.RegionIndex;
-                    reinforcement1.所属国家 = GameLandUnit.Belong;
                     GameLandUnit.Reinforcements.Add(reinforcement1);
                     AddReinforcement(reinforcement1);
                     break;
                 case Reinforcement3 reinforcement3:
                     reinforcement3.坐标 = GameLandUnit.RegionIndex;
-                    reinforcement3.所属国家 = GameLandUnit.Belong;
                     GameLandUnit.Reinforcements.Add(reinforcement3);
                     AddReinforcement(reinforcement3);
                     break;

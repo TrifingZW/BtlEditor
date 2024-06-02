@@ -1,10 +1,13 @@
 using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
+using Godot;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts.CustomItemList;
 
-public partial class AffairItemList : BaseItemList
+public partial class AffairItemList : ItemList, IDataOperation
 {
+    private static MapController MapController => Game.Instance.MapController;
+
     public override void _Ready()
     {
         ItemActivated += _ => Set();
@@ -12,7 +15,7 @@ public partial class AffairItemList : BaseItemList
             AddItem(GetText(affair));
     }
 
-    public override void Delete()
+    public void Delete()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;
@@ -23,7 +26,7 @@ public partial class AffairItemList : BaseItemList
         });
     }
 
-    public override void Add()
+    public void Add()
     {
         Game.Instance.Dialog.Builder("确定要新建事件？", () =>
         {
@@ -35,7 +38,7 @@ public partial class AffairItemList : BaseItemList
 
     private static string GetText(Affair affair) => $"事件ID:{affair.事件ID}  类型:{affair.事件类型}  触发回合:{affair.触发回合}  对话代码:{affair.对话代码}";
 
-    public override void Set()
+    public void Set()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;
@@ -46,7 +49,7 @@ public partial class AffairItemList : BaseItemList
         });
     }
 
-    public override void Copy()
+    public void Copy()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Affairs.TryGetValue(index, out Affair affair)) return;

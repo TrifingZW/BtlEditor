@@ -56,21 +56,8 @@ public class GameLandUnit : LandUnit
         set
         {
             if (Army is null && City is null) base.Belong = 0xff;
-            else
-            {
-                base.Belong = value;
+            else base.Belong = value;
 
-                foreach (Reinforcement reinforcement in Reinforcements)
-                    switch (reinforcement)
-                    {
-                        case Reinforcement1 reinforcement1:
-                            reinforcement1.所属国家 = Belong;
-                            break;
-                        case Reinforcement3 reinforcement3:
-                            reinforcement3.所属国家 = Belong;
-                            break;
-                    }
-            }
 
             if (MapController.Countries.TryGetValue(Belong, out Country country))
             {
@@ -140,10 +127,15 @@ public class GameLandUnit : LandUnit
         if (City != null)
         {
             City.坐标 = RegionIndex;
-            if(_citySprite == null)
+            if (_citySprite == null)
             {
                 _citySprite = new();
                 MapController.CityRender.AddChild(_citySprite);
+                _citySprite.Position = Position;
+                _citySprite.City = City;
+            }
+            else
+            {
                 _citySprite.Position = Position;
                 _citySprite.City = City;
             }

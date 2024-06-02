@@ -30,11 +30,11 @@
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/WeatherItemList.cs" id="22_i713q"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AffairItemList.cs" id="23_7eqaa"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/StrategyItemList.cs" id="24_an2yb"]
-[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportItemList.cs" id="25_qafdh"]
 [ext_resource type="PackedScene" uid="uid://cfiri0bgelvw4" path="res://UserInterface/TabPanel.tscn" id="26_3minh"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/InterceptUI.cs" id="26_4l3ub"]
 [ext_resource type="PackedScene" uid="uid://beisxt0foinfn" path="res://UserInterface/EditorItem.tscn" id="27_nb3k3"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/EditUI.cs" id="28_r5tlh"]
+[ext_resource type="Script" path="res://GameScreen/Scripts/DataUIScripts/CustomItemList/AirSupportTree.cs" id="28_rk06o"]
 [ext_resource type="Script" path="res://GameScreen/Scripts/Windows/SearchGeneralWindow.cs" id="30_djdrc"]
 [ext_resource type="Texture2D" uid="uid://dpcbhndwdusko" path="res://Assets/Textures/UI/avatar.png" id="31_sotk3"]
 [ext_resource type="Texture2D" uid="uid://e842xemg6ic1" path="res://Assets/Textures/general_ability_1.png" id="32_rr5n1"]
@@ -265,6 +265,7 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("12_ni0yi")
@@ -276,6 +277,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("13_t38vd")
@@ -287,6 +289,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("16_ptwu4")
@@ -298,6 +301,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("14_qxfg2")
@@ -309,6 +313,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 script = ExtResource("15_d2f5v")
@@ -318,6 +323,7 @@ metadata/_tab_index = 4
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+follow_focus = true
 script = ExtResource("18_mrjdc")
 metadata/_tab_index = 5
 
@@ -327,6 +333,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 vertical_scroll_mode = 3
 script = ExtResource("19_qf3fs")
 metadata/_tab_index = 6
@@ -337,6 +344,7 @@ visible = false
 layout_mode = 2
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
+follow_focus = true
 vertical_scroll_mode = 3
 script = ExtResource("20_w6ers")
 metadata/_tab_index = 7
@@ -384,6 +392,7 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+current_tab = 0
 tab_count = 6
 tab_0/title = "主数据"
 tab_1/title = "国家列表"
@@ -458,9 +467,7 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
-icon_scale = 2.0
 script = ExtResource("16_gx6sn")
 metadata/_tab_index = 1
 
@@ -470,7 +477,6 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("22_i713q")
@@ -482,7 +488,6 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("23_7eqaa")
@@ -494,22 +499,20 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme_override_font_sizes/font_size = 50
 allow_reselect = true
 icon_scale = 2.0
 script = ExtResource("24_an2yb")
 metadata/_tab_index = 4
 
-[node name="AirSupportItemList" type="ItemList" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
+[node name="AirSupportTree" type="Tree" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/TabContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 mouse_force_pass_scroll_events = false
-theme_override_font_sizes/font_size = 50
-allow_reselect = true
-icon_scale = 2.0
-script = ExtResource("25_qafdh")
+hide_root = true
+script = ExtResource("28_rk06o")
 metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer"]
@@ -517,22 +520,18 @@ layout_mode = 2
 
 [node name="Button1" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "新建单位"
 
 [node name="Button2" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "删除单位"
 
 [node name="Button3" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "设置单位"
 
 [node name="Button4" type="Button" parent="DataUI/MarginContainer/Panel/VBoxContainer/ColorRect/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
 text = "复制单位"
 
 [node name="InterceptUI" type="CanvasLayer" parent="."]

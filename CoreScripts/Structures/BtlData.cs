@@ -1,5 +1,6 @@
 ﻿using System;
 using BtlEditor.CoreScripts.Attributes;
+using Godot;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnassignedField.Global
@@ -543,7 +544,7 @@ public class Strategy : ICloneable
     public object Clone() => MemberwiseClone();
 }
 
-public class AirSupport : ICloneable
+public partial class AirSupport : GodotObject,ICloneable
 {
     public int 兵种;
     public int 弹药;

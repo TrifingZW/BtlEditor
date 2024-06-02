@@ -1,10 +1,13 @@
-    using BtlEditor.CoreScripts.Structures;
+using BtlEditor.CoreScripts.Structures;
 using BtlEditor.CoreScripts.Utils;
+using Godot;
 
 namespace BtlEditor.GameScreen.Scripts.DataUIScripts.CustomItemList;
 
-public partial class StrategyItemList : BaseItemList
+public partial class StrategyItemList : ItemList, IDataOperation
 {
+    private static MapController MapController => Game.Instance.MapController;
+
     public override void _Ready()
     {
         ItemActivated += _ => Set();
@@ -12,7 +15,7 @@ public partial class StrategyItemList : BaseItemList
             AddItem(GetText(strategy));
     }
 
-    public override void Delete()
+    public void Delete()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;
@@ -23,7 +26,7 @@ public partial class StrategyItemList : BaseItemList
         });
     }
 
-    public override void Add()
+    public void Add()
     {
         Game.Instance.Dialog.Builder("确定要新建战略？", () =>
         {
@@ -35,7 +38,7 @@ public partial class StrategyItemList : BaseItemList
 
     private static string GetText(Strategy strategy) => $"军团编号:{strategy.军团序号}  回合:{strategy.回合}  建设代码:{strategy.建设代码}";
 
-    public override void Set()
+    public void Set()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;
@@ -46,7 +49,7 @@ public partial class StrategyItemList : BaseItemList
         });
     }
 
-    public override void Copy()
+    public void Copy()
     {
         if (!GetSelectedItems().TryGetValue(0, out var index)) return;
         if (!MapController.Strategies.TryGetValue(index, out Strategy strategy)) return;

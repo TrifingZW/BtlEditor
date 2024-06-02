@@ -6,11 +6,14 @@ namespace BtlEditor.GameScreen.Scripts.DataUIScripts;
 public partial class DataUI : InterceptScreen.Scripts.InterceptUiLayer
 {
     private TabContainer _tabContainer;
+
+    public AirSupportTree AirSupportTree { get; set; }
     private static MapController MapController => Game.Instance.MapController;
 
     public override void _Ready()
     {
         _tabContainer = GetNode<TabContainer>("%TabContainer");
+        AirSupportTree = GetNode<AirSupportTree>("%AirSupportTree");
     }
 
     private void TabSelect(long index)
@@ -29,25 +32,25 @@ public partial class DataUI : InterceptScreen.Scripts.InterceptUiLayer
 
     private void Add()
     {
-        if (_tabContainer.GetCurrentTabControl() is BaseItemList baseItemList)
+        if (_tabContainer.GetCurrentTabControl() is IDataOperation baseItemList)
             baseItemList.Add();
     }
 
     private void Delete()
     {
-        if (_tabContainer.GetCurrentTabControl() is BaseItemList baseItemList)
+        if (_tabContainer.GetCurrentTabControl() is IDataOperation baseItemList)
             baseItemList.Delete();
     }
 
     private void Set()
     {
-        if (_tabContainer.GetCurrentTabControl() is BaseItemList baseItemList)
+        if (_tabContainer.GetCurrentTabControl() is IDataOperation baseItemList)
             baseItemList.Set();
     }
 
     private void Copy()
     {
-        if (_tabContainer.GetCurrentTabControl() is BaseItemList baseItemList)
+        if (_tabContainer.GetCurrentTabControl() is IDataOperation baseItemList)
             baseItemList.Copy();
     }
 }

@@ -65,7 +65,7 @@ popup/item_1/text = "English"
 popup/item_1/id = 1
 
 [node name="Button" type="Button" parent="MarginContainer/Panel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 icon = ExtResource("1_a558i")
 expand_icon = true
